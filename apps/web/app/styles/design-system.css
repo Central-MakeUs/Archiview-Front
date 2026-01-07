@@ -38,35 +38,40 @@
 
 @layer utilities {
   /* Typography */
-  .h1 {
+  .heading1 {
     font-size: 2.8rem;
     line-height: 132%;
-    letter-spacing: 0rem;
+    letter-spacing: -2.36%;
   }
-  .h2 {
+  .heading2 {
     font-size: 2.4rem;
     line-height: 132%;
-    letter-spacing: 0rem;
+    letter-spacing: -2%;
   }
-  .h3 {
+  .heading3 {
     font-size: 2rem;
     line-height: 132%;
-    letter-spacing: 0rem;
+    letter-spacing: -1%;
   }
-  .b1 {
+  .body1 {
     font-size: 1.8rem;
     line-height: 132%;
-    letter-spacing: 0rem;
+    letter-spacing: -1%;
   }
-  .b2 {
+  .body2 {
     font-size: 1.6rem;
     line-height: 150%;
-    letter-spacing: 0rem;
+    letter-spacing: -1%;
   }
-  .b3 {
+  .body3 {
     font-size: 1.4rem;
     line-height: 150%;
-    letter-spacing: 0rem;
+    letter-spacing: -1%;
+  }
+  .captions {
+    font-size: 1.2rem;
+    line-height: 150%;
+    letter-spacing: 0.6rem;
   }
 
   /* Default Scroll Bar Hide for mobile view */
