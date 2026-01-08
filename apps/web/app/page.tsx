@@ -3,6 +3,8 @@ import { useState } from 'react';
 
 import { TabBar } from '@/shared/components/TabBar';
 import { SearchBar } from '@/shared/components/SearchBar';
+import { PlaceListCard } from '@/shared/components/PlaceListCard';
+import { EditorResultCard } from '@/shared/components/EditorResultCard';
 
 type SearchScope = 'all' | 'info' | 'editor';
 
@@ -14,6 +16,15 @@ export default function Home(): React.ReactNode {
     <div>
       <div className="flex justify-center items-center h-screen flex-col w-full">
         <SearchBar value={input} onChange={setInput} />
+        <PlaceListCard image="" title="제목" description="내용" uploadedAt="1/2 업로드" />
+        <EditorResultCard
+          title="title"
+          image=""
+          description="내용"
+          uploadedAt="1/2 업로드"
+          views={10}
+          saves={5}
+        />
         <TabBar
           items={[
             { value: 'all', label: '전체' },
