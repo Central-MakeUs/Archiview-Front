@@ -1,4 +1,7 @@
+
+
 export default function Home(): React.ReactNode {
+
   return (
     <div>
       <div className="flex justify-center items-center h-screen flex-col">
