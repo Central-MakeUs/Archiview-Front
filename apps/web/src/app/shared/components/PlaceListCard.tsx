@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PencilIcon } from '@/shared/components/icon';
+import { PencilIcon } from '@/app/shared/components/icon';
 import { Card } from './common/Card';
 
 interface IPlaceListCardProps {

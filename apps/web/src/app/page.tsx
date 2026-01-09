@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 
-import { TabBar } from '@/shared/components/TabBar';
-import { SearchBar } from '@/shared/components/SearchBar';
-import { PlaceListCard } from '@/shared/components/PlaceListCard';
-import { EditorResultCard } from '@/shared/components/EditorResultCard';
+import { TabBar } from '@/app/shared/components/TabBar';
+import { SearchBar } from '@/app/shared/components/SearchBar';
+import { PlaceListCard } from '@/app/shared/components/PlaceListCard';
+import { EditorResultCard } from '@/app/shared/components/EditorResultCard';
 
 import { Button } from '@/app/shared/components/button';
 
