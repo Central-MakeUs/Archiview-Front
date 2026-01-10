@@ -24,6 +24,7 @@ export default defineConfig([
         { type: 'features', pattern: 'src/features/**' },
         { type: 'entities', pattern: 'src/entities/**' },
         { type: 'shared', pattern: 'src/shared/**' },
+        { type: 'mocks', pattern: 'src/mocks/**' },
       ],
       'boundaries/ignore': ['**/*.test.*', '**/*.spec.*'],
     },
@@ -46,6 +47,12 @@ export default defineConfig([
           ],
         },
       ],
+    },
+
+    // 리턴 타입 강제 끔
+    rules: {
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
     },
   },
 

@@ -12,7 +12,7 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write .",
-     "storybook:web": "pnpm --filter @apps/web storybook",
+    "storybook:web": "pnpm --filter @apps/web storybook",
     "build:storybook:web": "pnpm --filter @apps/web build-storybook"
   },
   "keywords": [],
