@@ -1,4 +1,4 @@
-import { cn } from '@/app/shared/lib/cn';
+import { cn } from '@/shared/lib/cn';
 
 interface ICardProps {
   thumbnail: React.ReactNode;

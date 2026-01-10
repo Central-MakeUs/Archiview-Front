@@ -2,18 +2,18 @@
 
 import { useState } from 'react';
 
-import { TabBar } from '@/app/shared/components/TabBar';
-import { SearchBar } from '@/app/shared/components/SearchBar';
-import { PlaceListCard } from '@/app/shared/components/PlaceListCard';
-import { EditorResultCard } from '@/app/shared/components/EditorResultCard';
+import { TabBar } from '@/shared/components/TabBar';
+import { SearchBar } from '@/shared/components/SearchBar';
+import { PlaceListCard } from '@/shared/components/PlaceListCard';
+import { EditorResultCard } from '@/shared/components/EditorResultCard';
 
-import { Button } from '@/app/shared/components/button';
+import { Button } from '@/shared/components/button';
 
 import Image from 'next/image';
 
 type SearchScope = 'all' | 'info' | 'editor';
 
-export default function Home(): React.ReactNode {
+export const HomePage = (): React.ReactElement => {
   const [scope, setScope] = useState<SearchScope>('all');
   const [input, setInput] = useState('');
 
@@ -86,4 +86,4 @@ export default function Home(): React.ReactNode {
       </div>
     </div>
   );
-}
+};

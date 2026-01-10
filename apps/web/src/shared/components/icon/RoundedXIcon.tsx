@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn } from '@/app/shared/lib/cn';
+import { cn } from '@/shared/lib/cn';
 
 export type RoundedXIconProps = {
   size?: number;

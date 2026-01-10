@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import '@/app/shared/styles/globals.css';
+import '@/shared/styles/globals.css';
 
 export const metadata: Metadata = {
   title: 'Archiview',
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: '너,나 우리의 정보 공유 플랫폼',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }): React.ReactNode {
+export function RootLayout({ children }: { children: React.ReactNode }): React.ReactNode {
   return (
     <html lang="en">
       <body>{children}</body>
