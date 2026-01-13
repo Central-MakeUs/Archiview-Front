@@ -1,6 +1,6 @@
 'use client';
 
-import { ArchiviewLogoIcon, NotificationIcon, SettingsIcon } from '@/shared/components/icon';
+import { ArchiviewLogoIcon, NotificationIcon, SettingsIcon } from '@/shared/ui/icon';
 
 export const Header = (): React.ReactElement => {
   return (
