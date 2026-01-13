@@ -18,11 +18,11 @@ export const Badge = ({ variant, label, color }: IBadgeProps): React.ReactElemen
       className={`
         inline-flex
         items-center
-        px-[12px]
-        py-[4px]
-        h-[26px]
-        rounded-[12px]
-        text-[12px]
+        px-3
+        py-1
+        h-7
+        rounded-md
+        text-xs
         ${isOutlined ? 'border' : ''}
       `}
     >

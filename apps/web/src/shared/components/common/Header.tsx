@@ -4,10 +4,10 @@ import { ArchiviewLogoIcon, NotificationIcon, SettingsIcon } from '@/shared/comp
 
 export const Header = (): React.ReactElement => {
   return (
-    <div className="h-[60px] top-0 py-[12px] px-[20px]">
+    <div className="h-15 top-0 py-3 px-5">
       <div className="flex items-center justify-between">
         <ArchiviewLogoIcon />
-        <div className="flex items-center gap-[1.5px]">
+        <div className="flex items-center gap-px">
           <NotificationIcon />
           <SettingsIcon />
         </div>

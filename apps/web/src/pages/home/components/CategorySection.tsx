@@ -10,8 +10,8 @@ const CategoryItem = ({
   path: string;
 }): React.ReactElement => {
   return (
-    <div className="flex flex-col gap-[6px] items-center">
-      <div className="h-[52px] w-[52px] rounded-[12px] flex items-center justify-center bg-primary-60">
+    <div className="flex flex-col gap-1.5 items-center">
+      <div className="h-13 w-13 rounded-xl flex items-center justify-center bg-primary-60">
         {icon}
       </div>
       <div className="body-12-medium">{label}</div>
@@ -21,8 +21,8 @@ const CategoryItem = ({
 
 export const CategorySection = (): React.ReactElement => {
   return (
-    <section className="py-[32px] px-[20px]">
-      <div className="flex flex-col gap-[12px]">
+    <section className="py-8 px-5">
+      <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <CategoryItem icon={<HomeIcon className="text-neutral-10" />} label="내주변" path="/" />
           <CategoryItem icon={<HomeIcon className="text-neutral-10" />} label="한식" path="/" />

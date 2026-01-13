@@ -38,11 +38,11 @@ export const Chip = ({
   const baseStyles = `
     inline-flex
     items-center
-    gap-[8px]
-    p-[12px]
-		font-[14px]
+    gap-2
+    p-3
+    text-sm
     font-semibold
-    rounded-[999px]
+    rounded-full
     cursor-pointer
     focus:outline-none
     disabled:opacity-50
@@ -50,7 +50,9 @@ export const Chip = ({
   `;
 
   // chipType 스타일
-  const chipTypeStyle = chipType === 'keyword' ? 'h-[36px]' : 'h-[26px]';
+  // 36px → h-9
+  // 26px → h-7 (가장 근접한 기본 spacing)
+  const chipTypeStyle = chipType === 'keyword' ? 'h-9' : 'h-7';
 
   const selectedStyle = selected ? 'border border-primary-40 text-primary-40' : null;
 

@@ -33,14 +33,14 @@ export const Button = ({
   // 버튼 공통 기본 스타일
   const baseStyles = `
     inline-flex
-    py-[12px]
-    px-[28px]
-    text-[16px]
+    py-3
+    px-7
+    text-base
     cursor-pointer
     items-center
     justify-center
     font-semibold
-    rounded-[12px]
+    rounded-xl
     focus:outline-none
     disabled:opacity-50
     disabled:cursor-not-allowed
@@ -61,8 +61,7 @@ export const Button = ({
       disabled={disabled}
       {...props}
     >
-      {/* startIcon이 있을 때만 렌더링 */}
-      {startIcon && <span className="mr-[12px] inline-flex items-center">{startIcon}</span>}
+      {startIcon && <span className="mr-3 inline-flex items-center">{startIcon}</span>}
       {children}
     </button>
   );
