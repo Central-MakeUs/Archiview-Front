@@ -3,13 +3,13 @@ import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 interface IChipProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'contained' | 'outlined';
+  variant?: 'default' | 'secondary';
   chipType?: 'category' | 'keyword';
-  hashTag?: boolean;
-  color?: 'primary' | 'secondary' | 'default';
+  selected?: boolean;
   label: string;
   endIcon?: React.ReactNode;
   className?: string;
+  disabled?: boolean;
 }
 
 /**
@@ -25,10 +25,9 @@ interface IChipProps extends ButtonHTMLAttributes<HTMLButtonElement> {
  * @param props 기본 button attribute
  */
 export const Chip = ({
-  variant = 'outlined',
+  variant = 'default',
   chipType = 'category',
-  color = 'primary',
-  hashTag = false,
+  selected = false,
   label,
   endIcon,
   className,
@@ -53,27 +52,20 @@ export const Chip = ({
   // chipType 스타일
   const chipTypeStyle = chipType === 'keyword' ? 'h-[36px]' : 'h-[26px]';
 
+  const selectedStyle = selected ? 'border border-primary-40 text-primary-40' : null;
+
   const variantStyle =
-    variant === 'contained'
-      ? {
-          primary: 'bg-primary-40 text-neutral-10',
-          secondary: 'bg-secondary-40 text-neutral-10',
-          default: 'bg-default-40 text-neutral-10',
-        }[color]
-      : {
-          primary: 'border border-primary-40 text-primary-40',
-          secondary: 'border border-secondary-40 text-secondary-40',
-          default: 'border border-default-40 text-default-40',
-        }[color];
+    variant === 'default'
+      ? 'border border-neutral-40 text-neutral-40'
+      : 'border border-secondary-40 text-secondary-40';
 
   return (
     <button
       type="button"
       disabled={disabled}
-      className={twMerge(clsx(baseStyles, chipTypeStyle, variantStyle, className))}
+      className={twMerge(clsx(baseStyles, chipTypeStyle, variantStyle, selectedStyle, className))}
       {...props}
     >
-      {hashTag && <span className="inline-flex">#</span>}
       {label}
       {endIcon && <span className="inline-flex">{endIcon}</span>}
     </button>
