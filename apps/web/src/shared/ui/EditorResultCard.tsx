@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Card } from './common/Card';
+import { CardWrapper } from './common/CardWrapper';
 import { RightArrowIcon, FolderIcon, EyeIcon } from './icon';
 
-interface EditorResultCardProps {
+interface IEditorResultCardProps {
   image: React.ReactNode;
   title: string;
   description: string;
@@ -22,9 +22,9 @@ export const EditorResultCard = ({
   saves,
   selected,
   onClick,
-}: EditorResultCardProps): React.ReactElement => {
+}: IEditorResultCardProps): React.ReactElement => {
   return (
-    <Card thumbnail={image} selected={selected}>
+    <CardWrapper thumbnail={image} selected={selected}>
       <button
         type="button"
         onClick={onClick}
@@ -47,6 +47,6 @@ export const EditorResultCard = ({
 
         <RightArrowIcon className="shrink-0 text-gray-400" />
       </button>
-    </Card>
+    </CardWrapper>
   );
 };

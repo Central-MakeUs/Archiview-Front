@@ -6,6 +6,7 @@ export * from './CheckCircleIcon';
 export * from './RightArrowIcon';
 export * from './FolderIcon';
 export * from './EyeIcon';
+export * from './BackArrow';
 export * from './ArchiviewLogoIcon';
 export * from './NotificationIcon';
 export * from './SettingsIcon';

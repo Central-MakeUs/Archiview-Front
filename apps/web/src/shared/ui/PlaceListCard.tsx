@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { PencilIcon } from '@/shared/components/icon';
-import { Card } from './common/Card';
+import { PencilIcon } from '@/shared/ui/icon';
+import { CardWrapper } from './common/CardWrapper';
 
 interface IPlaceListCardProps {
   image: React.ReactNode;
@@ -20,7 +20,7 @@ export const PlaceListCard = ({
   onEdit,
 }: IPlaceListCardProps): React.ReactElement => {
   return (
-    <Card thumbnail={image} selected={selected}>
+    <CardWrapper thumbnail={image} selected={selected}>
       <div className="flex w-full items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="truncate body-14-bold">{title}</div>
@@ -38,6 +38,6 @@ export const PlaceListCard = ({
           </button>
         )}
       </div>
-    </Card>
+    </CardWrapper>
   );
 };

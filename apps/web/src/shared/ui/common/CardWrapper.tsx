@@ -6,7 +6,7 @@ interface ICardProps {
   selected?: boolean;
 }
 
-export const Card = ({ thumbnail, children, selected }: ICardProps): React.ReactElement => {
+export const CardWrapper = ({ thumbnail, children, selected }: ICardProps): React.ReactElement => {
   return (
     <div
       className={cn(
