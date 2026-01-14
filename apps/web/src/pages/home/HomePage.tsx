@@ -11,6 +11,7 @@ import { BelievedEditorSeciton } from '@/pages/home/components/BelievedEditorSec
 
 export const HomePage = (): React.ReactElement => {
   const [searchedText, setSearchedText] = useState<string>('');
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
