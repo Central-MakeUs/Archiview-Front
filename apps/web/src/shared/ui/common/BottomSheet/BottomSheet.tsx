@@ -9,20 +9,25 @@ interface IBottomSheetProps {
   peekHeight: number;
 
   children: React.ReactNode;
-
-  /**
-   * 드래그로 닫을 수 있는지
-   */
-  draggable?: boolean;
 }
 
+/**
+ * 바텀시트 공통 컴포넌트
+ *
+ * 뷰포트 하단에 고정되어 항상 노출되며, 접힘/펼침 상태만 전환된다.
+ * @props
+ * @property {boolean} isOpen 바텀시트가 펼쳐진 상태인지 여부
+ * @property {(open: boolean) => void} onOpenChange 펼침/접힘 상태 변경 콜백
+ * @property {number} height 바텀시트가 완전히 펼쳐졌을 때의 높이(px)
+ * @property {number} peekHeight 바텀시트가 접힌 상태에서 노출되는 높이(px)
+ * 바텀시트 내부 콘텐츠가 많아 스크롤 필요할 경우 chidren 내에서 overflow-y-auto 등으로 스크롤 구현해야함
+ */
 export const BottomSheet = ({
   isOpen,
   onOpenChange,
   height,
   peekHeight,
   children,
-  draggable = true,
 }: IBottomSheetProps) => {
   const sheetRef = useRef<HTMLDivElement | null>(null);
   const startYRef = useRef<number | null>(null);
@@ -31,7 +36,6 @@ export const BottomSheet = ({
   const closedOffset = height - peekHeight;
 
   const handlePointerDown = (e: React.PointerEvent) => {
-    if (!draggable) return;
     startYRef.current = e.clientY;
 
     sheetRef.current?.setPointerCapture(e.pointerId);
