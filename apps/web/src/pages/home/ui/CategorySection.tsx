@@ -1,4 +1,4 @@
-import { HomeIcon } from '@/shared/components/icon';
+import { HomeIcon } from '@/shared/ui/icon';
 
 const CategoryItem = ({
   icon,

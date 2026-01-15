@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export function RootLayout({ children }: { children: React.ReactNode }): React.ReactNode {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-neutral-20">
         <MSWProvider>{children}</MSWProvider>
       </body>
     </html>

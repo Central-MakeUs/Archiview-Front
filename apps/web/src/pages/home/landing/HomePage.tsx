@@ -1,12 +1,12 @@
 'use client';
-import { Badge } from '@/shared/components/Badge';
-import { Header } from '@/shared/components/common/Header';
-import { NavigationFooter } from '@/shared/components/common/NavigationFooter';
-import { SearchBar } from '@/shared/components/SearchBar';
+import { Badge } from '@/shared/ui/Badge';
+import { Header } from '@/shared/ui/common/Header';
+import { NavigationFooter } from '@/shared/ui/common/NavigationFooter';
+import { SearchBar } from '@/shared/ui/SearchBar';
 import { useState } from 'react';
-import { CategorySection } from '@/pages/home/components/CategorySection';
-import { HotPlaceSection } from '@/pages/home/components/HotPlaceSection';
-import { BelievedEditorSeciton } from '@/pages/home/components/BelievedEditorSeciton';
+import { CategorySection } from '@/pages/home/ui/CategorySection';
+import { HotPlaceSection } from '@/pages/home/ui/HotPlaceSection';
+import { BelievedEditorSeciton } from '@/pages/home/ui/BelievedEditorSeciton';
 import Image from 'next/image';
 export const HomePage = (): React.ReactElement => {
   const [searchedText, setSearchedText] = useState<string>('');

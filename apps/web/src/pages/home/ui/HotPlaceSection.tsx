@@ -1,8 +1,8 @@
-import { Badge } from '@/shared/components/Badge';
-import { CaretRightIcon, FolderIcon } from '@/shared/components/icon';
+import { Badge } from '@/shared/ui/Badge';
+import { CaretRightIcon, FolderIcon } from '@/shared/ui/icon';
 import Image from 'next/image';
 
-const BelievedEditorItem = ({
+const HotPlaceItem = ({
   imageUrl,
   title,
 }: {
@@ -35,18 +35,18 @@ const BelievedEditorItem = ({
   );
 };
 
-export const BelievedEditorSeciton = (): React.ReactElement => {
+export const HotPlaceSection = (): React.ReactElement => {
   return (
     <section className="mb-5">
       <div className="flex justify-between mb-4">
-        <span className="heading-20-bold">믿고 먹는 에디터</span>
+        <span className="heading-20-bold">요즘 HOT한 장소</span>
         <CaretRightIcon />
       </div>
       <div className="flex overflow-x-scroll gap-3 scroll-none">
-        <BelievedEditorItem imageUrl="/images/TestImage.png" title="지도상의 장소 이름" />
-        <BelievedEditorItem imageUrl="/images/TestImage.png" title="지도상의 장소 이름" />
-        <BelievedEditorItem imageUrl="/images/TestImage.png" title="지도상의 장소 이름" />
-        <BelievedEditorItem imageUrl="/images/TestImage.png" title="지도상의 장소 이름" />
+        <HotPlaceItem imageUrl="/images/TestImage.png" title="지도상의 장소 이름" />
+        <HotPlaceItem imageUrl="/images/TestImage.png" title="지도상의 장소 이름" />
+        <HotPlaceItem imageUrl="/images/TestImage.png" title="지도상의 장소 이름" />
+        <HotPlaceItem imageUrl="/images/TestImage.png" title="지도상의 장소 이름" />
       </div>
     </section>
   );
