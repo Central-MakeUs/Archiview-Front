@@ -54,6 +54,9 @@
   /* Line Height */
   --line-height-heading: 132%;
   --line-height-body: 150%;
+
+  /* 20px radius  */
+  --radius-default: 20px
 }
 
 @layer components {
