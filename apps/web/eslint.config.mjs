@@ -47,12 +47,11 @@ export default defineConfig([
           ],
         },
       ],
-    },
 
-    // 리턴 타입 강제 끔
-    rules: {
+      // 리턴 타입/모듈 경계 타입 off
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
+      '@rushstack/typedef-var': 'off',
     },
   },
 

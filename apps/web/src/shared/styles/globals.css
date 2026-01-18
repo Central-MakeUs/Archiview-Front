@@ -13,8 +13,13 @@
 /* Base Mobile Layout */
 @layer base {
   :root {
-    /* --min-width: 375px; */
-    --max-width: 375px;
+    --max-width: 100%;
+  }
+
+  @media (min-width: 500px) {
+    :root {
+      --max-width: 500px;
+    }
   }
 
   #root {
@@ -72,4 +77,25 @@
   .scroll-none {
     scrollbar-width: none;
   }
+}
+
+* {
+  -webkit-user-drag: none; /* 이미지, 링크 드래그 방지 (Chrome, Safari) */
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+
+  -webkit-user-select: none; /* 텍스트 선택 방지 */
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  -webkit-tap-highlight-color: transparent; /* 모바일 탭 하이라이트 제거 */
+}
+
+html,
+body {
+  overscroll-behavior: none; /* 모바일 당겨서 새로고침 방지 */
+  touch-action: none; /* 기본 스크롤/줌 제스처 차단 */
 }

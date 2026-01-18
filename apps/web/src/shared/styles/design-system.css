@@ -250,6 +250,11 @@
     line-height: var(--line-height-body);
     font-weight: 300;
   }
+
+  /* 임시로 default 라고 정의 */
+  .shadow-default {
+    box-shadow: 0px 0px 11px rgba(144, 144, 144, 0.4);
+  }
 }
 
 @layer utilities {

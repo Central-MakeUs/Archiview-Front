@@ -1,18 +1,24 @@
 import type { SVGProps } from 'react';
 
-export const FolderIcon = (props: SVGProps<SVGSVGElement>): React.ReactElement => {
+interface IFolderIconProps extends SVGProps<SVGSVGElement> {
+  active?: boolean;
+}
+
+export const FolderIcon = ({ active = false, ...props }: IFolderIconProps): React.ReactElement => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={16}
-      height={12}
-      viewBox="0 0 16 12"
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
       fill="none"
+      aria-pressed={active}
       {...props}
     >
+      <rect width={24} height={24} rx={7} fill="#E3EFFA" />
       <path
-        d="M13.3526 3.6477H11.1332H10.669C9.56841 3.6477 8.82826 3.46452 8.79831 2.46576V2.30566C8.79831 1.03238 7.69826 0 6.3415 0H2.45681C1.10006 0 0 1.03238 0 2.30616V9.56744C0 10.8407 1.10006 11.8731 2.45681 11.8731H13.3526C14.7093 11.8731 15.8094 10.8407 15.8094 9.56744V5.95387C15.8094 4.68058 14.7093 3.64821 13.3526 3.64821V3.6477Z"
-        fill="currentColor"
+        d="M17.2987 9.58006H15.2545H14.827C13.8132 9.58006 13.1315 9.40027 13.1039 8.42004V8.26291C13.1039 7.01324 12.0907 6 10.841 6H7.26291C6.01323 6 5 7.01323 5 8.2634V15.39C5 16.6397 6.01323 17.6529 7.26291 17.6529H17.2987C18.5484 17.6529 19.5616 16.6397 19.5616 15.39V11.8435C19.5616 10.5938 18.5484 9.58056 17.2987 9.58056V9.58006Z"
+        fill={active ? '#359EFA' : '#989BA2'}
       />
     </svg>
   );

@@ -1,6 +1,8 @@
+import Image from 'next/image';
+import { useState } from 'react';
 import { Badge } from '@/shared/ui/Badge';
 import { CaretRightIcon, FolderIcon } from '@/shared/ui/icon';
-import Image from 'next/image';
+import { Card } from '@/shared/ui/common/Card';
 
 const HotPlaceItem = ({
   imageUrl,
@@ -9,8 +11,18 @@ const HotPlaceItem = ({
   imageUrl: string;
   title: string;
 }): React.ReactElement => {
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const handleFavoriteClick = (e: React.MouseEvent<SVGSVGElement>) => {
+    e.stopPropagation();
+    setIsFavorite((prev) => !prev);
+  };
+
   return (
-    <div className="shrink-0 h-52 w-46 rounded-2xl shadow-[0_0_11px_0_rgba(144,144,144,0.40)]">
+    <Card
+      onClick={() => console.log('click')}
+      className="shrink-0 h-52 w-46 shadow-default overflow-hidden border-none"
+    >
       <div>
         <Image src={imageUrl} alt="" width={182} height={99} />
       </div>
@@ -18,7 +30,7 @@ const HotPlaceItem = ({
         <div className="flex items-center justify-between">
           <span className="body-14-semibold">{title}</span>
           <span>
-            <FolderIcon />
+            <FolderIcon active={isFavorite} onClick={handleFavoriteClick} />
           </span>
         </div>
         <div className="caption-12-regular text-neutral-50 mb-3">주소 ~로 000 까지</div>
@@ -31,7 +43,7 @@ const HotPlaceItem = ({
           </span>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 
