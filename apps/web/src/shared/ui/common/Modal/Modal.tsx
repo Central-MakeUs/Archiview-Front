@@ -1,11 +1,20 @@
+import { cn } from '@/shared/lib/cn';
+
 interface IModalProps {
   isOpen: boolean;
   onClose?: () => void;
   children: React.ReactNode;
   closeOnOverlayClick?: boolean;
+  className?: string;
 }
 
-export const Modal = ({ isOpen, onClose, children, closeOnOverlayClick = true }: IModalProps) => {
+export const Modal = ({
+  isOpen,
+  onClose,
+  children,
+  closeOnOverlayClick = true,
+  className,
+}: IModalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -18,7 +27,7 @@ export const Modal = ({ isOpen, onClose, children, closeOnOverlayClick = true }:
         }}
       />
 
-      <div className="relative z-10 w-full p-5 rounded-default bg-white">{children}</div>
+      <div className={cn('relative z-10 p-5 rounded-default bg-white', className)}>{children}</div>
     </div>
   );
 };
