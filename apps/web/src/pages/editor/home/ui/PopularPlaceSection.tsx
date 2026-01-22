@@ -1,11 +1,11 @@
 import { PlaceOptionTabs } from './PlaceOptionTabs';
-import { PlaceItemList } from './PlaceItemList';
+import { EditorPlaceItemList } from './EditorPlaceItemList';
 
 export const PopularPlaceSection = () => {
   return (
     <>
       <PlaceOptionTabs value="ALL" />
-      <PlaceItemList />
+      <EditorPlaceItemList />
     </>
   );
 };
