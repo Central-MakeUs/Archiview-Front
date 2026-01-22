@@ -14,7 +14,7 @@ interface IEditorPlaceItemProps {
   description: string;
   savedCount: number;
   viewCount: number;
-  directionCount: number;
+  shareCount: number;
   instagramCount: number;
   thumbnail?: React.ReactNode;
 }
@@ -24,7 +24,7 @@ export const EditorPlaceItem = ({
   description,
   savedCount,
   viewCount,
-  directionCount,
+  shareCount,
   instagramCount,
   thumbnail = <div className="h-18 w-18 rounded-2xl bg-neutral-30" />,
 }: IEditorPlaceItemProps): React.ReactElement => {
@@ -49,7 +49,7 @@ export const EditorPlaceItem = ({
           </p>
           <p className="flex flex-row items-center gap-1">
             <PlaneArrowOutlineIcon className="w-4 text-primary-30" />
-            {directionCount}
+            {shareCount}
           </p>
           <p className="flex flex-row items-center gap-1">
             <InstagramOutlineIcon className="w-4 text-primary-30" />
