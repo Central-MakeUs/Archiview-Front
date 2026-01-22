@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Button } from '@/shared/ui/button';
+import { useMemo } from 'react';
+
+import { OptionTabs } from '@/shared/ui/common/Tabs/OptionTabs';
 
 export type PlaceOption =
   | 'ALL'
@@ -41,25 +42,11 @@ export const PlaceOptionTabs = ({ value }: { value: PlaceOption }) => {
   };
 
   return (
-    <div className="flex gap-2 overflow-x-auto whitespace-nowrap scroll-none pl-5">
-      {TABS.map((t) => {
-        const active = current === t.value;
-
-        return (
-          <Button
-            key={t.value}
-            type="button"
-            onClick={() => setMetric(t.value)}
-            className={[
-              'flex-none w-auto whitespace-nowrap',
-              'h-9 px-3 rounded-xl body-14-semibold transition-colors',
-              active ? 'bg-primary-40 text-white' : 'bg-neutral-20 text-neutral-40',
-            ].join(' ')}
-          >
-            {t.label}
-          </Button>
-        );
-      })}
-    </div>
+    <OptionTabs
+      items={TABS}
+      value={current}
+      onChange={setMetric}
+      containerClassName="flex gap-2 overflow-x-auto whitespace-nowrap scroll-none pl-5 pr-5"
+    />
   );
 };

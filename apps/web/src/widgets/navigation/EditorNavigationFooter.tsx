@@ -15,7 +15,7 @@ export const EDITOR_NAVIGATION_FOOTER_ITEMS = [
   {
     key: 'profile',
     label: '프로필',
-    href: '/follow-list',
+    href: 'profile',
     icon: UserCircleIcon,
   },
   {
