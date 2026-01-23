@@ -1,39 +1,6 @@
-import { Badge } from '@/shared/ui/Badge';
-import { CaretRightIcon, FolderIcon } from '@/shared/ui/icon';
-import Image from 'next/image';
+import { CaretRightIcon } from '@/shared/ui/icon';
 
-const BelievedEditorItem = ({
-  imageUrl,
-  title,
-}: {
-  imageUrl: string;
-  title: string;
-}): React.ReactElement => {
-  return (
-    <div className="shrink-0 h-52 w-46 rounded-2xl shadow-[0_0_11px_0_rgba(144,144,144,0.40)]">
-      <div>
-        <Image src={imageUrl} alt="" width={182} height={99} />
-      </div>
-      <div className="p-3">
-        <div className="flex items-center justify-between">
-          <span className="body-14-semibold">{title}</span>
-          <span>
-            <FolderIcon />
-          </span>
-        </div>
-        <div className="caption-12-regular text-neutral-50 mb-3">주소 ~로 000 까지</div>
-        <div className="flex items-center gap-1">
-          <span>
-            <Badge variant="outlined" color="primary-40">카테고리</Badge>
-          </span>
-          <span>
-            <Badge variant="outlined" color="secondary-50">사용자 지정</Badge>
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};
+import { EditorRecommendCard } from './EditorRecommendCard';
 
 export const BelievedEditorSeciton = (): React.ReactElement => {
   return (
@@ -43,10 +10,26 @@ export const BelievedEditorSeciton = (): React.ReactElement => {
         <CaretRightIcon />
       </div>
       <div className="flex overflow-x-scroll gap-3 scroll-none">
-        <BelievedEditorItem imageUrl="/images/TestImage.png" title="지도상의 장소 이름" />
-        <BelievedEditorItem imageUrl="/images/TestImage.png" title="지도상의 장소 이름" />
-        <BelievedEditorItem imageUrl="/images/TestImage.png" title="지도상의 장소 이름" />
-        <BelievedEditorItem imageUrl="/images/TestImage.png" title="지도상의 장소 이름" />
+        <EditorRecommendCard
+          imageUrl="/images/TestImage.png"
+          title="지도상의 장소 이름"
+          address="주소주소"
+        />
+        <EditorRecommendCard
+          imageUrl="/images/TestImage.png"
+          title="지도상의 장소 이름"
+          address="주소주소"
+        />
+        <EditorRecommendCard
+          imageUrl="/images/TestImage.png"
+          title="지도상의 장소 이름"
+          address="주소주소"
+        />
+        <EditorRecommendCard
+          imageUrl="/images/TestImage.png"
+          title="지도상의 장소 이름"
+          address="주소주소"
+        />
       </div>
     </section>
   );
