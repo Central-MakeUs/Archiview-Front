@@ -12,6 +12,7 @@
   "dependencies": {
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
+    "ky": "^1.14.2",
     "next": "16.1.1",
     "react": "19.2.3",
     "react-daum-postcode": "^3.2.0",
