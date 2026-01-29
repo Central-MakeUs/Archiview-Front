@@ -1,29 +1,32 @@
-import 'client-only';
+import 'server-only';
 
 import ky from 'ky';
+import { headers } from 'next/headers';
 
 import type { ApiResponse } from './common';
 import { ApiError } from './error';
 
-export const clientApi = ky.create({
+export const serverApi = ky.create({
   prefixUrl: process.env.NEXT_PUBLIC_API_URL,
   timeout: 10000,
   hooks: {
     beforeRequest: [
-      (request) => {
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-          request.headers.set('Authorization', `Bearer ${token}`);
+      async (request) => {
+        const headerList = await headers();
+        const cookie = headerList.get('cookie');
+        const userAgent = headerList.get('user-agent');
+
+        if (cookie) {
+          request.headers.set('Cookie', cookie);
+        }
+
+        if (userAgent) {
+          request.headers.set('User-Agent', userAgent);
         }
       },
     ],
     afterResponse: [
       async (_request, _options, response) => {
-        if (response.status === 401) {
-          window.location.href = '/login';
-          return;
-        }
-
         if (!response.ok) return;
 
         const contentType = response.headers.get('content-type');
