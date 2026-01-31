@@ -2,8 +2,18 @@ import 'client-only';
 
 import ky from 'ky';
 
-import type { ApiResponse } from './common';
-import { ApiError } from './error';
+import type { KyHttpError, ExtendedKyHttpError, ApiErrorResponse } from './common';
+
+export const errorInterceptor = async (error: KyHttpError) => {
+  const ct = error.response.headers.get('content-type') ?? '';
+
+  if (ct.includes('application/json')) {
+    const data = (await error.response.clone().json()) as ApiErrorResponse;
+    (error as ExtendedKyHttpError).errorData = data;
+  }
+
+  return error;
+};
 
 export const clientApi = ky.create({
   prefixUrl: process.env.NEXT_PUBLIC_API_URL + '/api/v1',
@@ -11,22 +21,15 @@ export const clientApi = ky.create({
   credentials: 'include',
   hooks: {
     afterResponse: [
-      async (_request, _options, response) => {
+      async (_, __, response) => {
+        // JSON이 아닌데 status가 에러면: ky가 HTTPError 던질 거고 beforeError가 fallback로 처리
         if (response.status === 401) {
           window.location.href = '/login';
-          return;
-        }
-
-        if (!response.ok) return;
-
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) return;
-
-        const body = (await response.clone().json()) as ApiResponse<unknown>;
-        if (!body.success) {
-          throw new ApiError(body);
+          // JSON이 아니면 여기서 강제로 끊는 게 낫다 (선택)
+          throw new Error('Unauthorized');
         }
       },
     ],
+    beforeError: [errorInterceptor],
   },
 });

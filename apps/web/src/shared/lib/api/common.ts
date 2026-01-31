@@ -1,7 +1,10 @@
+import { HTTPError } from 'ky';
+
 /* eslint-disable-next-line @typescript-eslint/naming-convention */
 export interface ApiSuccessResponse<T> {
-  success: true;
+  success: boolean;
   data: T;
+  code: string;
   // eslint-disable-next-line  @rushstack/no-new-null
   message: null;
   timestamp: string;
@@ -9,7 +12,7 @@ export interface ApiSuccessResponse<T> {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface ApiErrorResponse {
-  success: false;
+  success: boolean;
   // eslint-disable-next-line  @rushstack/no-new-null
   data: null;
   code: string;
@@ -18,3 +21,5 @@ export interface ApiErrorResponse {
 }
 
 export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
+export type KyHttpError = HTTPError<ApiErrorResponse>;
+export type ExtendedKyHttpError = KyHttpError & { errorData?: ApiErrorResponse };
