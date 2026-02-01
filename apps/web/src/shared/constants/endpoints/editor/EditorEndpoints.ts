@@ -1,16 +1,16 @@
 export const EDITOR_ENDPOINTS = {
-  posts: `posts`,
-  publicProfile: (editorId: number) => `${editorId}/profile`,
+  posts: `editors/posts`,
+  publicProfile: (editorId: number) => `editors/${editorId}/profile`,
   me: {
-    places: `me/places`,
-    profile: `me/profile`,
+    places: `editors/me/places`,
+    profile: `editors/me/profile`,
     insights: {
-      places: `me/insights/places`,
-      placesDetail: (placeId: string | number) => `me/insights/places/${placeId}`,
-      summary: `me/insights/summary`,
+      places: `editors/me/insights/places`,
+      placesDetail: (placeId: string | number) => `editors/me/insights/places/${placeId}`,
+      summary: `editors/me/insights/summary`,
     },
     map: {
-      places: `me/map/places`,
+      places: `editors/me/map/places`,
     },
   },
 } as const;
