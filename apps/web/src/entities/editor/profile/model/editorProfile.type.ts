@@ -24,6 +24,14 @@ export interface IEditorPublicProfileResponse {
   placeInfoResponseList: IPlaceInfo[];
 }
 
+// 에디터용 프로필 업데이트
+export interface IEditorProfileEditRequestDTO {
+  nickname: string;
+  instagramId: string;
+  bio: string;
+  profileImageUrl: string;
+}
+
 // 에디터 자신의 프로필 정보 조회
 export type IEditorMeProfileResponseDTO = ApiResponse<IEditorMeProfileResponse>;
 
