@@ -2,8 +2,7 @@ import 'server-only';
 
 import { headers } from 'next/headers';
 
-import type { ApiResponse, ApiSuccessResponse } from './common';
-import { ApiError } from './error';
+import type { ApiErrorResponse, ApiSuccessResponse } from './common';
 
 export type NextFetchOptions = {
   revalidate?: number | false;
@@ -24,10 +23,17 @@ function getApiBaseUrl(): string {
   return baseUrl;
 }
 
-function isApiResponse(value: unknown): value is ApiResponse<unknown> {
+function isApiErrorResponse(value: unknown): value is ApiErrorResponse {
   if (typeof value !== 'object' || value === null) return false;
   const record = value as Record<string, unknown>;
-  return typeof record.success === 'boolean';
+
+  return (
+    record.success === false &&
+    record.data === null &&
+    typeof record.code === 'string' &&
+    typeof record.message === 'string' &&
+    typeof record.timestamp === 'string'
+  );
 }
 
 async function request<T>(path: string, init: ServerApiRequestInit): Promise<T> {
@@ -74,11 +80,21 @@ async function request<T>(path: string, init: ServerApiRequestInit): Promise<T> 
   }
 
   const parsed = (await response.json()) as unknown;
-  if (isApiResponse(parsed)) {
-    if (!parsed.success) {
-      throw new ApiError(parsed);
-    }
+  if (isApiErrorResponse(parsed)) {
+    throw Object.assign(new Error(parsed.message), {
+      name: 'ApiError',
+      code: parsed.code,
+      timestamp: parsed.timestamp,
+      status: response.status,
+      errorData: parsed,
+    });
+  }
 
+  if (
+    typeof parsed === 'object' &&
+    parsed !== null &&
+    (parsed as { success?: unknown }).success === true
+  ) {
     return (parsed as ApiSuccessResponse<T>).data;
   }
 

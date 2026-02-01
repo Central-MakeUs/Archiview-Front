@@ -2,7 +2,7 @@ import { CaretRightIcon } from '@/shared/ui/icon';
 
 import { EditorRecommendCard } from './EditorRecommendCard';
 
-export const BelievedEditorSeciton = (): React.ReactElement => {
+export const BelievedEditorSection = (): React.ReactElement => {
   return (
     <section className="mb-5">
       <div className="flex justify-between mb-4">
