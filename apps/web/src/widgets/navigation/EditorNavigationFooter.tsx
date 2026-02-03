@@ -21,7 +21,7 @@ export const EDITOR_NAVIGATION_FOOTER_ITEMS = [
   {
     key: 'share-information',
     label: '정보공유',
-    href: '/archive',
+    href: 'register-place',
     icon: ShareInformationIcon,
   },
   {
