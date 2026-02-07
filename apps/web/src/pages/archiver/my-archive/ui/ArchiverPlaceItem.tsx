@@ -8,6 +8,7 @@ interface IArchiverPlaceItemProps {
   description: string;
   savedCount: number;
   viewCount: number;
+  onClick?: () => void;
   thumbnail?: React.ReactNode;
 }
 
@@ -16,10 +17,11 @@ export const ArchiverPlaceItem = ({
   description,
   savedCount,
   viewCount,
+  onClick,
   thumbnail = <div className="h-18 w-18 rounded-2xl bg-neutral-30" />,
 }: IArchiverPlaceItemProps): React.ReactElement => {
   return (
-    <Item thumbnail={thumbnail}>
+    <Item thumbnail={thumbnail} onClick={onClick}>
       <div className="flex flex-col pl-2 min-w-0">
         <p className="body-16-semibold flex flex-row items-center justify-between">
           <span className="truncate">{name}</span>
