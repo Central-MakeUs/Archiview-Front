@@ -22,7 +22,19 @@ export const RoleSelectSection = () => {
 
   const handleNext = () => {
     if (!role) return;
-    router.push(`/register-finish?role=${role}`);
+
+    switch (role) {
+      case 'ARCHIVER':
+        router.push(`/register-finish?role=${role}`);
+        break;
+
+      case 'EDITOR':
+        router.push('/term-agree-editor');
+        break;
+
+      default:
+        break;
+    }
   };
 
   return (

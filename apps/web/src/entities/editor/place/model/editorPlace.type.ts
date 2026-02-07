@@ -86,6 +86,22 @@ export interface IEditorMeUploadedPlaceList {
   places: IEditorInsightPlace[];
 }
 
+export interface ICreateEditorPostRequest {
+  url: string;
+  hashTag: string;
+  placeInfoRequestList: (IPlaceInfo & {
+    categoryIds: number[];
+    description: string;
+  })[];
+}
+
+export interface ICreateEditorPostPlaceInfoResponse {
+  postId: number;
+  url: string;
+  hashTag: string;
+  placeInfoResponseList: IPlaceInfo[];
+}
+
 // 에디터 인사이트 장소 목록 조회
 export type IEditorInsightPlaceListResponseDTO = ApiResponse<IEditorInsightPlaceList>;
 
@@ -100,3 +116,6 @@ export type IEditorMyPlaceMapResponseDTO = ApiResponse<IEditorMyPlaceMapResponse
 
 // 에디터 내가 업로드한 장소 목록 조회
 export type IEditorMeUploadedPlaceListResponseDTO = ApiResponse<IEditorMeUploadedPlaceList>;
+
+// 에디터 게시글 생성
+export type ICreateEditorPostResponseDTO = ApiResponse<ICreateEditorPostPlaceInfoResponse>;
