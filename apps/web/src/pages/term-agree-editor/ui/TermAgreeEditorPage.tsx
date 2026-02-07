@@ -10,7 +10,9 @@ export const TermAgreeEditorPage = () => {
   return (
     <div>
       {' '}
-      <Button onClick={() => router.push('register')}>에디터 추가 약관 동의</Button>
+      <Button onClick={() => router.push(`/register-finish?role=EDITOR`)}>
+        에디터 추가 약관 동의
+      </Button>
     </div>
   );
 };
