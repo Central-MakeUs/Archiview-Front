@@ -1,27 +1,31 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useEditorPlacePost } from '@/entities/editor/place/mutations/useEditorPlacePost';
-import { InstagramUrlInput, HashTagInput } from './ui/RegisterPlaceInput';
+import { useEditorCreatePost } from '@/entities/editor/place/mutations/useEditorCreatePost';
+import { IPlaceInfoRequest } from '@/entities/editor/place/model/editorPlace.type';
+import { HashTagInput } from './ui/HashTagInput';
+import { InstagramUrlInput } from './ui/InstagramUrlInput';
 import { RegisterPlaceCard, IRegisterPlaceCardValue } from './ui/RegisterPlaceCard';
 
 const createDefaultPlace = (): IRegisterPlaceCardValue => ({
-  placeId: 0,
-  name: '',
-  roadAddress: '',
-  detailAddress: '',
-  zipCode: '',
+  placeName: '',
+  description: '',
+  addressName: '',
+  roadAddressName: '',
   latitude: 0,
   longitude: 0,
   categoryIds: [],
-  description: '',
+  nearestStationWalkTime: '',
+  placeUrl: '',
+  phoneNumber: '',
+  imageUrl: '',
 });
 
 export const RegisterPlacePage = () => {
   const [instagramUrl, setInstagramUrl] = useState('');
-  const [hashTag, setHashTag] = useState('');
+  const [hashTag, setHashTag] = useState<string[]>([]);
   const [placeInfos, setPlaceInfos] = useState<IRegisterPlaceCardValue[]>([createDefaultPlace()]);
-  const { createEditorPost } = useEditorPlacePost();
+  const { createEditorPost } = useEditorCreatePost();
 
   const handleAddPlace = () => {
     setPlaceInfos((prev) => [...prev, createDefaultPlace()]);
@@ -36,10 +40,25 @@ export const RegisterPlacePage = () => {
   }, []);
 
   const handleSubmit = () => {
+    const placeInfoRequestList: IPlaceInfoRequest[] = placeInfos.map((place) => ({
+      placeName: place.placeName,
+      name: place.placeName || place.addressName || '장소',
+      description: place.description ?? '',
+      addressName: place.addressName,
+      roadAddressName: place.roadAddressName,
+      latitude: place.latitude,
+      longitude: place.longitude,
+      categoryIds: place.categoryIds,
+      nearestStationWalkTime: place.nearestStationWalkTime,
+      placeUrl: place.placeUrl,
+      phoneNumber: place.phoneNumber,
+      imageUrl: place.imageUrl,
+    }));
+
     createEditorPost({
       url: instagramUrl,
-      hashTag,
-      placeInfoRequestList: placeInfos,
+      hashTags: hashTag,
+      placeInfoRequestList,
     });
   };
 
@@ -69,7 +88,9 @@ export const RegisterPlacePage = () => {
           <button
             type="button"
             onClick={handleSubmit}
-            className="w-full h-12 rounded-xl bg-neutral-30 text-neutral-40 body-16-semibold"
+            className="w-full h-12 rounded-xl bg-primary-40 text-neutral-10 body-16-semibold"
+            // TODO : 등록하기 버튼 스타일 추가
+            // className="w-full h-12 rounded-xl bg-neutral-30 text-neutral-40 body-16-semibold"
           >
             등록하기
           </button>

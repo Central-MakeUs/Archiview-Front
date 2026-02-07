@@ -1,14 +1,15 @@
+import { toast } from 'sonner';
 import { editorPlacePost } from '../api/editorPlace-post';
 import { useMutation } from '@tanstack/react-query';
 
-export const useEditorPlacePost = () => {
+export const useEditorCreatePost = () => {
   const { mutate: createEditorPost } = useMutation({
     mutationFn: editorPlacePost.createEditorPost,
     onSuccess: () => {
-      console.log('게시글 생성 성공');
+      toast.success('게시글 생성 성공');
     },
     onError: () => {
-      console.log('게시글 생성 실패');
+      toast.error('게시글 생성 실패');
     },
   });
   return { createEditorPost };

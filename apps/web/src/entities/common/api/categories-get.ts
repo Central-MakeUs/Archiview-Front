@@ -1,3 +1,4 @@
+'use client';
 import { COMMON_ENDPOINTS } from '@/shared/constants/endpoints/common/CommonEndpoints';
 import { clientApi } from '@/shared/lib/api/client';
 

@@ -4,71 +4,112 @@ import { BoxInput } from '@/shared/ui/common/Input/BoxInput';
 import { usePostCode } from '@/shared/hooks/usePostCode';
 import { SearchPostCodeModal } from '@/shared/ui/common/Modal/SearchPostCodeModal';
 
-import { useState, useCallback } from 'react';
-import { Chip } from '@/shared/ui/Chip';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { CaretUpCircleIcon, PictureIcon } from '@/shared/ui/icon';
+import { useEditorGetPresignedUrl } from '@/entities/editor/place/mutations/useEditorGetPresignedUrl';
+import { usePutImage } from '@/entities/editor/place/mutations/usePutImage';
+import { CategoryChipGroup } from './CategoryChipGroup';
 
-const CATEGORIES = ['한식', '중식', '일식', '양식', '카페', '데이트', '이자카야', '기타'];
 const MAX_CATEGORIES = 2;
-// 카테고리 인덱스 + 1을 id로 사용 (1~8)
-const getCategoryId = (index: number) => index + 1;
 
 export interface IRegisterPlaceCardValue {
-  placeId: number;
-  name: string;
-  roadAddress: string;
-  detailAddress: string;
-  zipCode: string;
+  placeName: string;
+  description: string;
+  addressName: string;
+  roadAddressName: string;
   latitude: number;
   longitude: number;
   categoryIds: number[];
-  description: string;
+  nearestStationWalkTime: string;
+  placeUrl: string;
+  phoneNumber?: string;
+  imageUrl: string;
 }
-
-interface ICategoryChipGroupProps {
-  selectedIds: number[];
-  onToggle: (id: number) => void;
-}
-
-const CategoryChipGroup = ({ selectedIds, onToggle }: ICategoryChipGroupProps) => {
-  return (
-    <div className="flex gap-2 flex-wrap">
-      {CATEGORIES.map((label, index) => (
-        <Chip
-          key={label}
-          label={label}
-          selected={selectedIds.includes(getCategoryId(index))}
-          onClick={() => onToggle(getCategoryId(index))}
-          className="h-9 px-4 rounded-xl"
-        />
-      ))}
-    </div>
-  );
-};
 
 interface IRegisterPlaceCardProps {
   placeIndex?: number;
   value: IRegisterPlaceCardValue;
   onChange: (value: IRegisterPlaceCardValue) => void;
+  error?: string;
 }
 
-export const RegisterPlaceCard = ({ placeIndex = 1, value, onChange }: IRegisterPlaceCardProps) => {
-  const { isOpen, open, close, result, handleComplete } = usePostCode();
+export const RegisterPlaceCard = ({
+  placeIndex = 1,
+  value,
+  onChange,
+  error,
+}: IRegisterPlaceCardProps) => {
+  const { isOpen, open, close } = usePostCode();
   const [isExpanded, setIsExpanded] = useState(true);
+  const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { getPresignedUrl, isPending: isPresignedUrlLoading } = useEditorGetPresignedUrl();
+  const { putImage, isPending: isPutImageLoading } = usePutImage();
 
   const toggleExpanded = () => {
     setIsExpanded((prev) => !prev);
   };
 
   const handleAddressComplete = useCallback(
-    (data: { zonecode: string; roadAddress: string }) => {
+    (data: import('@/shared/ui/common/Modal/SearchPostCodeModal').IAddressCompleteData) => {
       onChange({
         ...value,
-        zipCode: data.zonecode,
-        roadAddress: data.roadAddress,
+        placeName: data.placeName,
+        addressName: data.addressName,
+        roadAddressName: data.roadAddressName,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        placeUrl: data.placeUrl,
+        nearestStationWalkTime: '테스트 10분',
+        phoneNumber: data.phoneNumber,
       });
     },
     [value, onChange],
+  );
+
+  const handleThumbnailClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  useEffect(() => {
+    return () => {
+      if (thumbnailPreviewUrl) URL.revokeObjectURL(thumbnailPreviewUrl);
+    };
+  }, [thumbnailPreviewUrl]);
+
+  const handleThumbnailFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      setThumbnailPreviewUrl((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return URL.createObjectURL(file);
+      });
+      getPresignedUrl(
+        {
+          filename: file.name,
+          contentType: file.type,
+          size: file.size,
+        },
+        {
+          onSuccess: (res) => {
+            if (res.success && res.data?.uploadUrl && res.data?.imageUrl) {
+              const { uploadUrl, imageUrl } = res.data;
+              putImage(
+                { uploadUrl, file },
+                {
+                  onSuccess: () => {
+                    onChange({ ...value, imageUrl: imageUrl });
+                  },
+                },
+              );
+            }
+          },
+        },
+      );
+      e.target.value = '';
+    },
+    [value, onChange, getPresignedUrl, putImage],
   );
 
   return (
@@ -79,7 +120,7 @@ export const RegisterPlaceCard = ({ placeIndex = 1, value, onChange }: IRegister
         className="flex justify-between items-center w-full text-left mb-0 -mb-1"
         aria-expanded={isExpanded}
       >
-        <p className="body-14-semibold">장소 {placeIndex}</p>
+        <p className="body-14-semibold">{value.placeName || `장소 ${placeIndex}`}</p>
         <CaretUpCircleIcon
           className={`w-4 h-4 text-neutral-40 transition-transform duration-300 ease-out ${isExpanded ? '' : 'rotate-180'}`}
           aria-hidden
@@ -92,20 +133,57 @@ export const RegisterPlaceCard = ({ placeIndex = 1, value, onChange }: IRegister
         <div className="min-h-0 overflow-hidden">
           <div className="flex flex-col gap-5 pt-3">
             <div>
-              <div className="h-40 bg-neutral-30 rounded-xl flex items-center justify-center">
-                <div className="flex flex-col items-center justify-center gap-2">
-                  <PictureIcon className="w-8.5 h-8.5 text-neutral-60" />
-                  <div className="caption-12-semibold text-neutral-60">썸네일 등록하기</div>
-                </div>
-              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                aria-hidden
+                onChange={handleThumbnailFileChange}
+              />
+              <button
+                type="button"
+                onClick={handleThumbnailClick}
+                disabled={isPresignedUrlLoading || isPutImageLoading}
+                className="h-40 w-full bg-neutral-30 rounded-xl flex items-center justify-center overflow-hidden hover:bg-neutral-40 transition-colors disabled:opacity-60 disabled:pointer-events-none relative"
+              >
+                {thumbnailPreviewUrl ? (
+                  <>
+                    <img
+                      src={thumbnailPreviewUrl}
+                      alt="썸네일 미리보기"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    {(isPresignedUrlLoading || isPutImageLoading) && (
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                        <span className="caption-12-semibold text-white">업로드 중...</span>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center justify-center gap-2">
+                    <PictureIcon className="w-8.5 h-8.5 text-neutral-60" />
+                    <div className="caption-12-semibold text-neutral-60">
+                      {isPresignedUrlLoading || isPutImageLoading
+                        ? '업로드 중...'
+                        : '썸네일 등록하기'}
+                    </div>
+                  </div>
+                )}
+              </button>
             </div>
             <div>
               <p className="body-14-semibold mb-3">주소</p>
               <div className="flex flex-row gap-3 ">
-                <BoxInput state="default" className="flex-1" onClick={open}>
+                <BoxInput
+                  state={error ? 'error' : 'default'}
+                  message={error ?? '주소검색 버튼을 눌러주세요'}
+                  className="flex-1"
+                  onClick={open}
+                >
                   <input
                     readOnly
-                    value={result?.roadAddress ?? value.roadAddress ?? ''}
+                    value={value.roadAddressName}
                     placeholder="주소검색 버튼을 눌러주세요"
                   />
                 </BoxInput>
@@ -119,9 +197,10 @@ export const RegisterPlaceCard = ({ placeIndex = 1, value, onChange }: IRegister
               <div className="flex flex-row gap-3 ">
                 <BoxInput state="default" className="flex-1">
                   <input
-                    placeholder="장소에 대한 한줄 소개를 입력해주세요"
-                    value={value.description}
+                    placeholder="50자 이내로 장소를 소개해주세요"
+                    value={value.description ?? ''}
                     onChange={(e) => onChange({ ...value, description: e.target.value })}
+                    maxLength={50}
                   />
                 </BoxInput>
               </div>
@@ -147,17 +226,7 @@ export const RegisterPlaceCard = ({ placeIndex = 1, value, onChange }: IRegister
         </div>
       </div>
 
-      <SearchPostCodeModal
-        isOpen={isOpen}
-        onClose={close}
-        onComplete={(data) => {
-          handleComplete(data);
-          handleAddressComplete({
-            zonecode: data.zonecode,
-            roadAddress: data.roadAddress,
-          });
-        }}
-      />
+      <SearchPostCodeModal isOpen={isOpen} onClose={close} onComplete={handleAddressComplete} />
     </div>
   );
 };

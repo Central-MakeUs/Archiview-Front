@@ -57,13 +57,28 @@ export interface IEditorInsightPlaceDetail {
 }
 
 export interface IPlaceInfo {
-  placeId: number;
+  placeId?: number;
   name: string;
   roadAddress: string;
   detailAddress: string;
   zipCode: string;
   latitude: number;
   longitude: number;
+}
+
+export interface IPlaceInfoRequest {
+  placeName: string;
+  name: string;
+  description: string;
+  addressName: string;
+  roadAddressName: string;
+  latitude: number;
+  longitude: number;
+  categoryIds: number[];
+  nearestStationWalkTime: string;
+  placeUrl: string;
+  phoneNumber?: string;
+  imageUrl: string;
 }
 
 export interface IEditorInsight {
@@ -88,11 +103,8 @@ export interface IEditorMeUploadedPlaceList {
 
 export interface ICreateEditorPostRequest {
   url: string;
-  hashTag: string;
-  placeInfoRequestList: (IPlaceInfo & {
-    categoryIds: number[];
-    description: string;
-  })[];
+  hashTags: string[];
+  placeInfoRequestList: IPlaceInfoRequest[];
 }
 
 export interface ICreateEditorPostPlaceInfoResponse {
@@ -100,6 +112,18 @@ export interface ICreateEditorPostPlaceInfoResponse {
   url: string;
   hashTag: string;
   placeInfoResponseList: IPlaceInfo[];
+}
+
+export interface IGetEditorPresignedUrlRequest {
+  filename: string;
+  contentType: string;
+  size: number;
+}
+
+export interface IEditorPresignedUrlResponse {
+  uploadUrl: string;
+  imageUrl: string;
+  imageKey: string;
 }
 
 // 에디터 인사이트 장소 목록 조회
@@ -119,3 +143,6 @@ export type IEditorMeUploadedPlaceListResponseDTO = ApiResponse<IEditorMeUploade
 
 // 에디터 게시글 생성
 export type ICreateEditorPostResponseDTO = ApiResponse<ICreateEditorPostPlaceInfoResponse>;
+
+// 에디터 게시글 생성 전 업로드 URL 조회
+export type IEditorGetPresignedUrlResponseDTO = ApiResponse<IEditorPresignedUrlResponse>;
