@@ -51,9 +51,9 @@ export const LoginPage = () => {
             </Button>
             <p className="text-center caption-12-semibold text-neutral-50 mt-2">
               이미 가입했나요?{' '}
-              <Link href="/login" className="underline underline-offset-2">
+              <button onClick={() => setStep('login')} className="underline underline-offset-2">
                 로그인
-              </Link>
+              </button>
             </p>
           </div>
         </>
@@ -63,6 +63,7 @@ export const LoginPage = () => {
         <>
           <div className="fixed bottom-10 left-5 right-5">
             <KakaoButton />
+            <Button>애플로그인 </Button>
             <Button className="w-full mt-13">회원가입</Button>
           </div>
         </>

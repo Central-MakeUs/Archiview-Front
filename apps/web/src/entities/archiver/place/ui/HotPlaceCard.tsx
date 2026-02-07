@@ -8,12 +8,25 @@ import { Card } from '@/shared/ui/common/Card';
 
 interface IHotPlaceCardProps {
   imageUrl: string;
-  title: string;
-  address: string;
+  name: string;
+  // address: string;
+  categoryNames: string[];
+  hashTags: string[];
+  // viewCount: number;
 }
 
-export const HotPlaceCard = ({ imageUrl, title, address }: IHotPlaceCardProps) => {
+// TODO : 이것을 쓸까요?
+function pickRandom<T>(arr: readonly T[]): T | undefined {
+  if (arr.length === 0) return undefined;
+  const idx = Math.floor(Math.random() * arr.length);
+  return arr[idx];
+}
+
+export const HotPlaceCard = ({ imageUrl, name, categoryNames, hashTags }: IHotPlaceCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
+
+  const categoryName = pickRandom(categoryNames);
+  const hashTag = pickRandom(hashTags);
 
   const handleFavoriteClick = (e: React.MouseEvent<SVGSVGElement>) => {
     e.preventDefault();
@@ -31,21 +44,21 @@ export const HotPlaceCard = ({ imageUrl, title, address }: IHotPlaceCardProps) =
         </div>
         <div className="p-3">
           <div className="flex items-center justify-between">
-            <span className="body-14-semibold">{title}</span>
+            <span className="body-14-semibold">{name}</span>
             <span>
               <FolderIcon active={isFavorite} onClick={handleFavoriteClick} />
             </span>
           </div>
-          <div className="caption-12-regular text-neutral-50 mb-3">{address}</div>
+          {/* <div className="caption-12-regular text-neutral-50 mb-3">{address}</div> */}
           <div className="flex items-center gap-1">
             <span>
               <Badge variant="contained" className="rounded-xl bg-primary-40">
-                카테고리
+                {categoryName}
               </Badge>
             </span>
             <span>
               <Badge variant="contained" className="rounded-xl bg-primary-10 text-primary-40">
-                사용자 지정
+                {hashTag}
               </Badge>
             </span>
           </div>

@@ -6,11 +6,15 @@ import { Card } from '@/shared/ui/common/Card';
 
 interface IEditorRecommendCardProps {
   imageUrl: string;
-  title: string;
-  address: string;
+  placeName: string;
+  editorSummary: string;
 }
 
-export const EditorRecommendCard = ({ imageUrl, title, address }: IEditorRecommendCardProps) => {
+export const EditorRecommendCard = ({
+  imageUrl,
+  placeName,
+  editorSummary,
+}: IEditorRecommendCardProps) => {
   return (
     // TODO : 라우팅 연결하기
     <Link href={`/`} className="block shrink-0">
@@ -20,9 +24,9 @@ export const EditorRecommendCard = ({ imageUrl, title, address }: IEditorRecomme
         </div>
         <div className="p-3">
           <div className="flex items-center justify-between">
-            <span className="body-14-semibold">{title}</span>
+            <span className="body-14-semibold">{placeName}</span>
           </div>
-          <div className="caption-12-regular text-neutral-50 mb-3">{address}</div>
+          <div className="caption-12-regular text-neutral-50 mb-3">{editorSummary}</div>
           <div className="flex items-center gap-1">
             <span>
               <Badge variant="contained" className="rounded-xl bg-primary-40">

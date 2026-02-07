@@ -1,18 +1,18 @@
-'use client';
-
 import { useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+
 import { Button } from '@/shared/ui/button';
 import { UpArrowIcon } from '@/shared/ui/icon';
 
-type Period = 'ALL' | 'LAST_7_DAYS' | 'LAST_30_DAYS';
+import type { InsightPeriod } from '@/entities/editor/place/model/editorPlace.type';
 
-const PERIOD_LABEL: Record<Period, string> = {
+const PERIOD_LABEL: Record<InsightPeriod, string> = {
   ALL: '전체 기간',
-  LAST_7_DAYS: '7일',
-  LAST_30_DAYS: '30일',
+  WEEK: '7일',
+  MONTH: '30일',
 };
-export const PeriodDropdown = ({ value }: { value: Period }) => {
+
+export const PeriodDropdown = ({ value }: { value: InsightPeriod }) => {
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
@@ -21,12 +21,11 @@ export const PeriodDropdown = ({ value }: { value: Period }) => {
 
   const currentLabel = useMemo(() => PERIOD_LABEL[value], [value]);
 
-  const setPeriod = (next: Period) => {
+  const setPeriod = (next: InsightPeriod) => {
     const params = new URLSearchParams(sp?.toString() ?? '');
-
     params.set('period', next);
-    router.push(`${pathname}?${params.toString()}`);
 
+    router.push(`${pathname}?${params.toString()}`);
     setOpen(false);
   };
 
@@ -57,6 +56,7 @@ export const PeriodDropdown = ({ value }: { value: Period }) => {
         ].join(' ')}
       >
         <Button
+          type="button"
           onClick={() => setPeriod('ALL')}
           className="w-full justify-start px-4 py-2 rounded-none active:bg-primary-10 bg-white caption-12-medium text-neutral-50"
         >
@@ -64,14 +64,14 @@ export const PeriodDropdown = ({ value }: { value: Period }) => {
         </Button>
         <Button
           type="button"
-          onClick={() => setPeriod('LAST_7_DAYS')}
+          onClick={() => setPeriod('WEEK')}
           className="w-full justify-start px-4 py-2 rounded-none active:bg-primary-10 bg-white caption-12-medium text-neutral-50"
         >
           7일
         </Button>
         <Button
           type="button"
-          onClick={() => setPeriod('LAST_30_DAYS')}
+          onClick={() => setPeriod('MONTH')}
           className="w-full justify-start px-4 py-2 rounded-none active:bg-primary-10 bg-white caption-12-medium text-neutral-50"
         >
           30일

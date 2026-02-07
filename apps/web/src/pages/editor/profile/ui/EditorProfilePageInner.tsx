@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 
-import { EditorPlaceItem } from '../../home/ui/EditorPlaceItem';
+import { EditorPlaceItem } from '../../../../entities/editor/place/ui/EditorPlaceItem';
 
 import { CategoryOptionTabs } from '../CategoryOptionTabs';
 import { HamburgerIcon } from '@/shared/ui/icon/HamburgerIcon';
