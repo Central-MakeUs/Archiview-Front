@@ -43,7 +43,19 @@ export const UnderLineInput = ({
               underlineByState[visualState],
             )}
           >
-            <div className="flex-1 body-14-medium">{cloneElement(children, bind)}</div>
+            <div className="flex-1 body-14-medium">
+              {cloneElement(children, {
+                ...bind,
+                className: cn(
+                  'w-full border-0 bg-transparent outline-none placeholder:text-neutral-50',
+                  (
+                    children as ReactElement<
+                      InputHTMLAttributes<HTMLInputElement> & { className?: string }
+                    >
+                  ).props.className,
+                ),
+              })}
+            </div>
             {rightSlot}
           </div>
 
