@@ -7,6 +7,8 @@ import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import { CategoryOptionTabs } from '@/pages/editor/profile/CategoryOptionTabs';
 import { HamburgerIcon } from '@/shared/ui/icon/HamburgerIcon';
 
+import { EditorProfileCard } from './EditorProfileCard';
+
 export type CategoryTab =
   | 'ALL'
   | 'NEAR'
@@ -36,9 +38,13 @@ export const EditorProfilePage = () => {
 
   return (
     <div className="flex h-full flex-col min-h-0">
+      <div className="px-5">
+        <EditorProfileCard />
+      </div>
       <CategoryOptionTabs value={category} onChange={setCategory} />
 
       <div className="flex-1 min-h-0 pt-6">
+      {/* <div className="h-100 pt-6"> */}
         <KakaoMap
           lat={37.5665}
           lng={126.978}

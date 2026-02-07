@@ -21,7 +21,7 @@ export const CardSection = () => {
                     className="w-6 h-6"
                   />
                 </button>
-                <button>
+                <button>  
                   <PencilIcon />
                 </button>
               </div>
