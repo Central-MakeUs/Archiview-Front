@@ -16,6 +16,7 @@
     "@webview-bridge/web": "^1.7.8",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
+    "framer-motion": "^12.33.0",
     "ky": "^1.14.2",
     "next": "16.1.1",
     "react": "19.2.3",
