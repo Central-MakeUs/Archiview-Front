@@ -26,3 +26,5 @@ export * from './PictureIcon';
 export * from './PlaneArrowOutlineIcon';
 export * from './ProfileAddIcon';
 export * from './DotThreeIcon';
+export * from './RightArrowIcon';
+export * from './XIcon';
