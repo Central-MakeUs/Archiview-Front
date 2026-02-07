@@ -18,7 +18,7 @@ export const EditorProfileItem = ({
   introduction,
   profileImageUrl,
 }: IEditorProfileItemProps): React.ReactElement => {
-  const [modalOpen, setModalOpen] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
   return (
     <div>
       <Item
@@ -59,6 +59,7 @@ export const EditorProfileItem = ({
           </div>
         </div>
       </Item>
+      {/* TODO : 팔로우 해제 연동하기 */}
       <FollowDeleteModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}

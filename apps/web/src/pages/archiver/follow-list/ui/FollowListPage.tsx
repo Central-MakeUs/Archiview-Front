@@ -1,11 +1,8 @@
 'use client';
 
-import { HamburgerIcon } from '@/shared/ui/icon/HamburgerIcon';
 import { useGetMyFollows } from '@/entities/archiver/profile/queries/useGetMyFollows';
 // import { IEditor } from '@/entities/archiver/profile/model/archiverProfile.type';
-
-import { EditorProfileItem } from '../../../../features/archiver/profile/ui/EditorProfileItem';
-
+import { EditorProfileItem } from '@/features/archiver/profile/ui/EditorProfileItem';
 export interface IEditor {
   editorId: string;
   nickname: string;
@@ -23,14 +20,13 @@ export const FollowListPage = () => {
   if (!data || isLoading) return <div className="mb-5">로딩중...</div>;
 
   if (isError) return <div className="mb-5">에러</div>;
-  console.log(followData);
+
   return (
     <div>
       <div className="flex flex-row justify-between p-5">
         <span className="heading-20-bold">
-          에디터 <span className="text-primary-40">editorNumber</span>
+          에디터 <span className="text-primary-40">{data.data?.editors.length}</span>
         </span>
-        <HamburgerIcon />
       </div>
       {followData?.map((editor: IEditor) => (
         <EditorProfileItem
