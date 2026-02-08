@@ -1,9 +1,13 @@
+'use client';
+
 import { PopularPlaceSection } from '@/widgets/editor/PopularPlaceSection';
 
-import { EditorTopBanner } from '../../../../widgets/editor/EditorTopBanner';
-import { EditorInsight } from '../../../../features/editor/ui/EditorInsight';
+import { EditorTopBanner } from '@/widgets/editor/EditorTopBanner';
+import { EditorInsight } from '@/features/editor/ui/EditorInsight';
+import { useAuth } from '@/entities/auth/hooks/useAuth';
 
 export const EditorHomePage = () => {
+  useAuth();
   return (
     <div className="w-full">
       <EditorTopBanner />

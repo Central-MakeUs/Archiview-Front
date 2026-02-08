@@ -7,7 +7,7 @@ export const authPost = {
   // 회원가입 (온보딩 완료)
   register: async ({ role }: IRegisterRequestDTO): Promise<IRegisterResponeDTO> => {
     const response = await clientApi
-      .put(`${AUTH_ENDPOINTS.users.onboarding}`, { json: { role } })
+      .post(`${AUTH_ENDPOINTS.users.onboarding}`, { json: { role } })
       .json<IRegisterResponeDTO>();
 
     return response;
