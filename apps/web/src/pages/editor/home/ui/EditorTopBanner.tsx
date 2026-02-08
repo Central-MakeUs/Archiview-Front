@@ -25,7 +25,10 @@ export const EditorTopBanner = () => {
         <p className="pt-3 body-14-regular text-primary-50">소중한 정보를 공유해주세요</p>
       </div>
 
-      <Link href="/editor/home" className="flex flex-row pt-4 justify-end items-center gap-1">
+      <Link
+        href="/editor/register-place"
+        className="flex flex-row pt-4 justify-end items-center gap-1"
+      >
         <p className="underline caption-12-regular text-white">지금 공유하러 가기</p>
         <RightArrowIcon className="h-2.5 text-white" />
       </Link>

@@ -1,64 +1,3 @@
-@theme {
-  /* Cool Neutral */
-  --color-neutral-10: #ffffff;
-  --color-neutral-20: #f7f7f8;
-  --color-neutral-30: #dbdcdf;
-  --color-neutral-40: #989ba2;
-  --color-neutral-50: #70737c;
-  --color-neutral-60: #5a5c63;
-  --color-neutral-70: #292a2d;
-  --color-neutral-80: #171719;
-  --color-neutral-90: #0f0f10;
-  --color-neutral-100: #000000;
-
-  /* Primary Blue */
-  --color-primary-10: #e3effa;
-  --color-primary-20: #cae4fa;
-  --color-primary-30: #98ccfa;
-  --color-primary-40: #359efa;
-  --color-primary-50: #1a4e7c;
-  --color-primary-60: #0f2c45;
-
-  /* Secondary Green */
-  --color-secondary-10: #c9e1b6;
-  --color-secondary-20: #b0e189;
-  --color-secondary-30: #96e15c;
-  --color-secondary-40: #7de12f;
-  --color-secondary-50: #62ad24;
-  --color-secondary-60: #457a19;
-
-  /* Error Red */
-  --color-error-10: #ffebeb;
-  --color-error-20: #ffd1d1;
-  --color-error-30: #ffb8b8;
-  --color-error-40: #ff8585;
-  --color-error-50: #ff5252;
-  --color-error-60: #993131;
-
-  /* Font Weights */
-  --font-weight-bold: 700;
-  --font-weight-semibold: 600;
-  --font-weight-medium: 500;
-  --font-weight-regular: 400;
-
-  /* Font Size */
-  --font-size-heading1: 28px;
-  --font-size-heading2: 24px;
-  --font-size-heading3: 20px;
-  --font-size-body1: 18px;
-  --font-size-body2: 16px;
-  --font-size-body3: 14px;
-  --font-size-caption: 12px;
-  --font-size-action: 12px;
-
-  /* Line Height */
-  --line-height-heading: 132%;
-  --line-height-body: 150%;
-
-  /* 20px radius  */
-  --radius-default: 20px
-}
-
 @layer components {
   /* Typography */
   /* Heading 28 */
@@ -267,5 +206,19 @@
 
   .scrollbar-hide {
     scrollbar-width: none;
+  }
+
+  .scrollbar-primary-40::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .scrollbar-primary-40::-webkit-scrollbar-track {
+    background-color: var(--color-neutral-20);
+    border-radius: 10px;
+  }
+
+  .scrollbar-primary-40::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary-30);
+    border-radius: 10px;
   }
 }

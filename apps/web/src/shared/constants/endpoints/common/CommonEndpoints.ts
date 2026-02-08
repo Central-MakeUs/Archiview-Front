@@ -1,3 +1,3 @@
 export const COMMON_ENDPOINTS = {
-  categories: '/categories',
+  categories: 'categories',
 } as const;

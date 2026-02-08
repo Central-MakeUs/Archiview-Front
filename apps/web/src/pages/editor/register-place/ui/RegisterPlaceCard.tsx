@@ -1,86 +1,183 @@
 'use client';
 
+import { useFormContext, Controller, FieldPath, FieldPathValue } from 'react-hook-form';
+import { useState, useCallback, useRef, useEffect } from 'react';
+
 import { BoxInput } from '@/shared/ui/common/Input/BoxInput';
 import { usePostCode } from '@/shared/hooks/usePostCode';
 import { SearchPostCodeModal } from '@/shared/ui/common/Modal/SearchPostCodeModal';
+import { CaretUpCircleIcon, PictureIcon } from '@/shared/ui/icon';
+import { useEditorGetPresignedUrl } from '@/entities/editor/place/mutations/useEditorGetPresignedUrl';
+import { usePutImage } from '@/entities/editor/place/mutations/usePutImage';
+import { CategoryChipGroup } from './CategoryChipGroup';
+import { registerPlaceSchema } from '../model/place.schema';
+import z from 'zod';
+import { IAddressValues } from '../model/place.types';
 
-import { useState } from 'react';
-import { Chip } from '@/shared/ui/Chip';
+const MAX_CATEGORIES = 2;
 
-const CATEGORIES = ['한식', '중식', '일식', '양식', '카페', '데이트', '이자카야', '기타'];
+interface IRegisterPlaceCardProps {
+  placeIndex: number;
+}
 
-// TODO : 카테고리 칩 수정
-export const CategoryChipGroup = () => {
-  const [selectedList, setSelectedList] = useState<string[]>([]);
+export const RegisterPlaceCard = ({ placeIndex }: IRegisterPlaceCardProps) => {
+  const index = placeIndex - 1;
+  const base = `placeInfoRequestList.${index}` as const;
 
-  const toggleCategory = (label: string) => {
-    setSelectedList((prev) =>
-      prev.includes(label) ? prev.filter((v) => v !== label) : [...prev, label],
+  const { control, setValue, watch, formState } =
+    useFormContext<z.infer<typeof registerPlaceSchema>>();
+  const value = watch(base);
+  const error = formState.errors?.placeInfoRequestList?.[index];
+
+  const { isOpen, open, close } = usePostCode();
+  const [isExpanded, setIsExpanded] = useState(true);
+  const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { getPresignedUrl } = useEditorGetPresignedUrl();
+  const { putImage } = usePutImage();
+
+  const setFormValue = useCallback(
+    <TName extends FieldPath<z.infer<typeof registerPlaceSchema>>>(
+      name: TName,
+      value: FieldPathValue<z.infer<typeof registerPlaceSchema>, TName>,
+    ) => {
+      setValue(name, value, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+    },
+    [setValue],
+  );
+
+  const handleAddressComplete = useCallback(
+    (data: IAddressValues) => {
+      setFormValue(`${base}.placeName`, data.placeName);
+      setFormValue(`${base}.addressName`, data.addressName);
+      setFormValue(`${base}.roadAddressName`, data.roadAddressName);
+      setFormValue(`${base}.latitude`, data.latitude);
+      setFormValue(`${base}.longitude`, data.longitude);
+      setFormValue(`${base}.placeUrl`, data.placeUrl);
+      setFormValue(`${base}.phoneNumber`, data.phoneNumber);
+      setFormValue(`${base}.nearestStationWalkTime`, '도보 10분');
+    },
+    [base, setFormValue],
+  );
+
+  const handleThumbnailFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const preview = URL.createObjectURL(file);
+    setThumbnailPreviewUrl(preview);
+
+    getPresignedUrl(
+      { filename: file.name, contentType: file.type, size: file.size },
+      {
+        onSuccess: (res) => {
+          if (!res.success) return;
+
+          putImage(
+            { uploadUrl: res.data?.uploadUrl ?? '', file },
+            {
+              onSuccess: () => {
+                setFormValue(`${base}.imageUrl`, res.data?.imageUrl ?? '');
+              },
+            },
+          );
+        },
+      },
     );
+
+    e.target.value = '';
   };
 
-  return (
-    <div className="flex gap-2 flex-wrap">
-      {CATEGORIES.map((label) => (
-        <Chip
-          key={label}
-          label={label}
-          selected={selectedList.includes(label)}
-          onClick={() => toggleCategory(label)}
-          className="h-9 px-4 rounded-xl"
-        />
-      ))}
-    </div>
-  );
-};
-
-export const RegisterPlaceCard = () => {
-  const { isOpen, open, close, result, handleComplete } = usePostCode();
+  useEffect(() => {
+    return () => {
+      if (thumbnailPreviewUrl) URL.revokeObjectURL(thumbnailPreviewUrl);
+    };
+  }, [thumbnailPreviewUrl]);
 
   return (
     <div className="flex flex-col bg-neutral-10 px-5 py-6 rounded-default">
-      <div className="flex flex-col gap-5">
-        <div>
-          <p className="body-14-semibold mb-3">장소 1</p>
-          <div className="h-40 bg-neutral-50 rounded-xl"></div>
-        </div>
-        {/* 주소 입력 */}
-        <div>
-          <p className="body-14-semibold mb-3">주소</p>
-          <div className="flex flex-row gap-3 ">
-            <BoxInput state="default" className="flex-1" onClick={open}>
-              <input
-                readOnly
-                value={result?.roadAddress ?? ''}
-                placeholder="주소검색 버튼을 눌러주세요"
+      <button
+        type="button"
+        onClick={() => setIsExpanded((v) => !v)}
+        className="flex justify-between items-center w-full text-left"
+      >
+        <p className="body-14-semibold">{value?.placeName || `장소 ${placeIndex}`}</p>
+        <CaretUpCircleIcon
+          className={`w-4 h-4 transition-transform ${isExpanded ? '' : 'rotate-180'}`}
+        />
+      </button>
+
+      {isExpanded && (
+        <div className="flex flex-col gap-5 pt-4">
+          <input
+            ref={fileInputRef}
+            type="file"
+            hidden
+            accept="image/*"
+            onChange={handleThumbnailFileChange}
+          />
+
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="h-40 w-full bg-neutral-30 rounded-xl flex items-center justify-center overflow-hidden"
+          >
+            {thumbnailPreviewUrl ? (
+              <img
+                src={thumbnailPreviewUrl}
+                alt="thumbnail"
+                className="w-full h-full object-cover"
               />
-            </BoxInput>
-            <button className="w-16 h-12 text-center body-14-semibold bg-primary-40 rounded-xl text-neutral-10">
-              입력
-            </button>
-          </div>
-        </div>
-        {/* 장소 소개 */}
-        <div>
-          <p className="body-14-semibold mb-3">장소 소개</p>
-          <div className="flex flex-row gap-3 ">
-            <BoxInput state="default" className="flex-1">
-              <input placeholder="장소에 대한 한줄 소개를 입력해주세요" />
-            </BoxInput>
-          </div>
-        </div>
+            ) : (
+              <PictureIcon className="w-8 h-8 text-neutral-60" />
+            )}
+          </button>
 
-        {/* 카테고리 설정 */}
-        <div>
-          <div className="flex flex-row justify-between">
-            <p className="body-14-semibold mb-3">카테고리를 설정해주세요</p>
-            <p className="caption-12-medium text-primary-40">*최대 2개</p>
-          </div>
-          <CategoryChipGroup />
-        </div>
-      </div>
+          <Controller
+            name={`${base}.roadAddressName`}
+            control={control}
+            render={({ field }) => (
+              <BoxInput
+                state={error?.roadAddressName ? 'error' : 'default'}
+                message={error?.roadAddressName?.message}
+                onClick={open}
+              >
+                <input {...field} readOnly placeholder="주소 검색" />
+              </BoxInput>
+            )}
+          />
 
-      <SearchPostCodeModal isOpen={isOpen} onClose={close} onComplete={handleComplete} />
+          <Controller
+            name={`${base}.description`}
+            control={control}
+            render={({ field }) => (
+              <BoxInput>
+                <input {...field} maxLength={50} placeholder="50자 이내로 장소를 소개해주세요" />
+              </BoxInput>
+            )}
+          />
+
+          <CategoryChipGroup
+            selectedIds={value?.categoryIds ?? []}
+            onToggle={(id) => {
+              const next = value.categoryIds.includes(id)
+                ? value.categoryIds.filter((v: number) => v !== id)
+                : value.categoryIds.length >= MAX_CATEGORIES
+                  ? value.categoryIds
+                  : [...value.categoryIds, id];
+
+              setFormValue(`${base}.categoryIds`, next);
+            }}
+          />
+        </div>
+      )}
+
+      <SearchPostCodeModal isOpen={isOpen} onClose={close} onComplete={handleAddressComplete} />
     </div>
   );
 };

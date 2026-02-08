@@ -10,9 +10,11 @@
     "storybook": "storybook dev -p 6006"
   },
   "dependencies": {
-    "@webview-bridge/web": "^1.7.8",
+    "@hookform/resolvers": "^5.2.2",
+    "@lukemorales/query-key-factory": "^1.3.4",
     "@tanstack/react-query": "^5.90.20",
     "@tanstack/react-query-devtools": "^5.91.2",
+    "@webview-bridge/web": "^1.7.8",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
     "ky": "^1.14.2",
@@ -20,7 +22,10 @@
     "react": "19.2.3",
     "react-daum-postcode": "^3.2.0",
     "react-dom": "19.2.3",
-    "tailwind-merge": "^3.4.0"
+    "react-hook-form": "^7.71.1",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@archiview/eslint": "workspace:*",

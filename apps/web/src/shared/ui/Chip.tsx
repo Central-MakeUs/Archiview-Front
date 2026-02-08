@@ -62,7 +62,7 @@ export const Chip = ({
     <button
       type="button"
       disabled={disabled}
-      className={twMerge(clsx(baseStyles, chipTypeStyle, variantStyle, selectedStyle, className))}
+      className={twMerge(clsx(baseStyles, chipTypeStyle, variantStyle, selectedStyle), className)}
       {...props}
     >
       {label}

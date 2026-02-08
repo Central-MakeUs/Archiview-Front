@@ -11,6 +11,8 @@ interface IBoxInputProps {
   children: FocusableInputElement;
   className?: string;
   onClick?: () => void;
+  /** disabled 시 bg-neutral-20, border-neutral-30 적용 */
+  disabledStyle?: boolean;
 }
 
 const boxBorderByState: Record<VisualState, string> = {
@@ -34,6 +36,7 @@ export const BoxInput = ({
   children,
   className,
   onClick,
+  disabledStyle,
 }: IBoxInputProps) => {
   return (
     <Input state={state} message={message}>
@@ -43,7 +46,7 @@ export const BoxInput = ({
             onClick={onClick}
             className={cn(
               'flex items-center h-12 gap-3 rounded-xl border px-4 caret-primary-40',
-              boxBorderByState[visualState],
+              disabledStyle ? 'bg-neutral-20 border-neutral-30' : boxBorderByState[visualState],
             )}
           >
             <div className="flex-1">
