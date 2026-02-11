@@ -11,7 +11,7 @@ import { CheckBoxIcon } from '@/shared/ui/icon';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/lib/cn';
 
-import { RegisterFinishModal } from './RegisterFinishModal';
+import { RegisterFinishModal } from '../../../../pages/register-editor/ui/RegisterFinishModal';
 import { IntroductionInput } from './IntroductionInput';
 import { NickNameInput } from './NickNameInput';
 import { InstagramUrlInput } from './InstagramUrlInput';
