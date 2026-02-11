@@ -6,8 +6,8 @@ import { useState } from 'react';
 
 import { Button } from '@/shared/ui/button';
 
-import { OnboardingCarousel } from './ui/OnboardingCarousel';
-import { KakaoButton } from './ui/SocialLoginButton';
+import { OnboardingCarousel } from './OnboardingCarousel';
+import { KakaoButton } from './SocialLoginButton';
 
 const ONBOARDING_TEXT: Array<{ title: string; description: string }> = [
   {

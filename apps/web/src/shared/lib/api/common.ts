@@ -5,8 +5,7 @@ export interface ApiSuccessResponse<T> {
   success: boolean;
   data: T;
   code: string;
-  // eslint-disable-next-line  @rushstack/no-new-null
-  message: null;
+  message: string;
   timestamp: string;
 }
 

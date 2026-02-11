@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 
 import '@/shared/styles/globals.css';
 
-import { MSWProvider } from '../providers/MSWProvider';
 import { QueryProvider } from '../providers/QueryProvider';
 import { KakaoMapScript } from '@/shared/lib/map/KakaoMapScript';
 import { Toaster } from 'sonner';
@@ -22,9 +21,7 @@ export function RootLayout({ children }: { children: React.ReactNode }): React.R
     <html lang="en">
       <body>
         <KakaoMapScript />
-        <MSWProvider>
           <QueryProvider>{children}</QueryProvider>
-        </MSWProvider>
         <Toaster position="top-left" richColors className="toaster-within-content" />
       </body>
     </html>

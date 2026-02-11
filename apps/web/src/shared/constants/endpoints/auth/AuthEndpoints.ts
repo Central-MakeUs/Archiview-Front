@@ -1,15 +1,17 @@
-const BASE = '/api/auth';
-
 export const AUTH_ENDPOINTS = {
-  logout: `${BASE}/logout`,
-  me: `${BASE}/me`,
+  logout: `auth/logout`,
+  me: `auth/me`,
   mobile: {
-    apple: `${BASE}/mobile/apple`,
-    kakao: `${BASE}/mobile/kakao`,
+    apple: `auth/mobile/apple`,
+    kakao: `auth/mobile/kakao`,
   },
-  refresh: `${BASE}/refresh`,
+  refresh: `auth/refresh`,
   test: {
-    archiver: `${BASE}/test/archiver`,
-    editor: `${BASE}/test/editor`,
+    archiver: `auth/test/archiver`,
+    editor: `auth/test/editor`,
+  },
+  users: {
+    onboarding: `users/onboarding`,
+    switchRole: `users/switch-role`,
   },
 } as const;

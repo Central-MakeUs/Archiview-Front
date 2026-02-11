@@ -10,6 +10,7 @@ interface IBoxInputProps {
   rightSlot?: React.ReactNode;
   children: FocusableInputElement;
   className?: string;
+  boxClassName?: string;
   onClick?: () => void;
   /** disabled 시 bg-neutral-20, border-neutral-30 적용 */
   disabledStyle?: boolean;
@@ -35,18 +36,20 @@ export const BoxInput = ({
   rightSlot,
   children,
   className,
+  boxClassName,
   onClick,
   disabledStyle,
 }: IBoxInputProps) => {
   return (
     <Input state={state} message={message}>
       {({ visualState, shouldShowMessage, bind }) => (
-        <div className={cn('flex flex-col gap-1 w-full', className)}>
+        <div className={cn('relative flex flex-col gap-1 w-full', className)}>
           <div
             onClick={onClick}
             className={cn(
               'flex items-center h-12 gap-3 rounded-xl border px-4 caret-primary-40',
               disabledStyle ? 'bg-neutral-20 border-neutral-30' : boxBorderByState[visualState],
+              boxClassName,
             )}
           >
             <div className="flex-1">
@@ -62,7 +65,14 @@ export const BoxInput = ({
           </div>
 
           {shouldShowMessage && (
-            <p className={cn('caption-12-regular', messageByState[visualState])}>{message}</p>
+            <p
+              className={cn(
+                'absolute left-0 -bottom-5 caption-12-regular',
+                messageByState[visualState],
+              )}
+            >
+              {message}
+            </p>
           )}
         </div>
       )}

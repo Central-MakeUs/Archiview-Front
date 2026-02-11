@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { Card } from '@/shared/ui/common/Card/Card';
 import { Button } from '@/shared/ui/button';
+import { authPost } from '@/entities/auth/api/auth-post';
 
 type Role = 'EDITOR' | 'ARCHIVER';
 
@@ -20,13 +21,29 @@ export const RoleSelectSection = () => {
       : '아카이버로 가입하기'
     : '가입하기';
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!role) return;
-    router.push(`/register-finish?role=${role}`);
+
+    switch (role) {
+      case 'ARCHIVER': {
+        try {
+          await authPost.register({ role });
+          router.push(`/register-finish?role=${role}`);
+        } catch (e) {
+          // TODO: 토스트/에러 처리
+          console.error(e);
+        }
+        break;
+      }
+
+      case 'EDITOR':
+        router.push('/term-agree-editor');
+        break;
+    }
   };
 
   return (
-    <div className="pt-11.5 flex h-full flex-col">
+    <div className="pt-11.5 flex justify-between h-full flex-col">
       <div className="flex flex-col h-full gap-4">
         {/* 에디터 */}
         <Card selected={role === 'EDITOR'} onClick={() => setRole('EDITOR')} className="p-5">
@@ -70,13 +87,13 @@ export const RoleSelectSection = () => {
         </Card>
       </div>
 
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center mb-4">
         <Button
           variant={buttonVariant}
           onClick={handleNext}
           className={[
             'w-full body-16-semibold',
-            role ? 'bg-neutral-90 text-white' : 'bg-neutral-10 text-neutral-40',
+            role ? '' : 'bg-neutral-20 text-neutral-40 border-none',
           ].join(' ')}
         >
           {buttonLabel}

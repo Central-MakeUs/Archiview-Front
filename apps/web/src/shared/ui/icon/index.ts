@@ -28,3 +28,4 @@ export * from './ProfileAddIcon';
 export * from './DotThreeIcon';
 export * from './RightArrowIcon';
 export * from './XIcon';
+export * from './CheckBoxIcon';
