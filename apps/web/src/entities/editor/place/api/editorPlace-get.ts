@@ -84,7 +84,7 @@ export const editorPlaceGet = {
       .json<IEditorInsightPlaceDetailResponseDTO>();
     return response;
   },
-  
+
   // 내가 업로드한 장소 목록 조회
   getMyPlaceList: async (params?: {
     useMock?: boolean;
