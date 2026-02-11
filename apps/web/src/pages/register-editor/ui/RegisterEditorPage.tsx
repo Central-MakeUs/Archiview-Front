@@ -10,13 +10,13 @@ import { usePutImage } from '@/entities/editor/place/mutations/usePutImage';
 import { CheckBoxIcon } from '@/shared/ui/icon';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/lib/cn';
+import { IntroductionInput } from '@/entities/editor/profile/ui/IntroductionInput';
+import { NickNameInput } from '@/entities/editor/profile/ui/NickNameInput';
+import { InstagramUrlInput } from '@/entities/editor/profile/ui/InstagramUrlInput';
+import { InstagramIdInput } from '@/entities/editor/profile/ui/InstagramIdInput';
+import { HashTagInput } from '@/entities/editor/profile/ui/HashTagInput';
 
-import { RegisterFinishModal } from '../../../../pages/register-editor/ui/RegisterFinishModal';
-import { IntroductionInput } from './IntroductionInput';
-import { NickNameInput } from './NickNameInput';
-import { InstagramUrlInput } from './InstagramUrlInput';
-import { InstagramIdInput } from './InstagramIdInput';
-import { HashTagInput } from './HashTagInput';
+import { RegisterFinishModal } from './RegisterFinishModal';
 
 export const RegisterEditorPage = () => {
   const router = useRouter();
@@ -83,10 +83,18 @@ export const RegisterEditorPage = () => {
   const isSubmitEnabled = useMemo(() => {
     const hasProfileImage = !!profileImageUrl; // 이미지 필수로 볼 거면 이렇게
     const hasNickname = nickname.trim().length > 0;
+    const hasIntroduction = introduction.trim().length <= 50;
     const hasInstagramId = instagramId.trim().length > 0;
     const hasInstagramUrl = instagramUrl.trim().length > 0;
     const hasHashtags = hashtags.length === 2;
-    return hasProfileImage && hasNickname && hasInstagramId && hasInstagramUrl && hasHashtags;
+    return (
+      hasProfileImage &&
+      hasNickname &&
+      hasInstagramId &&
+      hasInstagramUrl &&
+      hasHashtags &&
+      hasIntroduction
+    );
   }, [profileImageUrl, nickname, instagramId, instagramUrl]);
 
   const handleSubmit = () => {
@@ -151,6 +159,7 @@ export const RegisterEditorPage = () => {
         <div>
           <div className="flex flex-row justify-between mb-3">
             <p className="body-14-semibold">한줄소개</p>
+            <p className="caption-12-medium text-primary-40">*필수</p>
           </div>
           <IntroductionInput value={introduction} onChange={setIntroduction} />
         </div>
