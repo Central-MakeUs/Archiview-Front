@@ -42,6 +42,10 @@ export interface IHotPlace {
   viewCount: number;
 }
 
+export interface IPostPlaceRequest {
+  postPlaceId: number;
+}
+
 export interface IHotPlaceResponse {
   places: IHotPlace[];
 }
@@ -51,3 +55,6 @@ export type IPlaceDetailResponseDTO = ApiResponse<IPlaceDetailResponse>;
 
 // 요즘 핫한 장소 조회
 export type IHotPlaceResponseDTO = ApiResponse<IHotPlaceResponse>;
+
+// 장소카드 아카이브
+export type IIPostPlaceResponseDTO = ApiResponse<Record<string, never>>;

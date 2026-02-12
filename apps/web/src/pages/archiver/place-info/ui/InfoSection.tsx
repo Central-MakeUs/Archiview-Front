@@ -26,8 +26,6 @@ export const InfoSection = ({
   place?: IPlaceDetail;
   recordNumber?: number;
 }) => {
-  console.log(place);
-
   return (
     <section className="p-5 gap-3 flex flex-col border-b-[#DBDCDF] border-b">
       <div className="body-16-semibold text-neutral-50">장소 정보</div>

@@ -20,11 +20,17 @@ interface IPlaceDetail {
   directionCount: number;
 }
 
-export const RoundedHeaderSection = ({ place }: { place?: IPlaceDetail }) => {
+export const RoundedHeaderSection = ({
+  place,
+  thumbnail,
+}: {
+  place?: IPlaceDetail;
+  thumbnail?: string;
+}) => {
   return (
     <section className="relative mb-[86px]">
       <div className="h-[196px] overflow-hidden">
-        <Image src="/images/ExampleImage.png" alt="" fill className="object-cover" />
+        <Image src={thumbnail ?? ''} alt="" fill className="object-cover" />
       </div>
       <div
         className="
