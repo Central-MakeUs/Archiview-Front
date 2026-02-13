@@ -30,7 +30,7 @@ export interface IMyFollowsResponse {
 }
 
 export interface IEditorsTrustedResponse {
-  places: IPlace[];
+  editors: IEditor[];
 }
 
 export interface IMyProfileResponse {

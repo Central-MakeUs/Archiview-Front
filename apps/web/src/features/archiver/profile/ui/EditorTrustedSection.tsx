@@ -1,8 +1,7 @@
-import { CaretRightIcon } from '@/shared/ui/icon';
 import { useGetEditorTrusted } from '@/entities/archiver/profile/queries/useGetEditorTrusted';
-import { IPlace } from '@/entities/archiver/profile/model/archiverProfile.type';
+import { IEditor } from '@/entities/archiver/profile/model/archiverProfile.type';
 
-import { EditorRecommendCard } from '../../../../entities/archiver/profile/ui/EditorRecommendCard';
+import { EditorRecommendCard } from '@/entities/archiver/profile/ui/EditorRecommendCard';
 
 // TODO : 믿고먹는 에디터 응답값이 이거맞는지..?
 export const EditorTrustedSection = (): React.ReactElement => {
@@ -11,33 +10,20 @@ export const EditorTrustedSection = (): React.ReactElement => {
   if (isLoading) return <div className="mb-5">로딩중...</div>;
   if (isError) return <div className="mb-5">에러</div>;
 
-  const EditorTrusted = EditorTrustedData?.data?.places ?? [];
-
+  const EditorTrusted = EditorTrustedData?.data?.editors ?? [];
+  console.log(EditorTrustedData);
   if (EditorTrusted.length === 0) {
-    return (
-      <section className="mb-5">
-        <div className="flex justify-between mb-4">
-          <span className="heading-20-bold">요즘 HOT한 장소</span>
-        </div>
-        <div>표시할 장소가 없습니다.</div>
-      </section>
-    );
+    return <div>표시할 장소가 없습니다.</div>;
   }
 
   return (
     <section className="mb-5">
       <div className="flex justify-between mb-4">
         <span className="heading-20-bold">믿고 먹는 에디터</span>
-        <CaretRightIcon />
       </div>
       <div className="flex overflow-x-scroll gap-3 scroll-none">
-        {EditorTrusted.map((editor: IPlace) => (
-          <EditorRecommendCard
-            key={editor.placeId}
-            imageUrl={editor.placeImageUrl}
-            placeName={editor.placeName}
-            editorSummary={editor.editorSummary}
-          />
+        {EditorTrusted.map((editor: IEditor) => (
+          <EditorRecommendCard key={editor.editorId} editor={editor} />
         ))}
       </div>
     </section>

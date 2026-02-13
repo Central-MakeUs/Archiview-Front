@@ -36,6 +36,8 @@ export const HotPlaceCard = ({
   const categoryName = pickRandom(categoryNames);
   const hashTag = pickRandom(hashTags);
 
+  const stripHash = (tag?: string) => (tag ?? '').trim().replace(/^#/, '');
+
   const handleFavoriteClick = (e: React.MouseEvent<SVGSVGElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -74,7 +76,7 @@ export const HotPlaceCard = ({
             </span>
             <span>
               <Badge variant="contained" className="rounded-xl bg-primary-10 text-primary-40">
-                {hashTag}
+                {stripHash(hashTag)}
               </Badge>
             </span>
           </div>

@@ -40,7 +40,7 @@ export const clientApi = ky.create({
       (request) => {
         // const token = localStorage.getItem('accessToken')
         const token =
-          'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NjA4MGVjMS03MDU1LTQzZmMtODI1NS1kMjE5NjkyYTU5OWYiLCJlbWFpbCI6InRlc3QtYXJjaGl2ZXJAYXJjaGl2aWV3LmNvbSIsInJvbGUiOiJBUkNISVZFUiIsImlhdCI6MTc3MDgxMDQ0NiwiZXhwIjoxNzczNDAyNDQ2fQ.gbs11LWJniNY5RlqZDVnhb5Lvxvk2ppLaRV71VJiFv4t1EyHUINbKUABMdwbKnLM0pZV8LQjMfuGsp9m4cnjoA';
+          'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NjA4MGVjMS03MDU1LTQzZmMtODI1NS1kMjE5NjkyYTU5OWYiLCJlbWFpbCI6InRlc3QtYXJjaGl2ZXJAYXJjaGl2aWV3LmNvbSIsInJvbGUiOiJBUkNISVZFUiIsImlhdCI6MTc3MDk4NjQ1OSwiZXhwIjoxNzczNTc4NDU5fQ.XXCQpt7TNdI1th3DHvZELoKCfD3eT-vfIIiDWrrKZVZiL8iSWs1URzgTXU-XMbYTd00G8w8GJsVln1VWWJz6dQ';
 
         if (token) {
           request.headers.set('Authorization', `Bearer ${token}`);

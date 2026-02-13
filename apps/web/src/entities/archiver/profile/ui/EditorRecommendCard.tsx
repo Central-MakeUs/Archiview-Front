@@ -3,39 +3,43 @@ import Link from 'next/link';
 
 import { Badge } from '@/shared/ui/Badge';
 import { Card } from '@/shared/ui/common/Card';
+import type { IEditor } from '@/entities/archiver/profile/model/archiverProfile.type';
 
 interface IEditorRecommendCardProps {
-  imageUrl: string;
-  placeName: string;
-  editorSummary: string;
+  editor: IEditor;
 }
 
-export const EditorRecommendCard = ({
-  imageUrl,
-  placeName,
-  editorSummary,
-}: IEditorRecommendCardProps) => {
+export const EditorRecommendCard = ({ editor }: IEditorRecommendCardProps) => {
+  const stripHash = (tag?: string) => (tag ?? '').trim().replace(/^#/, '');
+
   return (
     // TODO : 라우팅 연결하기
     <Link href={`/`} className="block shrink-0">
       <Card className="shrink-0 h-52 w-46 shadow-default overflow-hidden border-none">
-        <div>
-          <Image src={imageUrl} alt="" width={182} height={90} />
+        <div className="relative w-full shrink-0 overflow-hidden" style={{ height: '99px' }}>
+          <Image
+            src={editor.profileImageUrl}
+            alt=""
+            width={200}
+            height={90}
+            className="object-cover"
+            priority={false}
+          />
         </div>
         <div className="p-3">
           <div className="flex items-center justify-between">
-            <span className="body-14-semibold">{placeName}</span>
+            <span className="body-14-semibold">{editor.nickname}</span>
           </div>
-          <div className="caption-12-regular text-neutral-50 mb-3">{editorSummary}</div>
+          <div className="caption-12-regular text-neutral-50 mb-3">{editor.introduction}</div>
           <div className="flex items-center gap-1">
             <span>
               <Badge variant="contained" className="rounded-xl bg-primary-40">
-                카테고리
+                {stripHash(editor.hashtags?.[0])}
               </Badge>
             </span>
             <span>
               <Badge variant="contained" className="rounded-xl bg-primary-10 text-primary-40">
-                사용자 지정
+                {stripHash(editor.hashtags[1] ?? '')}
               </Badge>
             </span>
           </div>
