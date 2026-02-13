@@ -27,7 +27,8 @@ export const ReportModal = ({ isOpen, onCancel, onConfirm, className }: IReportM
         </h2>
 
         <p className="mt-2 whitespace-pre-line text-[13px] leading-5 text-neutral-500">
-          신고하기를 클릭하여\n신고 사유를 작성해주세요.
+          신고하기를 클릭하여 <br />
+          신고 사유를 작성해주세요.
         </p>
 
         <div className="mt-5 grid grid-cols-2 gap-3">
@@ -35,8 +36,8 @@ export const ReportModal = ({ isOpen, onCancel, onConfirm, className }: IReportM
             type="button"
             onClick={onCancel}
             className={cn(
-              'h-10 rounded-xl bg-neutral-100 text-[14px] font-medium text-neutral-500',
-              'hover:bg-neutral-200 active:bg-neutral-200',
+              'h-10 rounded-xl bg-neutral-30 text-[14px] font-medium text-neutral-500',
+              'hover:bg-neutral-30 active:bg-neutral-30',
               'disabled:cursor-not-allowed disabled:opacity-60',
             )}
           >

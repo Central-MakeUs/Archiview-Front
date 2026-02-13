@@ -25,12 +25,12 @@ export const RoundedHeaderSection = ({
   thumbnail,
 }: {
   place?: IPlaceDetail;
-  thumbnail?: string;
+  thumbnail: string;
 }) => {
   return (
     <section className="relative mb-[86px]">
       <div className="h-[196px] overflow-hidden">
-        <Image src={thumbnail ?? ''} alt="" fill className="object-cover" />
+        <Image src={thumbnail} alt="" fill className="object-cover" />
       </div>
       <div
         className="

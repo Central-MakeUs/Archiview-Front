@@ -5,6 +5,8 @@ import { Chip } from '@/shared/ui/Chip';
 import { FolderIcon } from '@/shared/ui/icon';
 import { usePostPlaceCardMutation } from '@/entities/archiver/place/mutation/usePostPlaceCard';
 
+import { ReportModal } from '../../editor-profile/ui/ReportModal';
+
 import { ArchivePlaceFinishModal } from './ArchivePlaceFinishModal';
 
 interface IPostPlace {
@@ -17,6 +19,8 @@ interface IPostPlace {
   categoryNames: string[];
   editorName: string;
   editorInstagramId: string;
+  archived: boolean;
+  isArchived: boolean; // 안씀
 }
 
 export const CardSection = ({
@@ -27,6 +31,7 @@ export const CardSection = ({
   placeName?: string;
 }) => {
   const [openPlaceFinishModal, setOpenPlaceFinishModal] = useState(false);
+  const [openReportModal, setOpenReportModal] = useState(false);
 
   const { postPlaceCard } = usePostPlaceCardMutation({
     onSuccess: () => setOpenPlaceFinishModal(true),
@@ -35,6 +40,7 @@ export const CardSection = ({
   const onFolderClick = (postPlaceId: number) => {
     postPlaceCard({ postPlaceId });
   };
+  console.log(postPlaces);
 
   return (
     <section className="p-5 flex flex-col gap-4">
@@ -47,6 +53,17 @@ export const CardSection = ({
             onClose={() => setOpenPlaceFinishModal(false)}
             onConfirm={() => console.log('확ㄴ인')}
           />
+          <ReportModal
+            isOpen={openReportModal}
+            onCancel={() => {
+              setOpenReportModal(false);
+            }}
+            // TODO : api 연동하기
+            onConfirm={() => {
+              setOpenReportModal(false);
+            }}
+          />
+
           <div key={post.postId} className="flex h-31.75">
             <div className="rounded-l-default bg-neutral-40 w-20 relative overflow-hidden">
               <Image
@@ -66,9 +83,11 @@ export const CardSection = ({
                 </div>
                 <div className="flex gap-1">
                   <button onClick={() => onFolderClick(post.postPlaceId)}>
-                    <FolderIcon />
+                    <FolderIcon className={post.archived ? 'text-primary-40' : ''} />
                   </button>
-                  <button>
+                  <button
+                    onClick={() => window.open(post.instagramUrl, '_blank', 'noopener,noreferrer')}
+                  >
                     <Image
                       src="/images/instagramColoredIcon.svg"
                       alt="인스타 아이콘"
@@ -81,9 +100,21 @@ export const CardSection = ({
               </div>
               <div className="caption-12-regular text-neutral-50">{post.description}</div>
               <div className="flex gap-1">
-                <Chip label="카페" className="bg-primary-40 text-neutral-10 border-none" />
-                <Chip label="커피맛집" className="bg-primary-10 text-primary-40 border-none" />
-                <Chip label="카페맛집" className="bg-primary-10 text-primary-40 border-none" />
+                <Chip
+                  label={Array.isArray(post.hashTags) ? (post.hashTags[0] ?? '') : '#테스트'}
+                  className="bg-primary-40 text-neutral-10 border-none"
+                />
+                <Chip
+                  label={Array.isArray(post.hashTags) ? (post.hashTags[1] ?? '') : '#테스트'}
+                  className="bg-primary-10 text-primary-40 border-none"
+                />
+                <button
+                  type="button"
+                  className="ml-auto caption-12-regular text-neutral-50"
+                  onClick={() => setOpenReportModal(true)}
+                >
+                  신고하기
+                </button>
               </div>
             </div>
           </div>
