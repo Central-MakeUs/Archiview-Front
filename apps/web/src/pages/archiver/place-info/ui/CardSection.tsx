@@ -4,11 +4,10 @@ import { useState } from 'react';
 import { Chip } from '@/shared/ui/Chip';
 import { FolderIcon } from '@/shared/ui/icon';
 import { usePostPlaceCardMutation } from '@/entities/archiver/place/mutation/usePostPlaceCard';
+import { useReportPostPlace } from '@/entities/archiver/report/mutation/useReportPostPlace';
 
-import { ReportModal } from '../../editor-profile/ui/ReportModal';
-
+import { ReportEditorCardModal } from './ReportEditorCardModal';
 import { ArchivePlaceFinishModal } from './ArchivePlaceFinishModal';
-
 interface IPostPlace {
   postPlaceId: number;
   postId: number;
@@ -19,7 +18,6 @@ interface IPostPlace {
   categoryNames: string[];
   editorName: string;
   editorInstagramId: string;
-  archived: boolean;
   isArchived: boolean; // 안씀
 }
 
@@ -32,10 +30,28 @@ export const CardSection = ({
 }) => {
   const [openPlaceFinishModal, setOpenPlaceFinishModal] = useState(false);
   const [openReportModal, setOpenReportModal] = useState(false);
+  const [selectedReportPostPlaceId, setSelectedReportPostPlaceId] = useState<number | null>(null);
 
   const { postPlaceCard } = usePostPlaceCardMutation({
     onSuccess: () => setOpenPlaceFinishModal(true),
   });
+
+  const { reportPostPlace } = useReportPostPlace({
+    onSuccess: () => {
+      setOpenReportModal(false);
+      setSelectedReportPostPlaceId(null);
+    },
+  });
+
+  const onClickReport = (postPlaceId: number) => {
+    setSelectedReportPostPlaceId(postPlaceId);
+    setOpenReportModal(true);
+  };
+
+  const onConfirmReport = () => {
+    if (!selectedReportPostPlaceId) return;
+    reportPostPlace({ postPlaceId: selectedReportPostPlaceId });
+  };
 
   const onFolderClick = (postPlaceId: number) => {
     postPlaceCard({ postPlaceId });
@@ -53,15 +69,14 @@ export const CardSection = ({
             onClose={() => setOpenPlaceFinishModal(false)}
             onConfirm={() => console.log('확ㄴ인')}
           />
-          <ReportModal
+          <ReportEditorCardModal
             isOpen={openReportModal}
             onCancel={() => {
               setOpenReportModal(false);
+              setSelectedReportPostPlaceId(null);
             }}
             // TODO : api 연동하기
-            onConfirm={() => {
-              setOpenReportModal(false);
-            }}
+            onConfirm={onConfirmReport}
           />
 
           <div key={post.postId} className="flex h-31.75">
@@ -83,7 +98,7 @@ export const CardSection = ({
                 </div>
                 <div className="flex gap-1">
                   <button onClick={() => onFolderClick(post.postPlaceId)}>
-                    <FolderIcon className={post.archived ? 'text-primary-40' : ''} />
+                    <FolderIcon className={post.isArchived ? 'text-primary-40' : ''} />
                   </button>
                   <button
                     onClick={() => window.open(post.instagramUrl, '_blank', 'noopener,noreferrer')}
@@ -111,7 +126,7 @@ export const CardSection = ({
                 <button
                   type="button"
                   className="ml-auto caption-12-regular text-neutral-50"
-                  onClick={() => setOpenReportModal(true)}
+                  onClick={() => onClickReport(post.postPlaceId)}
                 >
                   신고하기
                 </button>

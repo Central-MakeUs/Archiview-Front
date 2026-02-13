@@ -50,7 +50,7 @@ export const InfoSection = ({
             {place?.addressName}
           </div>
           {/* TODO : 지도 연결 */}
-          <div className="text-primary-40 underline">지도보기</div>
+          {/* <div className="text-primary-40 underline">지도보기</div> */}
         </div>
         <div className="flex gap-[10px] items-center">
           <CursorIcon className="text-primary-40 h-[22px] w-[22px]" />

@@ -26,7 +26,6 @@ export interface IPostPlace {
   categoryNames: string[];
   editorName: string;
   editorInstagramId: string;
-  archived: boolean;
   isArchived: boolean;
 }
 
