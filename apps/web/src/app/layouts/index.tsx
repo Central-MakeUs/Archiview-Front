@@ -22,7 +22,7 @@ export function RootLayout({ children }: { children: React.ReactNode }): React.R
       <body>
         <KakaoMapScript />
           <QueryProvider>{children}</QueryProvider>
-        <Toaster position="top-left" richColors className="toaster-within-content" />
+        <Toaster position="top-center" richColors className="toaster-within-content" />
       </body>
     </html>
   );

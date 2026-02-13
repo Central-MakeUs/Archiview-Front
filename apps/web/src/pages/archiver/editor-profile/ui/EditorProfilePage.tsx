@@ -32,12 +32,8 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
     editorId,
     useMock: true,
   });
-
-  const {
-    data: placeListData,
-    isLoading,
-    isError,
-  } = useGetEditorPlaceList({
+  console.log(editorData);
+  const { data: placeListData } = useGetEditorPlaceList({
     userId: editorId,
     sort: 'LATEST',
     useMock: true,
@@ -57,10 +53,14 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
     });
   }, [places, category]);
 
+  const editor = editorData?.data;
+
+  if (!editor) return <div className="px-5">로딩중...</div>;
+
   return (
     <div className="flex h-full flex-col min-h-0">
       <div className="px-5">
-        <EditorProfileCard />
+        <EditorProfileCard editorId={editorId} editorData={editorData?.data} />
       </div>
       <CategoryOptionTabs value={category} onChange={setCategory} />
 
@@ -82,6 +82,7 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
               <HamburgerIcon />
             </div>
             {filteredPlaces.map((p) => (
+              //  TODO : onClick 이벤트 처리
               <ArchiverPlaceItem
                 key={p.postPlaceId}
                 name={p.placeName}

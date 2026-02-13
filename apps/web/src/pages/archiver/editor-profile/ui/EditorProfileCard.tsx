@@ -4,13 +4,30 @@ import { useState } from 'react';
 import { Badge } from '@/shared/ui/Badge';
 import { Card } from '@/shared/ui/common/Card';
 import { DotThreeIcon, ProfileAddIcon } from '@/shared/ui/icon';
+import { useFollowEditor } from '@/entities/archiver/follow/mutation/useFollowEditor';
 
 import { ReportBottomSheetModal } from './ReportBottomSheetModal';
 import { ReportModal, BlockModal } from './ReportModal';
 
-export const EditorProfileCard = () => {
+interface IEditorProfile {
+  nickname: string;
+  instagramId: string;
+  instagramUrl: string;
+  introduction: string;
+  hashtags: string[];
+  profileImageUrl: string;
+}
+
+interface IEditorProfileCardProps {
+  editorId: string;
+  editorData: IEditorProfile;
+}
+
+export const EditorProfileCard = ({ editorId, editorData }: IEditorProfileCardProps) => {
   const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState(false);
+
+  const { followEditor } = useFollowEditor();
 
   const stripHash = (tag?: string) => (tag ?? '').trim().replace(/^#/, '');
 
@@ -22,22 +39,34 @@ export const EditorProfileCard = () => {
         <div className="flex flex-row w-full gap-4 p-5">
           {/* 프로필 이미지 */}
           <div className="shrink-0">
-            <div className="h-17.5 w-17.5 rounded-full bg-neutral-30" />
+            <div className="relative overflow-hidden h-17.5 w-17.5 rounded-full bg-neutral-30">
+              <Image src={editorData.profileImageUrl} alt="" fill />
+            </div>
           </div>
 
           {/* 텍스트 + 배지 */}
           <div className="flex flex-col flex-1">
             <div className="flex flex-row w-full items-start justify-between">
               <div className="min-w-0 flex-1">
-                <div className="heading-20-bold leading-none text-primary-50">에디터 닉네임</div>
-                <div className="body-14-semibold text-primary-10">@ instagramid</div>
+                <div className="heading-20-bold leading-none text-primary-50">
+                  {editorData.nickname}
+                </div>
+                <div className="body-14-semibold text-primary-10">@{editorData.instagramId}</div>
               </div>
 
               {/* 우측 아이콘 버튼들 */}
               <div className="shrink-0 flex items-center gap-1">
                 <button
                   type="button"
-                  onClick={() => console.log('인스타그램 클릭')}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(
+                      `https://www.instagram.com/${editorData.instagramId}`,
+                      '_blank',
+                      'noopener,noreferrer',
+                    );
+                  }}
                   className="inline-flex items-center justify-center"
                 >
                   <Image
@@ -49,9 +78,10 @@ export const EditorProfileCard = () => {
                   />
                 </button>
 
+                {/* TODO : 친추완료 시 아이콘 바꾸기 */}
                 <button
                   type="button"
-                  onClick={() => console.log('프로필 추가 클릭')}
+                  onClick={() => followEditor(editorId)}
                   className="inline-flex items-center justify-center"
                 >
                   <ProfileAddIcon className="text-black" />
@@ -67,10 +97,10 @@ export const EditorProfileCard = () => {
             </div>
             <div className="flex flex-row gap-1 mt-2">
               <Badge variant="contained" className="bg-white text-primary-30 rounded-xl">
-                다섯글자로
+                {stripHash(editorData.hashtags[0])}
               </Badge>
               <Badge variant="contained" className="bg-white text-primary-30 rounded-xl">
-                해시태그임
+                {stripHash(editorData.hashtags[1])}
               </Badge>
             </div>
           </div>
