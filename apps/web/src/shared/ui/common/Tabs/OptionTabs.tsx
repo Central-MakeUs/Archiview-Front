@@ -1,29 +1,26 @@
 import React from 'react';
-
 import { Button } from '@/shared/ui/button';
 
-interface ITabItem<T extends string> {
+type TabValue = string | number;
+
+interface ITabItem<T extends TabValue> {
   label: React.ReactNode;
   value: T;
 }
 
-interface IOptionTabsProps<T extends string> {
+interface IOptionTabsProps<T extends TabValue> {
   items: ITabItem<T>[];
   value: T;
   onChange: (next: T) => void;
 
-  /** 레이아웃 커스텀 (스크롤/패딩/갭 등) */
   containerClassName?: string;
-
-  /** 버튼 공통 클래스 */
   buttonClassName?: string;
 
-  /** 활성/비활성 상태 클래스 */
   activeClassName?: string;
   inactiveClassName?: string;
 }
 
-export const OptionTabs = <T extends string>({
+export const OptionTabs = <T extends TabValue>({
   items,
   value,
   onChange,

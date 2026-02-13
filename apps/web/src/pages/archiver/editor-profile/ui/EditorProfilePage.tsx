@@ -31,7 +31,6 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
 
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState<CategoryTab>('ALL');
-  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('LATEST');
 
   const { data: editorData } = useGetEditorProfile({
