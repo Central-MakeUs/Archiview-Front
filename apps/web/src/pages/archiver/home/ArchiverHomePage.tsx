@@ -55,7 +55,9 @@ export const ArchiverHomePage = (): React.ReactElement => {
           </Link>
         </div>
         <div className="p-5">
-          <CategorySection /> <HotPlaceSection /> <EditorTrustedSection />
+          <CategorySection />
+          <HotPlaceSection />
+          <EditorTrustedSection />
         </div>
       </div>
     </div>

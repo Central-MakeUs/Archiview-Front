@@ -38,6 +38,7 @@ export interface IHotPlace {
   placeId: number;
   name: string;
   placeUrl: string;
+  address: string;
   imageUrl: string;
   categoryNames: string[];
   hashTags: string[];
