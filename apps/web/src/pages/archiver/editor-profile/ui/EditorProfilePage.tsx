@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
@@ -26,6 +27,8 @@ export type CategoryTab =
 type SortKey = 'LATEST' | 'OLDEST';
 
 export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
+  const router = useRouter();
+
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState<CategoryTab>('ALL');
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
@@ -92,6 +95,7 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
                 description={p.description}
                 savedCount={p.saveCount}
                 viewCount={p.viewCount}
+                onClick={() => router.push(`/archiver/place-info/${p.postPlaceId}`)}
               />
             ))}
           </div>
