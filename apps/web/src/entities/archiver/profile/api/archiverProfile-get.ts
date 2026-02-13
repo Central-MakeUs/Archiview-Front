@@ -6,6 +6,7 @@ import type {
   IEditorsTrustedResponseDTO,
   IMyFollowsResponseDTO,
   IEditorProfileResponseDTO,
+  IEditorPlaceResposneDTO,
 } from '../model/archiverProfile.type';
 
 export const archiverProfileGet = {
@@ -48,6 +49,20 @@ export const archiverProfileGet = {
         searchParams: { useMock: params?.useMock ?? false },
       })
       .json<IEditorProfileResponseDTO>();
+    return response;
+  },
+
+  // 에디터가 업로드한 장소 목록 조회
+  getEditorPlaceList: async (params: {
+    userId: string;
+    sort?: 'LATEST' | 'OLDEST';
+    useMock?: boolean;
+  }): Promise<IEditorPlaceResposneDTO> => {
+    const response = await clientApi
+      .get(`archivers/editors/${params.userId}/post-places`, {
+        searchParams: { sort: params?.sort ?? 'LATEST', useMock: params?.useMock ?? false },
+      })
+      .json<IEditorPlaceResposneDTO>();
     return response;
   },
 };

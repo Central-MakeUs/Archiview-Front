@@ -11,6 +11,9 @@ import { ReportModal, BlockModal } from './ReportModal';
 export const EditorProfileCard = () => {
   const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState(false);
+
+  const stripHash = (tag?: string) => (tag ?? '').trim().replace(/^#/, '');
+
   return (
     <>
       <Card className="bg-primary-30 overflow-hidden border-none shadow-default">

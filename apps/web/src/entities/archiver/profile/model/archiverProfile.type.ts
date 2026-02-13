@@ -34,6 +34,16 @@ export interface IEditorProfile {
   profileImageUrl: string;
 }
 
+export interface IEditorPlace {
+  postPlaceId: number;
+  placeName: string;
+  description: string;
+  saveCount: number;
+  viewCount: number;
+  lastModifiedAt: string;
+  imageUrl: string;
+}
+
 export interface IMyFollowsResponse {
   editors: IEditor[];
 }
@@ -48,6 +58,10 @@ export interface IMyProfileResponse {
   profileImageUrl: string;
 }
 
+export interface IEditorPlaceResposne {
+  postPlaces: IEditorPlace[];
+}
+
 // 내 프로필 조회(아카이버) API DTO
 export type IArchiverMyProfileResponseDTO = ApiResponse<IMyProfileResponse>;
 
@@ -59,3 +73,6 @@ export type IEditorsTrustedResponseDTO = ApiResponse<IEditorsTrustedResponse>;
 
 // 에디터 프로필 조회
 export type IEditorProfileResponseDTO = ApiResponse<IEditorProfile>;
+
+// 에디터가 업로드한 장소 목록 조회
+export type IEditorPlaceResposneDTO = ApiResponse<IEditorPlaceResposne>;

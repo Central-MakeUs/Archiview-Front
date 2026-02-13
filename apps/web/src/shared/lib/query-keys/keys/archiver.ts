@@ -94,4 +94,18 @@ export const archiverKeys = createQueryKeyStore({
       params?.useMock ?? false,
     ],
   },
+
+  /**
+   * @param {{userId: string, sort?: 'LATEST' | 'OLDEST', useMock?: boolean}} params
+   * @description 에디터가 업로드한 장소(포스트플레이스) 목록 조회용 쿼리키
+   * @returns ['getEditorPlaceList', 'applyFilters', userId, sort, useMock]
+   */
+  getEditorPlaceList: {
+    all: null,
+    applyFilters: (params: { userId: string; sort?: 'LATEST' | 'OLDEST'; useMock?: boolean }) => [
+      params.userId,
+      params?.sort ?? 'LATEST',
+      params?.useMock ?? false,
+    ],
+  },
 });

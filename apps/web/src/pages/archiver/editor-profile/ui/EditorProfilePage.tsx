@@ -21,17 +21,6 @@ export type CategoryTab =
   | 'DATE'
   | 'ETC';
 
-interface IPlace {
-  id: string;
-  title: string;
-  description: string;
-  lat: number;
-  lng: number;
-  savedCount: number;
-  viewCount: number;
-  category: CategoryTab;
-}
-
 export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState<CategoryTab>('ALL');
