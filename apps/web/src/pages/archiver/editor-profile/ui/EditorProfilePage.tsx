@@ -5,12 +5,12 @@ import { useMemo, useState } from 'react';
 import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import { CategoryOptionTabs } from '@/pages/editor/profile/CategoryOptionTabs';
-import { HamburgerIcon } from '@/shared/ui/icon/HamburgerIcon';
 import { useGetEditorProfile } from '@/entities/archiver/profile/queries/useGetEditorProfile';
 import { useGetEditorPlaceList } from '@/entities/archiver/profile/queries/useGetEditorPlaceList';
 
 import { ArchiverPlaceItem } from '../../my-archive/ui/ArchiverPlaceItem';
 import { EditorProfileCard } from './EditorProfileCard';
+import { SortDropdown } from './SortDropDown';
 
 export type CategoryTab =
   | 'ALL'
@@ -23,10 +23,13 @@ export type CategoryTab =
   | 'DATE'
   | 'ETC';
 
+type SortKey = 'LATEST' | 'OLDEST';
+
 export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState<CategoryTab>('ALL');
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
+  const [sort, setSort] = useState<SortKey>('LATEST');
 
   const { data: editorData } = useGetEditorProfile({
     editorId,
@@ -35,7 +38,7 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   console.log(editorData);
   const { data: placeListData } = useGetEditorPlaceList({
     userId: editorId,
-    sort: 'LATEST',
+    sort,
     useMock: true,
   });
 
@@ -79,7 +82,7 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
               <p className="heading-20-bold">
                 업로드한 장소 <span className="text-primary-40 pl-1">숫자</span>
               </p>
-              <HamburgerIcon />
+              <SortDropdown value={sort} onChange={setSort} />
             </div>
             {filteredPlaces.map((p) => (
               //  TODO : onClick 이벤트 처리
