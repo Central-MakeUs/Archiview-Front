@@ -6,19 +6,24 @@ import Image from 'next/image';
 import { Item } from '@/shared/ui/common/Item';
 import { RightArrowIcon, ProfileDeleteIcon } from '@/shared/ui/icon';
 import { FollowDeleteModal } from '@/entities/archiver/profile/ui/FollowDeleteModal';
+import { useUnfollowEditor } from '@/entities/archiver/follow/mutation/useUnFollowEditor';
 
 interface IEditorProfileItemProps {
+  editorId: string;
   nickname: string;
   introduction: string;
   profileImageUrl: string;
 }
 
 export const EditorProfileItem = ({
+  editorId,
   nickname,
   introduction,
   profileImageUrl,
 }: IEditorProfileItemProps): React.ReactElement => {
   const [modalOpen, setModalOpen] = useState(false);
+  const { unfollowEditor } = useUnfollowEditor();
+
   return (
     <div>
       <Item
@@ -47,7 +52,6 @@ export const EditorProfileItem = ({
                   <ProfileDeleteIcon
                     onClick={(e) => {
                       e.stopPropagation();
-                      console.log('클릭');
                       setModalOpen(true);
                     }}
                     className="active:text-primary-40"
@@ -64,6 +68,7 @@ export const EditorProfileItem = ({
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onConfirm={() => {
+          unfollowEditor(editorId);
           setModalOpen(false);
         }}
       />

@@ -31,6 +31,7 @@ export const FollowListPage = () => {
       {followData?.map((editor: IEditor) => (
         <EditorProfileItem
           key={editor.editorId}
+          editorId={editor.editorId}
           nickname={editor.nickname}
           introduction={editor.introduction}
           profileImageUrl={editor.profileImageUrl}
