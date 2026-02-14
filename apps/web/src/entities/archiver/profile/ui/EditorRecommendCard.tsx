@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+
 import { Badge } from '@/shared/ui/Badge';
 import { Card } from '@/shared/ui/common/Card';
 import type { IEditor } from '@/entities/archiver/profile/model/archiverProfile.type';
@@ -11,7 +12,7 @@ interface IEditorRecommendCardProps {
 
 export const EditorRecommendCard = ({ editor }: IEditorRecommendCardProps) => {
   const stripHash = (tag?: string) => (tag ?? '').trim().replace(/^#/, '');
-
+console.log(editor.profileImageUrl);
   return (
     // TODO : 라우팅 연결하기
     <Link href={`/archiver/editor-profile/${editor.editorId}`} className="block shrink-0">
@@ -24,6 +25,7 @@ export const EditorRecommendCard = ({ editor }: IEditorRecommendCardProps) => {
             height={90}
             className="object-cover"
             priority={false}
+            unoptimized
           />
         </div>
         <div className="p-3">

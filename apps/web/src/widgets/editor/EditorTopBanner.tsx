@@ -9,8 +9,8 @@ import { useEditorInsightSummaryQuery } from '@/entities/editor/place/queries/us
 import { useGetMyPlaceList } from '@/entities/editor/place/queries/useGetMyPlaceList';
 
 export const EditorTopBanner = () => {
-  const { data: userData } = useEditorInsightSummaryQuery({ useMock: true });
-  const { data: data } = useGetMyPlaceList({ useMock: true });
+  const { data: userData } = useEditorInsightSummaryQuery({ useMock: false });
+  const { data: data } = useGetMyPlaceList({ useMock: false });
 
   return (
     <div className="relative w-full h-62.75 bg-primary-30 rounded-b-4xl px-5 pt-8 pb-6">

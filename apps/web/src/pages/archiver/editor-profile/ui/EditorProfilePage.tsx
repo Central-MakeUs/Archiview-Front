@@ -35,13 +35,13 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
 
   const { data: editorData } = useGetEditorProfile({
     editorId,
-    useMock: true,
+    useMock: false,
   });
   console.log(editorData);
   const { data: placeListData } = useGetEditorPlaceList({
     userId: editorId,
     sort,
-    useMock: true,
+    useMock: false,
   });
 
   const places = placeListData?.data?.postPlaces ?? [];

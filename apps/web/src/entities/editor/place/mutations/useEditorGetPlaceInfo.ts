@@ -9,8 +9,7 @@ export const useEditorGetPlaceInfo = (placeId: number) => {
     isError,
     error,
   } = useQuery({
-    queryKey: editorKeys.getMyPlaceDetail.applyFilters({ placeId: placeId, useMock: true })
-      .queryKey,
+    queryKey: editorKeys.getMyPlaceDetail.applyFilters({ placeId: placeId }).queryKey,
     queryFn: () => editorPlaceGet.getMyPlaceDetail(placeId),
   });
   return { placeInfoData, isLoading, isError, error };

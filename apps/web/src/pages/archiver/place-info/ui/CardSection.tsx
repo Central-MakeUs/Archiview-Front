@@ -56,12 +56,12 @@ export const CardSection = ({
   const onFolderClick = (postPlaceId: number) => {
     postPlaceCard({ postPlaceId });
   };
-  console.log(postPlaces);
 
+  console.log(postPlaces);
   return (
     <section className="p-5 flex flex-col gap-4">
       {postPlaces?.map((post) => (
-        <>
+        <div>
           <ArchivePlaceFinishModal
             editor={post.editorName}
             place={placeName ?? ''}
@@ -88,6 +88,7 @@ export const CardSection = ({
                 className="object-cover"
                 sizes="80px"
                 priority={false}
+                unoptimized
               />
             </div>
             <div className="rounded-r-default bg-[#F7F7F8] w-full flex flex-col gap-1 py-3 pl-3 pr-5">
@@ -98,7 +99,7 @@ export const CardSection = ({
                 </div>
                 <div className="flex gap-1">
                   <button onClick={() => onFolderClick(post.postPlaceId)}>
-                    <FolderIcon className={post.isArchived ? 'text-primary-40' : ''} />
+                    <FolderIcon active={post.isArchived} />
                   </button>
                   <button
                     onClick={() => window.open(post.instagramUrl, '_blank', 'noopener,noreferrer')}
@@ -133,7 +134,7 @@ export const CardSection = ({
               </div>
             </div>
           </div>
-        </>
+        </div>
       ))}
     </section>
   );

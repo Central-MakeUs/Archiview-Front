@@ -3,7 +3,7 @@ import { useGetHotPlace } from '@/entities/archiver/place/queries/useGetHotPlace
 import { IHotPlace } from '@/entities/archiver/place/model/archiverPlace.type';
 
 export const HotPlaceSection = (): React.ReactElement => {
-  const { data: hotPlaceData, isLoading, isError } = useGetHotPlace({ useMock: true });
+  const { data: hotPlaceData, isLoading, isError } = useGetHotPlace({ useMock: false });
 
   if (isLoading) return <div className="mb-5">로딩중...</div>;
   if (isError) return <div className="mb-5">에러</div>;

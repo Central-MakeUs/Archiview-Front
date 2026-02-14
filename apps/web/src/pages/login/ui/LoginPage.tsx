@@ -8,6 +8,7 @@ import { Button } from '@/shared/ui/button';
 
 import { OnboardingCarousel } from './OnboardingCarousel';
 import { KakaoButton } from './SocialLoginButton';
+import { AppleLoginButton } from './AppleLoginButton';
 
 const ONBOARDING_TEXT: Array<{ title: string; description: string }> = [
   {
@@ -63,7 +64,13 @@ export const LoginPage = () => {
         <>
           <div className="fixed bottom-10 left-5 right-5">
             <KakaoButton />
-            <Button>애플로그인 </Button>
+            <AppleLoginButton
+              clientId={process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!}
+              redirectUri={`${process.env.NEXT_PUBLIC_BASE_URL}/login/oauth2/code/apple`}
+              className="w-full rounded-xl bg-black px-4 py-3 text-white"
+            >
+              Apple로 로그인
+            </AppleLoginButton>
             <Button className="w-full mt-13">회원가입</Button>
           </div>
         </>

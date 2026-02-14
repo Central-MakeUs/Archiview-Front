@@ -39,7 +39,7 @@ export const MyArchivePageInner = ({ initialPlaces }: { initialPlaces: IPlace[] 
   const [category, setCategory] = useState<CategoryTab>('ALL');
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
 
-  const { data, isLoading, isError } = useGetMyArchives({ useMock: true });
+  const { data, isLoading, isError } = useGetMyArchives({ useMock: false });
 
   const places: IPlace[] = useMemo(() => {
     const postPlaces = data?.data?.postPlaces ?? [];
@@ -87,12 +87,8 @@ export const MyArchivePageInner = ({ initialPlaces }: { initialPlaces: IPlace[] 
         />
 
         <BottomSheet isOpen={open} onOpenChange={setOpen} height={500} peekHeight={72}>
-          <div className="px-5 pb-6">
-            <div className="flex flex-row justify-between pb-4 pt-2.5">
-              <p className="heading-20-bold">
-                업로드한 장소 <span className="text-primary-40 pl-1">{filteredPlaces.length}</span>
-              </p>
-            </div>
+          <div className="h-full px-5 pb-6 ">
+           
             {filteredPlaces.map((p) => (
               <ArchiverPlaceItem
                 key={p.id}

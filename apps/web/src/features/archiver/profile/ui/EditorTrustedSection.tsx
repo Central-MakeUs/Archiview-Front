@@ -5,7 +5,7 @@ import { EditorRecommendCard } from '@/entities/archiver/profile/ui/EditorRecomm
 
 // TODO : 믿고먹는 에디터 응답값이 이거맞는지..?
 export const EditorTrustedSection = (): React.ReactElement => {
-  const { data: EditorTrustedData, isLoading, isError } = useGetEditorTrusted({ useMock: true });
+  const { data: EditorTrustedData, isLoading, isError } = useGetEditorTrusted({ useMock: false });
 
   if (isLoading) return <div className="mb-5">로딩중...</div>;
   if (isError) return <div className="mb-5">에러</div>;

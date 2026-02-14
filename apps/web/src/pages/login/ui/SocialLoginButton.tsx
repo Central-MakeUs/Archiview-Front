@@ -23,6 +23,17 @@ const joinUrl = (base: string, path: string): string => {
   return `${normalizedBase}${normalizedPath}`;
 };
 
+const withDevQuery = (target: string): string => {
+  const url = new URL(target, window.location.origin);
+
+  if (process.env.NODE_ENV === 'development') {
+    url.searchParams.set('dev', 'true');
+  }
+
+  const isRelative = !/^(https?:)?\/\//.test(target);
+  return isRelative ? `${url.pathname}${url.search}${url.hash}` : url.toString();
+};
+
 export const KakaoButton = () => {
   const handleClick = () => {
     if (isReactNativeWebView()) {
@@ -31,9 +42,11 @@ export const KakaoButton = () => {
     }
 
     const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
-    const target = apiBaseUrl
+    const rawTarget = apiBaseUrl
       ? joinUrl(apiBaseUrl, '/oauth2/authorization/kakao')
       : '/oauth2/authorization/kakao';
+
+    const target = withDevQuery(rawTarget);
 
     window.location.href = target;
   };

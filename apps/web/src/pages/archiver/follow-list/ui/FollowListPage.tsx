@@ -14,7 +14,7 @@ export interface IEditor {
 }
 
 export const FollowListPage = () => {
-  const { data, isLoading, isError } = useGetMyFollows({ useMock: true });
+  const { data, isLoading, isError } = useGetMyFollows({ useMock: false });
   const followData = data?.data?.editors ?? [];
 
   if (!data || isLoading) return <div className="mb-5">로딩중...</div>;

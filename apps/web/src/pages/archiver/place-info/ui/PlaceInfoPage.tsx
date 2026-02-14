@@ -10,7 +10,7 @@ import { CardSection } from './CardSection';
 export const PlaceInfoPage = ({ placeId }: { placeId: number }) => {
   const { data: placeDetailData } = useGetPlaceDetail({
     placeId,
-    useMock: true,
+    useMock: false,
   });
 
   if (!placeDetailData?.data) return <div>에러</div>;
