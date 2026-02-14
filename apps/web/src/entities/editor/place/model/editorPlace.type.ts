@@ -47,6 +47,7 @@ export interface IEditorInsightPlaceDetail {
   };
   postPlaces: [
     {
+      imageUrl: string;
       postPlaceId: number;
       editorName: string;
       editorInstagramId: string;

@@ -29,6 +29,7 @@ export const EditorInsight = () => {
 
   if (isError) return <div>에러입니다 ㅜ</div>;
 
+  console.log(insightData);
   return (
     <div className="px-5 py-8">
       <div className="flex flex-row justify-between items-center pb-4">
