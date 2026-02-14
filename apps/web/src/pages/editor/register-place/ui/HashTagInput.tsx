@@ -21,6 +21,8 @@ export const HashTagInput = ({ className }: { className?: string }) => {
       name: 'hashTags',
     }) ?? [];
 
+  const hasTags = tags.length > 0;
+
   const handleAddTag = () => {
     const trimmed = inputValue.trim().replace(/^#+/, '');
     if (!trimmed) return;
@@ -64,7 +66,10 @@ export const HashTagInput = ({ className }: { className?: string }) => {
         <div className="flex gap-3">
           <BoxInput
             state={errorMessage ? 'error' : 'default'}
-            message={errorMessage ?? '해시태그를 입력해주세요'}
+            message={
+              errorMessage ??
+              (hasTags ? '해시태그는 최대 3개까지 추가할 수 있어요' : '해시태그를 입력해주세요')
+            }
             className="flex-1"
           >
             <input

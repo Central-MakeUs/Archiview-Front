@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth, SwitchRoleError } from '@/entities/auth/hooks/useAuth';
 import { LOCAL_STORAGE_KEYS, type StoredUserRole } from '@/shared/constants/localStorageKeys';
 import { ChangeRoleModal } from '@/entities/auth/ui/ChangeRoleModal';
+import { EditorMyPage } from './ui/editor/EditorMyPage';
+import { ArchiverMyPage } from './ui/archiver/ArchiverMyPage';
 
 const isStoredUserRole = (value: string | null): value is StoredUserRole => {
   return value === 'GUEST' || value === 'ARCHIVER' || value === 'EDITOR';
@@ -48,7 +50,8 @@ export const MyPage = (): React.ReactElement => {
 
   return (
     <>
-      <div className="p-5">
+      {role === 'EDITOR' ? <EditorMyPage /> : <ArchiverMyPage />}
+      {/* <div className="p-5">
         <div className="body-16-semibold">MyPage</div>
 
         <div className="mt-4 flex items-center justify-between">
@@ -68,8 +71,8 @@ export const MyPage = (): React.ReactElement => {
         <p className="mt-3 text-xs text-neutral-50">
           개발용: localStorage에 role 저장 후 role 홈으로 이동합니다.
         </p>
-      </div>
-      
+      </div> */}
+
       <ChangeRoleModal
         isOpen={openChangeRoleModal}
         onClose={() => setOpenChangeRoleModal(false)}
