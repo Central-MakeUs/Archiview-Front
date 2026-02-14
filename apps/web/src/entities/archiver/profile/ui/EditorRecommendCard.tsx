@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 
 import { Badge } from '@/shared/ui/Badge';
-import { Card } from '@/shared/ui/common/Card';
+import { Kard } from '@/shared/ui/common/Kard';
 import type { IEditor } from '@/entities/archiver/profile/model/archiverProfile.type';
 
 interface IEditorRecommendCardProps {
@@ -16,7 +16,7 @@ console.log(editor.profileImageUrl);
   return (
     // TODO : 라우팅 연결하기
     <Link href={`/archiver/editor-profile/${editor.editorId}`} className="block shrink-0">
-      <Card className="shrink-0 h-52 w-46 shadow-default overflow-hidden border-none">
+      <Kard className="shrink-0 h-52 w-46 shadow-default overflow-hidden border-none">
         <div className="relative w-full shrink-0 overflow-hidden" style={{ height: '99px' }}>
           <Image
             src={editor.profileImageUrl}
@@ -46,7 +46,7 @@ console.log(editor.profileImageUrl);
             </span>
           </div>
         </div>
-      </Card>
+      </Kard>
     </Link>
   );
 };

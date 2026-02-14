@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { Card } from '@/shared/ui/common/Card/Card';
+import { Kard } from '@/shared/ui/common/Kard';
 import { Button } from '@/shared/ui/button';
 import { authPost } from '@/entities/auth/api/auth-post';
 
@@ -46,7 +46,7 @@ export const RoleSelectSection = () => {
     <div className="pt-11.5 flex justify-between h-full flex-col">
       <div className="flex flex-col h-full gap-4">
         {/* 에디터 */}
-        <Card selected={role === 'EDITOR'} onClick={() => setRole('EDITOR')} className="p-5">
+        <Kard selected={role === 'EDITOR'} onClick={() => setRole('EDITOR')} className="p-5">
           <div className="flex flex-1 flex-col gap-2">
             <span className="inline-flex w-fit rounded-full bg-primary-40 px-3 py-1 caption-12-semibold text-white">
               에디터
@@ -64,10 +64,10 @@ export const RoleSelectSection = () => {
               <li>자동으로 정리</li>
             </ul>
           </div>
-        </Card>
+        </Kard>
 
         {/* 아카이버 */}
-        <Card selected={role === 'ARCHIVER'} onClick={() => setRole('ARCHIVER')} className="p-5">
+        <Kard selected={role === 'ARCHIVER'} onClick={() => setRole('ARCHIVER')} className="p-5">
           <div className="flex flex-col gap-2">
             <span className="inline-flex w-fit rounded-full bg-neutral-90 px-3 py-1 caption-12-semibold text-white">
               아카이버
@@ -84,7 +84,7 @@ export const RoleSelectSection = () => {
               <li>자동으로 정리</li>
             </ul>
           </div>
-        </Card>
+        </Kard>
       </div>
 
       <div className="flex flex-col items-center mb-4">
