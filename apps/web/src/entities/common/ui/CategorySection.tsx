@@ -1,4 +1,3 @@
-import { HomeIcon } from '@/shared/ui/icon';
 import Image from 'next/image';
 
 const CategoryItem = ({
