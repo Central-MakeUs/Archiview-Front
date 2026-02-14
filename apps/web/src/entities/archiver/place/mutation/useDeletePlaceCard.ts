@@ -4,21 +4,21 @@ import type { ExtendedKyHttpError } from '@/shared/lib/api/common';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { archiverKeys } from '@/shared/lib/query-keys';
 
-import { archiverPlacePost } from '../api/archiverPlace-post';
-import type { IPostPlaceRequest, IIPostPlaceResponseDTO } from '../model/archiverPlace.type';
+import { archiverPlaceDelete } from '../api/archiverPlace-delete';
+import type { IDeletePlaceResponseDTO } from '../model/archiverPlace.type';
 
-type PostPlaceVariables = IPostPlaceRequest & { placeId: number; useMock?: boolean };
+type DeletePlaceVariables = { postPlaceId: number; placeId: number; useMock?: boolean };
 
-interface IUsePostPlaceCardOptions {
-  onSuccess?: (data: IIPostPlaceResponseDTO, variables: PostPlaceVariables) => void;
-  onError?: (error: ExtendedKyHttpError, variables: PostPlaceVariables) => void;
+interface IUseDeletePlaceCardOptions {
+  onSuccess?: (data: IDeletePlaceResponseDTO, variables: DeletePlaceVariables) => void;
+  onError?: (error: ExtendedKyHttpError, variables: DeletePlaceVariables) => void;
 }
 
-export const usePostPlaceCardMutation = (options?: IUsePostPlaceCardOptions) => {
+export const useDeletePlaceCardMutation = (options?: IUseDeletePlaceCardOptions) => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<IIPostPlaceResponseDTO, ExtendedKyHttpError, PostPlaceVariables>({
-    mutationFn: archiverPlacePost.postPlaceCard,
+  const mutation = useMutation<IDeletePlaceResponseDTO, ExtendedKyHttpError, DeletePlaceVariables>({
+    mutationFn: ({ postPlaceId }) => archiverPlaceDelete.deletePlace({ postPlaceId }),
 
     onSuccess: async (data, variables) => {
       await queryClient.invalidateQueries({
@@ -48,8 +48,8 @@ export const usePostPlaceCardMutation = (options?: IUsePostPlaceCardOptions) => 
   });
 
   return {
-    postPlaceCard: mutation.mutate,
-    postPlaceCardAsync: mutation.mutateAsync,
-    ...mutation, // isPending, data, error 등
+    deletePlaceCard: mutation.mutate,
+    deletePlaceCardAsync: mutation.mutateAsync,
+    ...mutation,
   };
 };

@@ -79,6 +79,10 @@ export interface IPostPlaceRequest {
   postPlaceId: number;
 }
 
+export interface IDeletePlaceRequest {
+  postPlaceId: number;
+}
+
 export interface IHotPlaceResponse {
   places: IHotPlace[];
 }
@@ -113,3 +117,6 @@ export type IArchivePinsResponseDTO = ApiResponse<IArchivePinsResponse>;
 
 // 내 주변 1km 장소 조회
 export type INearPlaceResponseDTO = ApiResponse<INearPlaceResponse>;
+
+// 아카이브 장소카드 해제
+export type IDeletePlaceResponseDTO = ApiResponse<Record<string, never>>;

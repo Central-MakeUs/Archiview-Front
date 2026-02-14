@@ -78,26 +78,32 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
           // TODO: 마커
         />
 
-        <BottomSheet isOpen={open} onOpenChange={setOpen} height={500} peekHeight={72}>
-          <div className="px-5 pb-6">
-            <div className="flex flex-row justify-between pb-4 pt-2.5">
+        <BottomSheet
+          isOpen={open}
+          onOpenChange={setOpen}
+          height={500}
+          peekHeight={72}
+          header={
+            <div className="flex flex-row justify-between pb-4 pt-2.5 px-5">
               <p className="heading-20-bold">
                 업로드한 장소 <span className="text-primary-40 pl-1">숫자</span>
               </p>
               <SortDropdown value={sort} onChange={setSort} />
             </div>
-            {filteredPlaces.map((p) => (
-              //  TODO : onClick 이벤트 처리
-              <ArchiverPlaceItem
-                key={p.postPlaceId}
-                name={p.placeName}
-                description={p.description}
-                savedCount={p.saveCount}
-                viewCount={p.viewCount}
-                onClick={() => router.push(`/archiver/place-info/${p.postPlaceId}`)}
-              />
-            ))}
-          </div>
+          }
+          contentClassName="overflow-y-auto px-5 pb-6"
+        >
+          {filteredPlaces.map((p) => (
+            //  TODO : onClick 이벤트 처리
+            <ArchiverPlaceItem
+              key={p.postPlaceId}
+              name={p.placeName}
+              description={p.description}
+              savedCount={p.saveCount}
+              viewCount={p.viewCount}
+              onClick={() => router.push(`/archiver/place-info/${p.postPlaceId}`)}
+            />
+          ))}
         </BottomSheet>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Chip } from '@/shared/ui/Chip';
 import { FolderIcon } from '@/shared/ui/icon';
 import { usePostPlaceCardMutation } from '@/entities/archiver/place/mutation/usePostPlaceCard';
+import { useDeletePlaceCardMutation } from '@/entities/archiver/place/mutation/useDeletePlaceCard';
 import { useReportPostPlace } from '@/entities/archiver/report/mutation/useReportPostPlace';
 
 import { ReportEditorCardModal } from './ReportEditorCardModal';
@@ -24,15 +25,25 @@ interface IPostPlace {
 export const CardSection = ({
   postPlaces,
   placeName,
+  placeId,
 }: {
   postPlaces?: IPostPlace[];
   placeName?: string;
+  placeId: number;
 }) => {
   const [openPlaceFinishModal, setOpenPlaceFinishModal] = useState(false);
+  const [placeFinishModalType, setPlaceFinishModalType] = useState<'archive' | 'unarchive'>(
+    'archive',
+  );
+  const [placeFinishModalEditor, setPlaceFinishModalEditor] = useState('');
   const [openReportModal, setOpenReportModal] = useState(false);
   const [selectedReportPostPlaceId, setSelectedReportPostPlaceId] = useState<number | null>(null);
 
   const { postPlaceCard } = usePostPlaceCardMutation({
+    onSuccess: () => setOpenPlaceFinishModal(true),
+  });
+
+  const { deletePlaceCard } = useDeletePlaceCardMutation({
     onSuccess: () => setOpenPlaceFinishModal(true),
   });
 
@@ -53,22 +64,31 @@ export const CardSection = ({
     reportPostPlace({ postPlaceId: selectedReportPostPlaceId });
   };
 
-  const onFolderClick = (postPlaceId: number) => {
-    postPlaceCard({ postPlaceId });
+  const onFolderClick = (postPlaceId: number, isArchived: boolean, editorName: string) => {
+    setPlaceFinishModalType(isArchived ? 'unarchive' : 'archive');
+    setPlaceFinishModalEditor(editorName);
+
+    if (isArchived) {
+      deletePlaceCard({ postPlaceId, placeId, useMock: false });
+      return;
+    }
+
+    postPlaceCard({ postPlaceId, placeId, useMock: false });
   };
 
   console.log(postPlaces);
   return (
     <section className="p-5 flex flex-col gap-4">
+      <ArchivePlaceFinishModal
+        editor={placeFinishModalEditor}
+        place={placeName ?? ''}
+        type={placeFinishModalType}
+        isOpen={openPlaceFinishModal}
+        onClose={() => setOpenPlaceFinishModal(false)}
+        onConfirm={() => setOpenPlaceFinishModal(false)}
+      />
       {postPlaces?.map((post) => (
         <div>
-          <ArchivePlaceFinishModal
-            editor={post.editorName}
-            place={placeName ?? ''}
-            isOpen={openPlaceFinishModal}
-            onClose={() => setOpenPlaceFinishModal(false)}
-            onConfirm={() => console.log('확ㄴ인')}
-          />
           <ReportEditorCardModal
             isOpen={openReportModal}
             onCancel={() => {
@@ -98,7 +118,11 @@ export const CardSection = ({
                   <p className="caption-12-semibold text-neutral-50">@ {post.editorInstagramId}</p>
                 </div>
                 <div className="flex gap-1">
-                  <button onClick={() => onFolderClick(post.postPlaceId)}>
+                  <button
+                    onClick={() =>
+                      onFolderClick(post.postPlaceId, post.isArchived, post.editorName)
+                    }
+                  >
                     <FolderIcon active={post.isArchived} />
                   </button>
                   <button

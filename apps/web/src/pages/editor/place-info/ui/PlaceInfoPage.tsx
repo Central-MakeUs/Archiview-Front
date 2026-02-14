@@ -29,6 +29,7 @@ export const PlaceInfoPage = ({ placeId }: { placeId: number }) => {
         <CardSection
           postPlaces={placeInfoData?.data?.postPlaces}
           placeName={placeInfoData?.data?.placeName}
+          placeId={placeId}
         />
       </div>
       <div className="shrink-0"></div>

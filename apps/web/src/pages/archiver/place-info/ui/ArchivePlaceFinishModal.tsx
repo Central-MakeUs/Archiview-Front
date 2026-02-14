@@ -11,6 +11,7 @@ interface IArchivePlaceFinishModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  type?: 'archive' | 'unarchive';
 }
 
 export const ArchivePlaceFinishModal = ({
@@ -19,7 +20,10 @@ export const ArchivePlaceFinishModal = ({
   editor,
   onClose,
   onConfirm,
+  type = 'archive',
 }: IArchivePlaceFinishModalProps) => {
+  const isUnarchive = type === 'unarchive';
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="w-70">
       <div className="relative rounded-default bg-white text-center">
@@ -27,11 +31,13 @@ export const ArchivePlaceFinishModal = ({
           <XIcon onClick={onClose} className="right-4 top-4 w-3" />
         </div>
 
-        <h2 className="body-16-bold text-neutral-90 pb-5">아카이브 완료!</h2>
+        <h2 className="body-16-bold text-neutral-90 pb-5">
+          {isUnarchive ? '아카이브 취소' : '아카이브 완료!'}
+        </h2>
         <span className="body-14-bold text-primary-40">{place}</span>
         <p className="mt-3 body-14-bold text-neutral-40">
           <span className="text-primary-40">{editor} 에디터님의 글</span>을
-          <br /> 아카이브 했어요
+          <br /> {isUnarchive ? '아카이브를 취소했어요' : '아카이브 했어요'}
         </p>
 
         <div className="mt-6 flex gap-2">

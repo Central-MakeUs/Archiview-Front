@@ -11,9 +11,11 @@ import { useRouter } from 'next/navigation';
 export const CardSection = ({
   postPlaces,
   placeName,
+  placeId,
 }: {
   postPlaces?: IEditorInsightPlaceDetail['postPlaces'];
   placeName?: string;
+  placeId: number;
 }) => {
   const router = useRouter();
   const [openPlaceFinishModal, setOpenPlaceFinishModal] = useState(false);
@@ -23,7 +25,7 @@ export const CardSection = ({
   });
 
   const onFolderClick = (postPlaceId: number) => {
-    postPlaceCard({ postPlaceId });
+    postPlaceCard({ postPlaceId, placeId, useMock: false });
   };
   console.log(postPlaces);
 

@@ -8,6 +8,10 @@ interface IBottomSheetProps {
   height: number;
   peekHeight: number;
 
+  header?: React.ReactNode;
+  headerClassName?: string;
+  contentClassName?: string;
+
   children: React.ReactNode;
 }
 
@@ -27,18 +31,21 @@ export const BottomSheet = ({
   onOpenChange,
   height,
   peekHeight,
+  header,
+  headerClassName,
+  contentClassName,
   children,
 }: IBottomSheetProps) => {
   const sheetRef = useRef<HTMLDivElement | null>(null);
   const startYRef = useRef<number | null>(null);
+  const isDraggingRef = useRef(false);
   const [dragOffset, setDragOffset] = useState(0);
 
   const closedOffset = height - peekHeight;
 
   const handlePointerDown = (e: React.PointerEvent) => {
     startYRef.current = e.clientY;
-
-    sheetRef.current?.setPointerCapture(e.pointerId);
+    isDraggingRef.current = false;
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
@@ -46,15 +53,28 @@ export const BottomSheet = ({
 
     const diff = e.clientY - startYRef.current;
 
+    if (!isDraggingRef.current && Math.abs(diff) < 4) return;
+
     if (isOpen && diff < 0) return;
 
     if (!isOpen && diff > 0) return;
+
+    if (!isDraggingRef.current) {
+      isDraggingRef.current = true;
+      (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
+    }
 
     setDragOffset(diff);
   };
 
   const handlePointerUp = (e: React.PointerEvent) => {
     if (startYRef.current === null) return;
+
+    if (!isDraggingRef.current) {
+      startYRef.current = null;
+      setDragOffset(0);
+      return;
+    }
 
     const threshold = height * 0.15;
 
@@ -64,8 +84,9 @@ export const BottomSheet = ({
       onOpenChange(true);
     }
 
-    sheetRef.current?.releasePointerCapture(e.pointerId);
+    (e.currentTarget as HTMLDivElement).releasePointerCapture(e.pointerId);
     startYRef.current = null;
+    isDraggingRef.current = false;
     setDragOffset(0);
   };
 
@@ -75,22 +96,29 @@ export const BottomSheet = ({
     <div
       ref={sheetRef}
       className={cn(
-        'fixed flex flex-col w-full max-w-125 bottom-0 left-1/2 z-40 h-full rounded-t-default bg-white touch-none',
+        'fixed flex flex-col w-full max-w-125 bottom-0 left-1/2 z-40 h-full rounded-t-default bg-white',
         'transition-transform duration-250 ease-out',
       )}
       style={{
         height,
         transform: `translateX(-50%) translateY(${baseTranslateY + dragOffset}px)`,
       }}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerUp}
     >
-      <div className="flex justify-center pt-1.25">
-        <div className="h-[5px] w-[36px] rounded-[2.5px] bg-[rgba(60,60,67,0.3)]" />
+      <div
+        className={cn('shrink-0 touch-none select-none', headerClassName)}
+        style={header ? { height: peekHeight } : undefined}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+      >
+        <div className="flex justify-center pt-1.25">
+          <div className="h-[5px] w-[36px] rounded-[2.5px] bg-[rgba(60,60,67,0.3)]" />
+        </div>
+        {header}
       </div>
-      {children}
+
+      <div className={cn('flex-1 min-h-0', contentClassName)}>{children}</div>
     </div>
   );
 };
