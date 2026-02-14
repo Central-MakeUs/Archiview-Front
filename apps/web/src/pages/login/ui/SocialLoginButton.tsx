@@ -1,5 +1,7 @@
 import { Button } from '@/shared/ui/button';
 import { KakaoIcon } from '@/shared/ui/icon/KakaoIcon';
+import { AppleIcon } from '@/shared/ui/icon/AppleIcon';
+import { GoogleIcon } from '@/shared/ui/icon/GoogleIcon';
 
 const isReactNativeWebView = (): boolean => {
   if (typeof window === 'undefined') return false;
@@ -26,7 +28,7 @@ const joinUrl = (base: string, path: string): string => {
 export const KakaoButton = () => {
   const handleClick = () => {
     if (isReactNativeWebView()) {
-      postMessageToReactNativeWebView({ type: 'AUTH_LOGIN', provider: 'kakao' });
+      postMessageToReactNativeWebView({ type: 'AUTH_LOGIN', provider: ' ' });
       return;
     }
 
@@ -40,12 +42,29 @@ export const KakaoButton = () => {
 
   return (
     <Button
+      variant="login"
       startIcon={<KakaoIcon />}
       className="bg-[#FEE500] w-full"
       type="button"
       onClick={handleClick}
     >
       <span className="text-neutral-70">카카오톡으로 로그인</span>
+    </Button>
+  );
+};
+
+export const AppleButton = () => {
+  return (
+    <Button variant="login" startIcon={<AppleIcon />} className="bg-[#000000] w-full" type="button">
+      <span className="text-neutral-10">Apple 로 로그인</span>
+    </Button>
+  );
+};
+
+export const GoogleButton = () => {
+  return (
+    <Button variant="login" startIcon={<GoogleIcon />} className="bg-[#F5F6FA] w-full" type="button">
+      <span className="text-neutral-70">구글로 로그인</span>
     </Button>
   );
 };

@@ -55,7 +55,7 @@ export const EditorPlaceItemList = () => {
   return (
     <div className="pt-6">
       {sortedPlaces.map((place) => (
-        <Link href={`/editor/place-info?placeId=${place.placeId}`} key={place.placeId}>
+        <Link href={`/editor/place-info/${place.placeId}`} key={place.placeId}>
           <EditorPlaceItem
             name={place.placeName}
             description={place.editorSummary}

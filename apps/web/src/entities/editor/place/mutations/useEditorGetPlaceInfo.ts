@@ -13,5 +13,6 @@ export const useEditorGetPlaceInfo = (placeId: number) => {
       .queryKey,
     queryFn: () => editorPlaceGet.getMyPlaceDetail(placeId),
   });
+  console.log(placeInfoData);
   return { placeInfoData, isLoading, isError, error };
 };
