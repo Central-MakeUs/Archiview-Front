@@ -33,6 +33,7 @@ export interface IEditorInsightPlaceDetail {
   placeImageUrl: string;
   editorTotal: number;
   address: {
+    addressName: string;
     roadAddress: string;
     detailAddress: string;
     zipCode: string;
@@ -46,12 +47,46 @@ export interface IEditorInsightPlaceDetail {
   };
   postPlaces: [
     {
+      postPlaceId: number;
       editorName: string;
       editorInstagramId: string;
       postUrl: string;
-      postHashTag: string;
+      postHashTags: string[];
       description: string;
       categories: string[];
+    },
+  ];
+}
+
+export interface IEditorPostByPlaceResponse {
+  postId: number;
+  url: string;
+  hashTags: string[];
+  postPlaces: [
+    {
+      postPlaceId: number;
+      description: string;
+      imageUrl: string;
+      viewCount: number;
+      saveCount: number;
+      instagramInflowCount: number;
+      directionCount: number;
+      postPlaceCreatedAt: string;
+      postPlaceLastModifiedAt: string;
+      placeId: number;
+      placeName: string;
+      placeUrl: string;
+      phoneNumber: string;
+      addressName: string;
+      roadAddressName: string;
+      latitude: number;
+      longitude: number;
+      nearestStationWalkTime: string;
+      placeViewCount: number;
+      placeCreatedAt: string;
+      placeLastModifiedAt: string;
+      categoryIds: number[];
+      categoryNames: string[];
     },
   ];
 }
@@ -154,3 +189,6 @@ export type IEditEditorPostResponseDTO = ApiResponse<ICreateEditorPostPlaceInfoR
 
 // 에디터 게시글 생성 전 업로드 URL 조회
 export type IEditorGetPresignedUrlResponseDTO = ApiResponse<IEditorPresignedUrlResponse>;
+
+// 에디터 게시글 조회 (수정)
+export type IEditorPostByPlaceResponseDTO = ApiResponse<IEditorPostByPlaceResponse>;

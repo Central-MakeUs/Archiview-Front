@@ -4,6 +4,9 @@ export const EDITOR_ENDPOINTS = {
   presignedUrl: 'editors/posts/presigned-url',
   publicProfile: (editorId: number) => `editors/${editorId}/profile`,
   me: {
+    posts: {
+      byPostPlace: (postId: number) => `editors/me/posts/by-post-place/${postId}`,
+    },
     places: `editors/me/places`,
     placesDetail: (placeId: string | number) => `editors/me/places/${placeId}`,
     postsDetail: (postId: string | number) => `editors/me/posts/${postId}`,

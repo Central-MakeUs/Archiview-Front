@@ -9,6 +9,7 @@ import type {
   IEditorMeUploadedPlaceListResponseDTO,
   InsightPeriod,
   EditorInsightPlaceSort,
+  IEditorPostByPlaceResponseDTO,
 } from '../model/editorPlace.type';
 
 export type MapFilter = 'ALL' | 'NEARBY';
@@ -94,6 +95,20 @@ export const editorPlaceGet = {
         searchParams: { useMock: params?.useMock ?? false },
       })
       .json<IEditorMeUploadedPlaceListResponseDTO>();
+    return response;
+  },
+
+  getMyPlaceDetail: async (placeId: number): Promise<IEditorInsightPlaceDetailResponseDTO> => {
+    const response = await clientApi
+      .get(`${EDITOR_ENDPOINTS.me.placesDetail(placeId)}`)
+      .json<IEditorInsightPlaceDetailResponseDTO>();
+    return response;
+  },
+
+  getPostByPlace: async (postPlaceId: number): Promise<IEditorPostByPlaceResponseDTO> => {
+    const response = await clientApi
+      .get(`${EDITOR_ENDPOINTS.me.posts.byPostPlace(postPlaceId)}`)
+      .json<IEditorPostByPlaceResponseDTO>();
     return response;
   },
 };

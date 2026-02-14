@@ -8,7 +8,6 @@ import { useEditorInsightSummaryQuery } from '@/entities/editor/place/queries/us
 import type { InsightPeriod } from '@/entities/editor/place/model/editorPlace.type';
 import { PeriodDropdown } from '@/entities/editor/place/ui/PeriodDropDown';
 
-
 function parseInsightPeriod(value: string | null): InsightPeriod {
   if (value === 'WEEK' || value === 'MONTH' || value === 'ALL') return value;
   return 'ALL';
@@ -23,7 +22,7 @@ export const EditorInsight = () => {
     data: insightData,
     isLoading,
     isError,
-  } = useEditorInsightSummaryQuery({ period, useMock: true });
+  } = useEditorInsightSummaryQuery({ period, useMock: false });
 
   // TODO : 이 둘 예쁘게 처리하기
   if (isLoading) return <div>로딩중입니다</div>;

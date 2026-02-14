@@ -1,1 +1,7 @@
-export { MyPage as default, metadata } from '@/pages/mypage';
+import { MyPage, metadata } from '@/pages/mypage';
+
+export { metadata };
+
+export default function MyPageRoute(): React.ReactNode {
+  return <MyPage />;
+}

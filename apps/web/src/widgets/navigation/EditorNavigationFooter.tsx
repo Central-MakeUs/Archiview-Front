@@ -9,7 +9,7 @@ export const EDITOR_NAVIGATION_FOOTER_ITEMS = [
   {
     key: 'home',
     label: '홈',
-    href: '',
+    href: 'home',
     icon: HomeIcon,
   },
   {
