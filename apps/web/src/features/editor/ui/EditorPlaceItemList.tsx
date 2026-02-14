@@ -1,13 +1,12 @@
 import { useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
-import { useGetMyPlaceList } from '@/entities/editor/place/queries/useGetMyPlaceList';
 import type { IEditorInsightPlace } from '@/entities/editor/place/model/editorPlace.type';
 import { parseMetric } from '@/features/editor/utils/parseMetric';
 
 import type { PlaceOption } from './PlaceOptionTabs';
 import { EditorPlaceItem } from '../../../entities/editor/place/ui/EditorPlaceItem';
-import Link from 'next/link';
 
 function sortPlaces(places: IEditorInsightPlace[], metric: PlaceOption) {
   const copy = [...places];
@@ -36,22 +35,18 @@ function sortPlaces(places: IEditorInsightPlace[], metric: PlaceOption) {
   return copy;
 }
 
-export const EditorPlaceItemList = () => {
+interface IEditorPlaceItemListProps {
+  places: IEditorInsightPlace[];
+}
+
+export const EditorPlaceItemList = ({ places }: IEditorPlaceItemListProps) => {
   const sp = useSearchParams();
   const metric = useMemo<PlaceOption>(() => parseMetric(sp?.get('metric') ?? ''), [sp]);
 
-  const { data: placeData, isLoading, isError, error } = useGetMyPlaceList({ useMock: false });
-
-  const places = placeData?.data?.places ?? [];
-
   const sortedPlaces = useMemo(() => sortPlaces(places, metric), [places, metric]);
 
-  if (isLoading) return <div className="pt-6">로딩중...</div>;
-
-  if (isError) return <div className="pt-6">에러: {String(error)}</div>;
-
   if (sortedPlaces.length === 0) return <div className="pt-6">장소가 없습니다.</div>;
-  console.log(placeData);
+
   return (
     <div className="pt-6">
       {sortedPlaces.map((place) => (

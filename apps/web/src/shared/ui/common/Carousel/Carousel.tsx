@@ -1,9 +1,14 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 
 import { cn } from '@/shared/lib/cn';
+
+export interface ICarouselHandle {
+  scrollNext: () => void;
+  canScrollNext: () => boolean;
+}
 
 interface ICarouselProps {
   children: React.ReactNode;
@@ -22,30 +27,30 @@ interface ICarouselProps {
  * @property {boolean} [loop=false] 순환 여부
  * @property {string} [className]
  */
-export const Carousel = ({
-  children,
-  onIndexChange,
-  showIndicator,
-  loop = false,
-  className,
-}: ICarouselProps) => {
-  const slides = useMemo(() => (Array.isArray(children) ? children : [children]), [children]);
+export const Carousel = forwardRef<ICarouselHandle, ICarouselProps>(
+  ({ children, onIndexChange, showIndicator, loop = false, className }, ref) => {
+    const slides = useMemo(() => (Array.isArray(children) ? children : [children]), [children]);
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop });
-  const [currentIndex, setCurrentIndex] = useState(0);
+    const [emblaRef, emblaApi] = useEmblaCarousel({ loop });
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    if (!emblaApi) return;
+    useImperativeHandle(ref, () => ({
+      scrollNext: () => emblaApi?.scrollNext(),
+      canScrollNext: () => emblaApi?.canScrollNext() ?? false,
+    }));
 
-    const onSelect = () => {
-      const index = emblaApi.selectedScrollSnap();
-      setCurrentIndex(index);
-      onIndexChange?.(index);
-    };
+    useEffect(() => {
+      if (!emblaApi) return;
 
-    emblaApi.on('select', onSelect);
-    onSelect();
-  }, [emblaApi, onIndexChange]);
+      const onSelect = () => {
+        const index = emblaApi.selectedScrollSnap();
+        setCurrentIndex(index);
+        onIndexChange?.(index);
+      };
+
+      emblaApi.on('select', onSelect);
+      onSelect();
+    }, [emblaApi, onIndexChange]);
 
   return (
     <div className={cn('flex flex-col', className)}>
@@ -75,4 +80,7 @@ export const Carousel = ({
       )}
     </div>
   );
-};
+  },
+);
+
+Carousel.displayName = 'Carousel';

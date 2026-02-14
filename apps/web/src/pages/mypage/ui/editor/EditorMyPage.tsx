@@ -12,10 +12,14 @@ import { EditorAccountManagementSection } from './EditorAccountManagementSection
 import { EditorInfoSupportSection } from './EditorInfoSupportSection';
 import { EditorTermsConditionsSection } from './EditorTermsConditionsSection';
 import { EllipseArrowIcons } from '@/shared/ui/icon/EllipseArrowIcons';
+import { useLogout } from '@/entities/auth/hooks/useLogout';
+import { useEditorGetMyProfile } from '@/entities/editor/profile/queries/useEditorGetMyProfile';
 
 export const EditorMyPage = (): React.ReactElement => {
   const router = useRouter();
   const { switchRole } = useAuth();
+  const { logout } = useLogout();
+  const { data: editorUserData } = useEditorGetMyProfile();
   const [openChangeRoleModal, setOpenChangeRoleModal] = useState(false);
 
   const handleSwitchToArchiver = useCallback(async () => {
@@ -36,7 +40,7 @@ export const EditorMyPage = (): React.ReactElement => {
   };
 
   const handleLogout = () => {
-    // TODO: 로그아웃 처리
+    logout();
   };
 
   const handleWithdraw = () => {
@@ -62,9 +66,10 @@ export const EditorMyPage = (): React.ReactElement => {
         {/* 프로필 카드 */}
         <div className="px-5 pt-4">
           <EditorInfoCard
-            nickname="에디터 닉네임"
-            instagramId="instagramid"
-            tags={['커피맛집', '커피맛집']}
+            nickname={editorUserData?.data?.nickname ?? ''}
+            instagramId={editorUserData?.data?.instagramId ?? ''}
+            tags={editorUserData?.data?.hashtags ?? []}
+            profileImageUrl={editorUserData?.data?.profileImageUrl ?? ''}
             onEdit={handleEditProfile}
           />
         </div>
