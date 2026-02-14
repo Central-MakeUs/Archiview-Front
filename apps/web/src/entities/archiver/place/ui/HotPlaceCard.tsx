@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { Badge } from '@/shared/ui/Badge';
 import { FolderIcon } from '@/shared/ui/icon';
-import { Card } from '@/shared/ui/common/Card';
+import { Kard } from '@/shared/ui/common/Kard';
 
 interface IHotPlaceCardProps {
   placeId: number;
@@ -48,7 +48,7 @@ export const HotPlaceCard = ({
   return (
     // TODO : 라우팅 연결하기
     <Link href={`place-info/${placeId}`} className="block shrink-0">
-      <Card className="flex flex-col h-52 w-46 shadow-default overflow-hidden border-none">
+      <Kard className="flex flex-col h-52 w-46 shadow-default overflow-hidden border-none">
         {/* 이거 스타일 하드코딩 어케고치지 */}
         <div className="relative w-full shrink-0 overflow-hidden" style={{ height: '99px' }}>
           <Image
@@ -81,7 +81,7 @@ export const HotPlaceCard = ({
             </span>
           </div>
         </div>
-      </Card>
+      </Kard>
     </Link>
   );
 };
