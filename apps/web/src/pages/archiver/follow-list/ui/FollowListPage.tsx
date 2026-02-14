@@ -1,8 +1,8 @@
 'use client';
 
 import { useGetMyFollows } from '@/entities/archiver/profile/queries/useGetMyFollows';
-// import { IEditor } from '@/entities/archiver/profile/model/archiverProfile.type';
 import { EditorProfileItem } from '@/features/archiver/profile/ui/EditorProfileItem';
+
 export interface IEditor {
   editorId: string;
   nickname: string;

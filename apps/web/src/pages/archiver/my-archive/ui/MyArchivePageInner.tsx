@@ -1,11 +1,12 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import { CategoryOptionTabs } from '@/pages/editor/profile/CategoryOptionTabs';
-import { HamburgerIcon } from '@/shared/ui/icon/HamburgerIcon';
+import { useGetMyArchives } from '@/entities/archiver/place/queries/useGetMyArchives';
 
 import { ArchiverPlaceItem } from './ArchiverPlaceItem';
 
@@ -32,19 +33,46 @@ interface IPlace {
 }
 
 export const MyArchivePageInner = ({ initialPlaces }: { initialPlaces: IPlace[] }) => {
+  const router = useRouter();
+
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState<CategoryTab>('ALL');
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
 
+  const { data, isLoading, isError } = useGetMyArchives({ useMock: true });
+
+  const places: IPlace[] = useMemo(() => {
+    const postPlaces = data?.data?.postPlaces ?? [];
+
+    return postPlaces.map((p) => ({
+      id: String(p.postPlaceId),
+      title: p.placeName,
+      description: p.description ?? '',
+      lat: 37.5665,
+      lng: 126.978,
+      category: 'ALL',
+      savedCount: p.saveCount,
+      viewCount: p.viewCount,
+    }));
+  }, [data]);
+
   const filteredPlaces = useMemo(() => {
-    if (category === 'ALL') return initialPlaces;
-    return initialPlaces.filter((p) => p.category === category);
-  }, [initialPlaces, category]);
+    if (category === 'ALL') return places;
+    return places.filter((p) => p.category === category);
+  }, [places, category]);
 
   const selectedPlace = useMemo(
     () => filteredPlaces.find((p) => p.id === selectedPlaceId) ?? null,
     [filteredPlaces, selectedPlaceId],
   );
+
+  if (isLoading) {
+    return <div className="px-5 pt-6">로딩중...</div>;
+  }
+
+  if (isError) {
+    return <div className="px-5 pt-6">불러오기 실패</div>;
+  }
 
   return (
     <div className="flex h-full flex-col min-h-0">
@@ -62,9 +90,8 @@ export const MyArchivePageInner = ({ initialPlaces }: { initialPlaces: IPlace[] 
           <div className="px-5 pb-6">
             <div className="flex flex-row justify-between pb-4 pt-2.5">
               <p className="heading-20-bold">
-                업로드한 장소 <span className="text-primary-40 pl-1">숫자</span>
+                업로드한 장소 <span className="text-primary-40 pl-1">{filteredPlaces.length}</span>
               </p>
-              <HamburgerIcon />
             </div>
             {filteredPlaces.map((p) => (
               <ArchiverPlaceItem
@@ -73,6 +100,7 @@ export const MyArchivePageInner = ({ initialPlaces }: { initialPlaces: IPlace[] 
                 description={p.description}
                 savedCount={p.savedCount}
                 viewCount={p.viewCount}
+                onClick={() => router.push(`/archiver/place-info/${p.id}`)}
               />
             ))}
           </div>
