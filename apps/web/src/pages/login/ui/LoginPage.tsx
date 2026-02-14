@@ -1,11 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { Button } from '@/shared/ui/button';
 
-import { OnboardingCarousel } from './OnboardingCarousel';
+import { OnboardingCarousel, type IOnboardingCarouselHandle } from './OnboardingCarousel';
 import { AppleButton, GoogleButton, KakaoButton } from './SocialLoginButton';
 
 const ONBOARDING_TEXT: Array<{ title: string; description: string }> = [
@@ -25,12 +25,21 @@ const ONBOARDING_TEXT: Array<{ title: string; description: string }> = [
 
 export const LoginPage = () => {
   const [step, setStep] = useState<'onboarding' | 'login'>('onboarding');
+  const carouselRef = useRef<IOnboardingCarouselHandle>(null);
+
+  const handleNext = () => {
+    if (carouselRef.current?.canScrollNext()) {
+      carouselRef.current.scrollNext();
+    } else {
+      setStep('login');
+    }
+  };
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       {step === 'onboarding' && (
         <div className="flex min-h-dvh flex-col">
-          <OnboardingCarousel items={ONBOARDING_TEXT}>
+          <OnboardingCarousel ref={carouselRef} items={ONBOARDING_TEXT}>
             {/* 나중에 슬라이드 바꾸기 */}
             <div className="flex h-full items-center justify-center">
               <Image
@@ -60,7 +69,7 @@ export const LoginPage = () => {
             </div>
           </OnboardingCarousel>
           <div className="flex flex-col items-center gap-2 px-5 pb-8">
-            <Button className="w-full bg-primary-40" onClick={() => setStep('login')}>
+            <Button className="w-full bg-primary-40" onClick={handleNext}>
               다음
             </Button>
             <p className="text-center caption-12-regular text-neutral-50">

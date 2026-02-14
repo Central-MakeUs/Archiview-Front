@@ -12,6 +12,5 @@ export const useEditorGetPlaceInfo = (placeId: number) => {
     queryKey: editorKeys.getMyPlaceDetail.applyFilters({ placeId: placeId }).queryKey,
     queryFn: () => editorPlaceGet.getMyPlaceDetail(placeId),
   });
-  console.log(placeInfoData);
   return { placeInfoData, isLoading, isError, error };
 };

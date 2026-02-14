@@ -8,6 +8,7 @@ import { LOCAL_STORAGE_KEYS, type StoredUserRole } from '@/shared/constants/loca
 import { ChangeRoleModal } from '@/entities/auth/ui/ChangeRoleModal';
 import { EditorMyPage } from './ui/editor/EditorMyPage';
 import { ArchiverMyPage } from './ui/archiver/ArchiverMyPage';
+import { useGetMyProfile } from '@/entities/archiver/profile/queries/useGetMyProfile';
 
 const isStoredUserRole = (value: string | null): value is StoredUserRole => {
   return value === 'GUEST' || value === 'ARCHIVER' || value === 'EDITOR';
@@ -16,6 +17,7 @@ const isStoredUserRole = (value: string | null): value is StoredUserRole => {
 export const MyPage = (): React.ReactElement => {
   const router = useRouter();
   const { switchRole, changeRoleMutation } = useAuth();
+  const { data: myData, isLoading, isError } = useGetMyProfile({ useMock: false });
 
   const [role, setRole] = useState<StoredUserRole | null>(null);
   const [openChangeRoleModal, setOpenChangeRoleModal] = useState(false);
@@ -48,9 +50,11 @@ export const MyPage = (): React.ReactElement => {
     router.push('/register-editor');
   };
 
+  console.log(myData);
+
   return (
     <>
-      {role === 'EDITOR' ? <EditorMyPage /> : <ArchiverMyPage />}
+      {role === 'EDITOR' ? <EditorMyPage /> : <ArchiverMyPage myData={myData?.data ?? null} />}
       {/* <div className="p-5">
         <div className="body-16-semibold">MyPage</div>
 

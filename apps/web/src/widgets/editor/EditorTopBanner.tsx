@@ -5,13 +5,13 @@ import Link from 'next/link';
 
 import { Chip } from '@/shared/ui/Chip';
 import { RightArrowIcon } from '@/shared/ui/icon';
-import { useEditorInsightSummaryQuery } from '@/entities/editor/place/queries/useGetInsightSummery';
-import { useGetMyPlaceList } from '@/entities/editor/place/queries/useGetMyPlaceList';
 
-export const EditorTopBanner = () => {
-  const { data: userData } = useEditorInsightSummaryQuery({ useMock: false });
-  const { data: data } = useGetMyPlaceList({ useMock: false });
+interface IEditorTopBannerProps {
+  editorNickname: string;
+  placeCount: number;
+}
 
+export const EditorTopBanner = ({ editorNickname, placeCount }: IEditorTopBannerProps) => {
   return (
     <div className="relative w-full h-62.75 bg-primary-30 rounded-b-4xl px-5 pt-8 pb-6">
       <Image
@@ -23,9 +23,9 @@ export const EditorTopBanner = () => {
       />
       <Chip label="에디터" className="rounded-xl border-none bg-primary-40 text-white" />
       <div className="pt-3">
-        <p className="heading-24-bold">{userData?.data?.editorNickname}</p>
+        <p className="heading-24-bold">{editorNickname}</p>
         <span className="heading-20-semibold">
-          총 <span className="text-primary-40 underline">{data?.data?.places.length}</span>개의
+          총 <span className="text-primary-40 underline">{placeCount}</span>개의
           장소를
           <br />
           아카이뷰에 공유했어요

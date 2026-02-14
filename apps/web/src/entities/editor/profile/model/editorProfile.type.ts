@@ -11,10 +11,12 @@ export interface IPlaceInfo {
 }
 
 export interface IEditorMeProfileResponse {
-  postId: number;
-  url: string;
-  hashTag: string;
-  placeInfoResponseList: IPlaceInfo[];
+  nickname: string;
+  instagramId: string;
+  instagramUrl: string;
+  introduction: string;
+  hashtags: string[];
+  profileImageUrl: string;
 }
 
 export interface IEditorPublicProfileResponse {

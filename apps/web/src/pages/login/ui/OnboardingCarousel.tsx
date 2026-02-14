@@ -1,13 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 
-import { Carousel } from '@/shared/ui/common/Carousel/Carousel';
+import { Carousel, type ICarouselHandle } from '@/shared/ui/common/Carousel/Carousel';
 import { cn } from '@/shared/lib/cn';
 
 interface IOnboardingText {
   title: string;
   description: string;
+}
+
+export interface IOnboardingCarouselHandle {
+  scrollNext: () => void;
+  canScrollNext: () => boolean;
 }
 
 interface IOnboardingCarouselProps {
@@ -41,19 +46,26 @@ const FadeText = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const OnboardingCarousel = ({ children, items }: IOnboardingCarouselProps) => {
-  const [index, setIndex] = useState(0);
+export const OnboardingCarousel = forwardRef<IOnboardingCarouselHandle, IOnboardingCarouselProps>(
+  ({ children, items }, ref) => {
+    const [index, setIndex] = useState(0);
+    const carouselRef = useRef<ICarouselHandle>(null);
 
-  const slideCount = Array.isArray(children) ? children.length : 1;
+    const slideCount = Array.isArray(children) ? children.length : 1;
 
-  return (
-    <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-6">
-      {/* Carousel (비주얼만 이동) */}
-      <div>
-        <Carousel onIndexChange={setIndex} className="h-full">
-          {children}
-        </Carousel>
-      </div>
+    useImperativeHandle(ref, () => ({
+      scrollNext: () => carouselRef.current?.scrollNext(),
+      canScrollNext: () => carouselRef.current?.canScrollNext() ?? false,
+    }));
+
+    return (
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-6">
+        {/* Carousel (비주얼만 이동) */}
+        <div>
+          <Carousel ref={carouselRef} onIndexChange={setIndex} className="h-full">
+            {children}
+          </Carousel>
+        </div>
 
       {/* Fixed Text Area */}
       <div className="flex shrink-0 flex-col items-center gap-10">
@@ -78,4 +90,7 @@ export const OnboardingCarousel = ({ children, items }: IOnboardingCarouselProps
       </div>
     </div>
   );
-};
+  },
+);
+
+OnboardingCarousel.displayName = 'OnboardingCarousel';

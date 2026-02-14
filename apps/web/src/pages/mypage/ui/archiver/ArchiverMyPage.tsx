@@ -12,10 +12,17 @@ import { ArchiverAccountManagementSection } from './ArchiverAccountManagementSec
 import { ArchiverInfoSupportSection } from './ArchiverInfoSupportSection';
 import { ArchiverTermsConditionsSection } from './ArchiverTermsConditionsSection';
 import { EllipseArrowIcons } from '@/shared/ui/icon/EllipseArrowIcons';
+import { IArchiverMyProfileResponseDTO } from '@/entities/archiver/profile/model/archiverProfile.type';
+import { useLogout } from '@/entities/auth/hooks/useLogout';
 
-export const ArchiverMyPage = (): React.ReactElement => {
+export const ArchiverMyPage = ({
+  myData,
+}: {
+  myData: IArchiverMyProfileResponseDTO['data'];
+}): React.ReactElement => {
   const router = useRouter();
   const { switchRole } = useAuth();
+  const { logout } = useLogout();
   const [openChangeRoleModal, setOpenChangeRoleModal] = useState(false);
 
   const handleSwitchToEditor = useCallback(async () => {
@@ -32,7 +39,7 @@ export const ArchiverMyPage = (): React.ReactElement => {
   }, [router, switchRole]);
 
   const handleLogout = () => {
-    // TODO: 로그아웃 처리
+    logout();
   };
 
   const handleWithdraw = () => {
@@ -61,7 +68,10 @@ export const ArchiverMyPage = (): React.ReactElement => {
       <div className="flex flex-1 flex-col">
         {/* 프로필 카드 */}
         <div className="px-5 pt-4">
-          <ArchiverInfoCard nickname="{형용사} {명사}" code="#0000" />
+          <ArchiverInfoCard
+            nickname={myData?.nickname ?? ''}
+            code={myData?.userId ? `#${myData.userId.slice(-4)}` : ''}
+          />
         </div>
 
         {/* 계정관리 */}
