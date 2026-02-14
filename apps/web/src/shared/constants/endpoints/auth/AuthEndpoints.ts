@@ -11,6 +11,9 @@ export const AUTH_ENDPOINTS = {
     editor: `auth/test/editor`,
   },
   users: {
+    me: {
+      editorProfile: `users/me/editor-profile`,
+    },
     onboarding: `users/onboarding`,
     switchRole: `users/switch-role`,
   },

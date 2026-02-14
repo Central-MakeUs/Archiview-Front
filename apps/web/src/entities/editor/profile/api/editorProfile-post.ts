@@ -1,13 +1,13 @@
 import { clientApi } from '@/shared/lib/api/client';
-import { EDITOR_ENDPOINTS } from '@/shared/constants/endpoints/editor/EditorEndpoints';
 
 import {
   IEditorProfileRegisterRequest,
   IEditorProfileRegisterResponseDTO,
 } from '@/entities/auth/model/auth.type';
+import { AUTH_ENDPOINTS } from '@/shared/constants/endpoints/auth/AuthEndpoints';
 
 export const editorProfilePost = {
-    // 에디터 프로필 등록
+  // 에디터 프로필 등록
   registerEditorProfile: async ({
     profileImageUrl,
     nickname,
@@ -17,7 +17,7 @@ export const editorProfilePost = {
     hashtags,
   }: IEditorProfileRegisterRequest): Promise<IEditorProfileRegisterResponseDTO> => {
     const response = await clientApi
-      .post(`${EDITOR_ENDPOINTS.me.profile}`, {
+      .post(`${AUTH_ENDPOINTS.users.me.editorProfile}`, {
         json: { profileImageUrl, nickname, instagramId, instagramUrl, introduction, hashtags },
       })
       .json<IEditorProfileRegisterResponseDTO>();

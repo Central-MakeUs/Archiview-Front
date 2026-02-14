@@ -1,13 +1,12 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { useState } from 'react';
 
 import { Button } from '@/shared/ui/button';
 
 import { OnboardingCarousel } from './OnboardingCarousel';
-import { KakaoButton } from './SocialLoginButton';
+import { AppleButton, GoogleButton, KakaoButton } from './SocialLoginButton';
 
 const ONBOARDING_TEXT: Array<{ title: string; description: string }> = [
   {
@@ -33,25 +32,47 @@ export const LoginPage = () => {
         <>
           <OnboardingCarousel items={ONBOARDING_TEXT}>
             {/* 나중에 슬라이드 바꾸기 */}
-            <div className="flex h-120 items-center justify-center">
-              <Image src="/images/TestImage.png" alt="온보딩 이미지 1" width={240} height={240} />
+            <div className="flex items-center justify-center">
+              <Image
+                src="/images/WebOnboardingImage1.png"
+                alt="온보딩 이미지 1"
+                width={340}
+                height={510}
+                // className="h-auto w-full max-w-[340px]"
+              />
             </div>
 
-            <div className="flex h-120 items-center justify-center">
-              <Image src="/images/TestImage.png" alt="온보딩 이미지 2" width={240} height={240} />
+            <div className="flex items-center justify-center">
+              <Image
+                src="/images/WebOnboardingImage2.png"
+                alt="온보딩 이미지 2"
+                width={340}
+                height={510}
+                // className="h-auto w-full max-w-[340px]"
+              />
             </div>
 
-            <div className="flex h-120 items-center justify-center">
-              <Image src="/images/TestImage.png" alt="온보딩 이미지 3" width={240} height={240} />
+            <div className="flex items-center justify-center">
+              <Image
+                className="w-full max-w-[340px]"
+                src="/images/WebOnboardingImage3.png"
+                alt="온보딩 이미지 3"
+                width={340}
+                height={510}
+                // className="h-auto w-full max-w-[340px]"
+              />
             </div>
           </OnboardingCarousel>
-          <div className="px-5 pb-8">
+          <div className="flex flex-col items-center gap-2 px-5 pb-8">
             <Button className="w-full bg-primary-40" onClick={() => setStep('login')}>
               다음
             </Button>
-            <p className="text-center caption-12-semibold text-neutral-50 mt-2">
+            <p className="text-center caption-12-regular text-neutral-50">
               이미 가입했나요?{' '}
-              <button onClick={() => setStep('login')} className="underline underline-offset-2">
+              <button
+                onClick={() => setStep('login')}
+                className="caption-12-semibold underline underline-offset-2"
+              >
                 로그인
               </button>
             </p>
@@ -60,13 +81,18 @@ export const LoginPage = () => {
       )}
 
       {step === 'login' && (
-        <>
-          <div className="fixed bottom-10 left-5 right-5">
-            <KakaoButton />
-            <Button>애플로그인 </Button>
-            <Button className="w-full mt-13">회원가입</Button>
+        <div className="flex flex-1 flex-col items-center justify-between">
+          <div className="flex flex-1 items-center justify-center">
+            <Image src="/images/LoginPageImage.png" alt="archiview 로고" width={246} height={45} />
           </div>
-        </>
+          <div className="flex w-full flex-col gap-4 px-5 pb-10">
+            <KakaoButton />
+            <AppleButton />
+            <div className="flex flex-col items-center gap-1">
+              <GoogleButton />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

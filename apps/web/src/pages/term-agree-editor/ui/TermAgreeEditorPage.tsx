@@ -41,18 +41,23 @@ export const TermAgreeEditorPage = () => {
           에디터로 활동하시려면
           <br /> 추가 약관동의가 필요해요
         </p>
-        <CheckItem checked={allChecked} onCheckedChange={onToggleAll} className="bg-[#F5F6FA] mb-1">
+        <CheckItem
+          checked={allChecked}
+          onCheckedChange={onToggleAll}
+          className="bg-[#F5F6FA] mb-1"
+          endArrowIcon={false}
+        >
           전체 약관에 동의합니다
         </CheckItem>
-        <CheckItem checked={copyWrite} onCheckedChange={setCopyWrite}>
+        <CheckItem checked={copyWrite} onCheckedChange={setCopyWrite} endArrowIcon={true}>
           <span className="text-neutral-40 mr-1">(필수)</span> 에디터 운영정책 및 저작권 안내
         </CheckItem>
-        <CheckItem checked={guideLine} onCheckedChange={setGuideLine}>
+        <CheckItem checked={guideLine} onCheckedChange={setGuideLine} endArrowIcon={true}>
           <span className="text-neutral-40 mr-1">(필수)</span> 커뮤니티 가이드라인 준수 서약
         </CheckItem>
       </div>
       <Button
-        onClick={() => router.push('register')}
+        onClick={() => router.push('register-editor')}
         className={allChecked ? 'w-full' : 'w-full bg-neutral-20 text-neutral-40 border-none'}
       >
         동의
