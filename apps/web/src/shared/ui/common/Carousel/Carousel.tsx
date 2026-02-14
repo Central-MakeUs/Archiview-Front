@@ -50,10 +50,10 @@ export const Carousel = ({
   return (
     <div className={cn('flex flex-col', className)}>
       {/* viewport */}
-      <div ref={emblaRef} className="overflow-hidden">
-        <div className="flex">
+      <div ref={emblaRef} className="h-full overflow-hidden">
+        <div className="flex h-full">
           {slides.map((slide, index) => (
-            <div key={index} className="w-full shrink-0">
+            <div key={index} className="h-full w-full shrink-0">
               {slide}
             </div>
           ))}

@@ -6,10 +6,7 @@ import { useState } from 'react';
 import { Button } from '@/shared/ui/button';
 
 import { OnboardingCarousel } from './OnboardingCarousel';
-
-import { AppleLoginButton } from './AppleLoginButton';
-
-import { GoogleButton, KakaoButton } from './SocialLoginButton';
+import { AppleButton, GoogleButton, KakaoButton } from './SocialLoginButton';
 
 const ONBOARDING_TEXT: Array<{ title: string; description: string }> = [
   {
@@ -30,39 +27,35 @@ export const LoginPage = () => {
   const [step, setStep] = useState<'onboarding' | 'login'>('onboarding');
 
   return (
-    <div className="flex h-full flex-col bg-white">
+    <div className="flex flex-col overflow-hidden bg-white">
       {step === 'onboarding' && (
-        <>
+        <div className="flex min-h-dvh flex-col">
           <OnboardingCarousel items={ONBOARDING_TEXT}>
             {/* 나중에 슬라이드 바꾸기 */}
-            <div className="flex items-center justify-center">
+            <div className="flex h-full items-center justify-center">
               <Image
                 src="/images/WebOnboardingImage1.png"
                 alt="온보딩 이미지 1"
-                width={340}
-                height={510}
-                // className="h-auto w-full max-w-[340px]"
+                width={148}
+                height={283}
               />
             </div>
 
-            <div className="flex items-center justify-center">
+            <div className="flex h-full items-center justify-center">
               <Image
                 src="/images/WebOnboardingImage2.png"
                 alt="온보딩 이미지 2"
-                width={340}
-                height={510}
-                // className="h-auto w-full max-w-[340px]"
+                width={148}
+                height={283}
               />
             </div>
 
-            <div className="flex items-center justify-center">
+            <div className="flex h-full items-center justify-center">
               <Image
-                className="w-full max-w-[340px]"
                 src="/images/WebOnboardingImage3.png"
                 alt="온보딩 이미지 3"
-                width={340}
-                height={510}
-                // className="h-auto w-full max-w-[340px]"
+                width={148}
+                height={283}
               />
             </div>
           </OnboardingCarousel>
@@ -80,26 +73,22 @@ export const LoginPage = () => {
               </button>
             </p>
           </div>
-        </>
+        </div>
       )}
 
       {step === 'login' && (
-        <>
+        <div className="flex min-h-dvh flex-col items-center">
+          <div className="flex flex-1 items-center justify-center">
+            <Image src="/images/LoginPageImage.png" alt="archiview 로고" width={246} height={45} />
+          </div>
           <div className="flex w-full flex-col gap-4 px-5 pb-10">
             <KakaoButton />
-            <AppleLoginButton
-              clientId={process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!}
-              redirectUri={`${process.env.NEXT_PUBLIC_BASE_URL}/login/oauth2/code/apple`}
-              className="w-full rounded-xl bg-black px-4 py-3 text-white"
-            >
-              Apple로 로그인
-            </AppleLoginButton>
-            <Button className="w-full mt-13">회원가입</Button>
+            <AppleButton />
             <div className="flex flex-col items-center gap-1">
               <GoogleButton />
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

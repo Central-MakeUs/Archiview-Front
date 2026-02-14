@@ -47,13 +47,17 @@ export const OnboardingCarousel = ({ children, items }: IOnboardingCarouselProps
   const slideCount = Array.isArray(children) ? children.length : 1;
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-10">
+    <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-26 mt-26">
       {/* Carousel (비주얼만 이동) */}
-      <Carousel onIndexChange={setIndex}>{children}</Carousel>
+      <div>
+        <Carousel onIndexChange={setIndex} className="h-full">
+          {children}
+        </Carousel>
+      </div>
 
       {/* Fixed Text Area */}
-      <div className="flex flex-col items-center gap-10">
-        <div className="text-center">
+      <div className="flex shrink-0 flex-col items-center gap-10">
+        <div className="flex flex-col items-center gap-5 text-center">
           <FadeText key={index}>
             <h2 className="heading-24-bold">{items[index]?.title}</h2>
             <p className="mt-5 whitespace-pre-line body-14-semibold text-primary-50">
@@ -67,10 +71,7 @@ export const OnboardingCarousel = ({ children, items }: IOnboardingCarouselProps
           {Array.from({ length: slideCount }).map((_, i) => (
             <span
               key={i}
-              className={cn(
-                'h-2 w-2 rounded-full bg-neutral-30',
-                index === i && 'bg-primary-40',
-              )}
+              className={cn('h-2 w-2 rounded-full bg-neutral-30', index === i && 'bg-primary-40')}
             />
           ))}
         </div>
