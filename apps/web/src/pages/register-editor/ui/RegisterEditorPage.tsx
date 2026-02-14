@@ -2,20 +2,24 @@
 
 import Image from 'next/image';
 import { useRef, useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { useEditorGetPresignedUrl } from '@/entities/editor/place/mutations/useEditorGetPresignedUrl';
+import { useRegisterEditorProfile } from '@/entities/auth/mutations/useRegisterEditorProfile';
 import { usePutImage } from '@/entities/editor/place/mutations/usePutImage';
 import { CheckBoxIcon } from '@/shared/ui/icon';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/lib/cn';
+import { IntroductionInput } from '@/entities/editor/profile/ui/IntroductionInput';
+import { NickNameInput } from '@/entities/editor/profile/ui/NickNameInput';
+import { InstagramUrlInput } from '@/entities/editor/profile/ui/InstagramUrlInput';
+import { InstagramIdInput } from '@/entities/editor/profile/ui/InstagramIdInput';
+import { HashTagInput } from '@/entities/editor/profile/ui/HashTagInput';
 
-import { IntroductionInput } from './IntroductionInput';
-import { NickNameInput } from './NickNameInput';
-import { InstagramUrlInput } from './InstagramUrlInput';
-import { InstagramIdInput } from './InstagramIdInput';
-import { HashTagInput } from './HashTagInput';
+import { RegisterFinishModal } from './RegisterFinishModal';
 
 export const RegisterEditorPage = () => {
+  const router = useRouter();
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const [profileImagePreViewUrl, setProfileImagePreViewUrl] = useState<string>('');
@@ -27,8 +31,16 @@ export const RegisterEditorPage = () => {
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [isChecked, setIsChecked] = useState(false);
 
+  const [isNicknameDisabled, setIsNicknameDisabled] = useState(false);
+  const [isInstagramIdDisabled, setIsInstagramIdDisabled] = useState(false);
+  const [isInstagramUrlDisabled, setIsInstagramUrlDisabled] = useState(false);
+
+  const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
+
   const { getPresignedUrl } = useEditorGetPresignedUrl();
   const { putImage } = usePutImage();
+
+  const { mutate: registerEditor } = useRegisterEditorProfile();
 
   const openFilePicker = () => fileRef.current?.click();
 
@@ -59,7 +71,7 @@ export const RegisterEditorPage = () => {
 
     e.target.value = '';
   };
-
+  console.log(hashtags)
   const payload = useMemo(
     () => ({
       profileImageUrl,
@@ -73,18 +85,48 @@ export const RegisterEditorPage = () => {
   );
 
   const isSubmitEnabled = useMemo(() => {
-    const hasProfileImage = !!profileImageUrl; // 이미지 필수로 볼 거면 이렇게
+    const hasProfileImage = !!profileImageUrl;
     const hasNickname = nickname.trim().length > 0;
+    const hasIntroduction = introduction.trim().length <= 50 && introduction.trim().length > 0;
     const hasInstagramId = instagramId.trim().length > 0;
     const hasInstagramUrl = instagramUrl.trim().length > 0;
+    const hasHashtags = hashtags.length === 2;
 
-    return hasProfileImage && hasNickname && hasInstagramId && hasInstagramUrl;
-  }, [profileImageUrl, nickname, instagramId, instagramUrl]);
+    const allRequiredInputsDisabled =
+      isNicknameDisabled && isInstagramIdDisabled && isInstagramUrlDisabled;
+
+    return (
+      hasProfileImage &&
+      hasNickname &&
+      hasInstagramId &&
+      hasInstagramUrl &&
+      hasHashtags &&
+      hasIntroduction &&
+      allRequiredInputsDisabled
+    );
+  }, [
+    profileImageUrl,
+    nickname,
+    introduction,
+    instagramId,
+    instagramUrl,
+    hashtags,
+    isNicknameDisabled,
+    isInstagramIdDisabled,
+    isInstagramUrlDisabled,
+  ]);
 
   const handleSubmit = () => {
     if (!isSubmitEnabled) return;
-    console.log('submit payload', payload);
-    // TODO: 등록 mutation에 payload 넣어서 호출
+
+    registerEditor(payload, {
+      onSuccess: (res) => {
+        setIsFinishModalOpen(true);
+      },
+      onError: (err) => {
+        // TODO: 에러 처리(토스트 등)
+      },
+    });
   };
 
   return (
@@ -130,12 +172,14 @@ export const RegisterEditorPage = () => {
             value={nickname}
             onChange={setNickname}
             disabledCheck={!nickname || nickname.length > 6}
+            onDisabledChange={setIsNicknameDisabled}
           />
         </div>
 
         <div>
           <div className="flex flex-row justify-between mb-3">
             <p className="body-14-semibold">한줄소개</p>
+            <p className="caption-12-medium text-primary-40">*필수</p>
           </div>
           <IntroductionInput value={introduction} onChange={setIntroduction} />
         </div>
@@ -145,7 +189,11 @@ export const RegisterEditorPage = () => {
             <p className="body-14-semibold">인스타그램 아이디</p>
             <p className="caption-12-medium text-primary-40">*필수</p>
           </div>
-          <InstagramIdInput value={instagramId} onChange={setInstagramId} />
+          <InstagramIdInput
+            value={instagramId}
+            onChange={setInstagramId}
+            onDisabledChange={setIsInstagramIdDisabled}
+          />
         </div>
 
         <div>
@@ -153,7 +201,11 @@ export const RegisterEditorPage = () => {
             <p className="body-14-semibold">인스타그램 URL</p>
             <p className="caption-12-medium text-primary-40">*필수</p>
           </div>
-          <InstagramUrlInput value={instagramUrl} onChange={setInstagramUrl} />
+          <InstagramUrlInput
+            value={instagramUrl}
+            onChange={setInstagramUrl}
+            onDisabledChange={setIsInstagramUrlDisabled}
+          />
         </div>
 
         <div>
@@ -183,6 +235,12 @@ export const RegisterEditorPage = () => {
           등록완료
         </Button>
       </div>
+
+      <RegisterFinishModal
+        isOpen={isFinishModalOpen}
+        onClose={() => router.replace('/mypage')}
+        onConfirm={() => router.replace('/editor/home')}
+      />
     </div>
   );
 };

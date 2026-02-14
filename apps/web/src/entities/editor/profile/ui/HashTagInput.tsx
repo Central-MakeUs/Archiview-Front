@@ -149,7 +149,7 @@ export const HashTagInput = ({ value, onChange, max = 2, className }: IHashTagIn
             key={tag}
             className="inline-flex items-center gap-4 rounded-default bg-neutral-10 px-3 h-9"
           >
-            <span className="body-14-semibold text-neutral-40">#{tag}</span>
+            <span className="body-14-semibold text-neutral-40">{tag}</span>
             <button type="button" onClick={() => removeTag(tag)} aria-label="해시태그 삭제">
               <XIcon className="w-2.5 text-neutral-40" />
             </button>

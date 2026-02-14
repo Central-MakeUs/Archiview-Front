@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, useRef } from 'react';
+import { useCallback, useMemo, useState, useRef, useEffect } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { BoxInput } from '@/shared/ui/common/Input/BoxInput';
 import { Button } from '@/shared/ui/button';
@@ -7,6 +7,7 @@ interface IInstagramUrlInputProps {
   value: string;
   onChange: (value: string) => void;
   disabledCheck?: boolean;
+  onDisabledChange?: (locked: boolean) => void;
   className?: string;
 }
 
@@ -27,13 +28,22 @@ const validateInstagramUrl = (raw: string): ValidationResult => {
     : { state: 'error', message: '링크가 정상적으로 인식되지 않았어요' };
 };
 
-export const InstagramUrlInput = ({ value, onChange, className }: IInstagramUrlInputProps) => {
+export const InstagramUrlInput = ({
+  value,
+  onChange,
+  onDisabledChange,
+  className,
+}: IInstagramUrlInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [validation, setValidation] = useState<ValidationResult>({ state: 'default' });
   const [hasValidated, setHasValidated] = useState(false);
 
-  const isLocked = hasValidated && validation.state === 'success';
+  const isDisabled = hasValidated && validation.state === 'success';
+
+  useEffect(() => {
+    onDisabledChange?.(isDisabled);
+  }, [isDisabled, onDisabledChange]);
 
   const handleClickValidate = useCallback(() => {
     setHasValidated(true);
@@ -42,7 +52,7 @@ export const InstagramUrlInput = ({ value, onChange, className }: IInstagramUrlI
 
   // UX: 값 바꾸면 이전 검증 결과는 무효니까 숨김 처리(선택)
   const handleChange = (next: string) => {
-    if (isLocked) return;
+    if (isDisabled) return;
     onChange(next);
     setHasValidated(false);
     setValidation({ state: 'default' });
@@ -73,7 +83,7 @@ export const InstagramUrlInput = ({ value, onChange, className }: IInstagramUrlI
     <div className={cn('flex gap-3 items-center', className)}>
       <BoxInput
         className={cn('flex-1')}
-        boxClassName={cn(isLocked && 'bg-neutral-30 text-neutral-40 border-neutral-40')}
+        boxClassName={cn(isDisabled && 'bg-neutral-30 text-neutral-40 border-neutral-40')}
         state={inputState}
         message={message}
       >
@@ -81,11 +91,11 @@ export const InstagramUrlInput = ({ value, onChange, className }: IInstagramUrlI
           value={value}
           onChange={(e) => handleChange(e.target.value)}
           placeholder="인스타그램 프로필 링크를 입력해주세요."
-          disabled={isLocked}
+          disabled={isDisabled}
         />
       </BoxInput>
 
-      {isLocked ? (
+      {isDisabled ? (
         <Button
           type="button"
           onClick={handleClickEdit}

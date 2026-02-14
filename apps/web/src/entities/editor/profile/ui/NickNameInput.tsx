@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { BoxInput } from '@/shared/ui/common/Input/BoxInput';
 import { Button } from '@/shared/ui/button';
@@ -8,6 +8,7 @@ interface INickNameInputProps {
   onChange: (value: string) => void;
   disabledCheck?: boolean;
   className?: string;
+  onDisabledChange?: (locked: boolean) => void;
 }
 
 interface IValidation {
@@ -19,6 +20,7 @@ export const NickNameInput = ({
   value,
   onChange,
   disabledCheck,
+  onDisabledChange,
   className,
 }: INickNameInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -26,10 +28,14 @@ export const NickNameInput = ({
   const [validation, setValidation] = useState<IValidation>({ state: 'default' });
   const [hasValidated, setHasValidated] = useState(false);
 
-  const isLocked = hasValidated && validation.state === 'success';
+  const isDisabled = hasValidated && validation.state === 'success';
 
+  useEffect(() => {
+    onDisabledChange?.(isDisabled);
+  }, [isDisabled, onDisabledChange]);
+  
   const handleChange = (next: string) => {
-    if (isLocked) return;
+    if (isDisabled) return;
 
     onChange(next);
 
@@ -69,18 +75,18 @@ export const NickNameInput = ({
         className="flex-1"
         state={hasValidated ? validation.state : 'default'}
         message={hasValidated ? validation.message : undefined}
-        boxClassName={cn(isLocked && 'bg-neutral-30 text-neutral-40 border-neutral-40')}
+        boxClassName={cn(isDisabled && 'bg-neutral-30 text-neutral-40 border-neutral-40')}
       >
         <input
           ref={inputRef}
           value={value}
           onChange={(e) => handleChange(e.target.value)}
           placeholder="프로필 닉네임을 입력해주세요 (6자 이내)"
-          disabled={isLocked}
+          disabled={isDisabled}
         />
       </BoxInput>
 
-      {isLocked ? (
+      {isDisabled ? (
         <Button
           type="button"
           onClick={handleClickEdit}
