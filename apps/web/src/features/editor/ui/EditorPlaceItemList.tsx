@@ -7,6 +7,7 @@ import { parseMetric } from '@/features/editor/utils/parseMetric';
 
 import type { PlaceOption } from './PlaceOptionTabs';
 import { EditorPlaceItem } from '../../../entities/editor/place/ui/EditorPlaceItem';
+import Link from 'next/link';
 
 function sortPlaces(places: IEditorInsightPlace[], metric: PlaceOption) {
   const copy = [...places];
@@ -39,9 +40,7 @@ export const EditorPlaceItemList = () => {
   const sp = useSearchParams();
   const metric = useMemo<PlaceOption>(() => parseMetric(sp?.get('metric') ?? ''), [sp]);
 
-  const { data: placeData, isLoading, isError, error } = useGetMyPlaceList({ useMock: true });
-
-  console.log(placeData);
+  const { data: placeData, isLoading, isError, error } = useGetMyPlaceList({ useMock: false });
 
   const places = placeData?.data?.places ?? [];
 
@@ -52,19 +51,29 @@ export const EditorPlaceItemList = () => {
   if (isError) return <div className="pt-6">에러: {String(error)}</div>;
 
   if (sortedPlaces.length === 0) return <div className="pt-6">장소가 없습니다.</div>;
-
+  console.log(placeData);
   return (
     <div className="pt-6">
       {sortedPlaces.map((place) => (
-        <EditorPlaceItem
-          key={place.placeId}
-          name={place.placeName}
-          description={place.editorSummary}
-          savedCount={place.stats.saveCount}
-          viewCount={place.stats.viewCount}
-          shareCount={place.stats.directionCount}
-          instagramCount={place.stats.instagramInflowCount}
-        />
+        <Link href={`/editor/place-info?placeId=${place.placeId}`} key={place.placeId}>
+          <EditorPlaceItem
+            name={place.placeName}
+            description={place.editorSummary}
+            savedCount={place.stats.saveCount}
+            viewCount={place.stats.viewCount}
+            shareCount={place.stats.directionCount}
+            instagramCount={place.stats.instagramInflowCount}
+            thumbnail={
+              <img
+                src={place.placeImageUrl}
+                alt={place.placeName}
+                width={18}
+                height={18}
+                className="h-18 w-18 rounded-2xl"
+              />
+            }
+          />
+        </Link>
       ))}
     </div>
   );

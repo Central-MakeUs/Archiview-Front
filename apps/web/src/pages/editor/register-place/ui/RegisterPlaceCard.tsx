@@ -127,9 +127,9 @@ export const RegisterPlaceCard = ({ placeIndex }: IRegisterPlaceCardProps) => {
             onClick={() => fileInputRef.current?.click()}
             className="h-40 w-full bg-neutral-30 rounded-xl flex items-center justify-center overflow-hidden"
           >
-            {thumbnailPreviewUrl ? (
+            {thumbnailPreviewUrl || value?.imageUrl ? (
               <img
-                src={thumbnailPreviewUrl}
+                src={thumbnailPreviewUrl ?? value?.imageUrl}
                 alt="thumbnail"
                 className="w-full h-full object-cover"
               />

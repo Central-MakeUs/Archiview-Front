@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm, useFieldArray } from 'react-hook-form';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import z from 'zod';
 
 import { InstagramUrlInput } from './ui/InstagramUrlInput';
@@ -18,17 +18,18 @@ import {
 
 import { useEditorCreatePost } from '@/entities/editor/place/mutations/useEditorCreatePost';
 import { useEditorEditPosts } from '@/entities/editor/place/mutations/useEditorEditPosts';
-import { useEditorGetPostDetail } from '@/entities/editor/place/queries/useEditorGetPostDetail';
+import { useEditorGetPlaceByPostPlaceId } from '@/entities/editor/place/mutations/useEditorGetPlaceByPostPlaceId';
 
 const createDefaultPlace = () => createPlaceDefault();
 
 export const RegisterPlacePage = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
-  const placeIdParam = searchParams?.get('placeId') ?? '';
-  const postId = placeIdParam ? Number(placeIdParam) : null;
-  const isEdit = postId !== null;
+  const postPlaceIdParam = searchParams?.get('postPlaceId') ?? '';
+  const postPlaceId = postPlaceIdParam ? Number(postPlaceIdParam) : undefined;
+
+  const [createdPostId, setCreatedPostId] = useState<number | undefined>(undefined);
+  const isEdit = !!postPlaceIdParam || !!createdPostId;
 
   const methods = useForm<z.infer<typeof registerPlaceSchema>>({
     defaultValues: {
@@ -45,42 +46,38 @@ export const RegisterPlacePage = () => {
     name: 'placeInfoRequestList',
   });
 
-  // TODO: 상세페이지 조회 API 나오면 연결하기
-  // const { data: postDetail } = useEditorGetPostDetail(
-  //   { postId: postId as number },
-  //   { enabled: isEdit },
-  // );
+  const { placeData } = useEditorGetPlaceByPostPlaceId(postPlaceId);
 
-  // useEffect(() => {
-  //   if (!postDetail) return;
+  useEffect(() => {
+    if (!postPlaceId || !placeData?.data) return;
 
-  //   reset({
-  //     url: postDetail.data.url,
-  //     hashTags: postDetail.data.hashTags,
-  //     placeInfoRequestList: postDetail.data.placeInfoList.map((place) => ({
-  //       placeName: place.placeName,
-  //       description: place.description ?? '',
-  //       addressName: place.addressName,
-  //       roadAddressName: place.roadAddressName,
-  //       latitude: place.latitude,
-  //       longitude: place.longitude,
-  //       categoryIds: place.categoryIds,
-  //       nearestStationWalkTime: place.nearestStationWalkTime,
-  //       placeUrl: place.placeUrl,
-  //       phoneNumber: place.phoneNumber,
-  //       imageUrl: place.imageUrl,
-  //     })),
-  //   });
-  // }, [postDetail, reset]);
+    const { url, hashTags, postPlaces } = placeData.data;
+
+    reset({
+      url,
+      hashTags: hashTags ?? [],
+      placeInfoRequestList: postPlaces.map((place) => ({
+        placeName: place.placeName,
+        description: place.description ?? '',
+        addressName: place.addressName ?? '',
+        roadAddressName: place.roadAddressName ?? '',
+        latitude: place.latitude,
+        longitude: place.longitude,
+        categoryIds: place.categoryIds ?? [],
+        nearestStationWalkTime: place.nearestStationWalkTime ?? '',
+        placeUrl: place.placeUrl ?? '',
+        phoneNumber: place.phoneNumber ?? '',
+        imageUrl: place.imageUrl ?? '',
+      })),
+    });
+  }, [postPlaceId, placeData, reset]);
 
   const { createEditorPost } = useEditorCreatePost({
     onSuccess: (data) => {
-      const createdPostId = data.data?.postId;
-      if (!createdPostId) return;
+      const postId = data.data?.postId;
+      if (!postId) return;
 
-      router.replace(`/editor/register-place?placeId=${createdPostId}`, {
-        scroll: false,
-      });
+      setCreatedPostId(postId);
     },
   });
 
@@ -110,8 +107,11 @@ export const RegisterPlacePage = () => {
       return;
     }
 
+    const postId = placeData?.data?.postId ?? createdPostId;
+    if (!postId) return;
+
     editEditorPost({
-      postId: postId as number,
+      postId,
       body: {
         url: data.url,
         hashTags: data.hashTags,

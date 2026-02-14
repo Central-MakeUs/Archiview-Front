@@ -73,11 +73,35 @@ export const editorKeys = createQueryKeyStore({
   },
 
   /**
-   * @description 특정 에디터 공개 프로필 조회용 쿼리키 (파라미터 없음)
+   * @description 특정 에디터 공개 프로필 조회용 쿼리키
    * @returns ['getEditorPublicProfile','applyFilters',editorId]
    */
   getEditorPublicProfile: {
     all: null,
     applyFilters: (editorId: number) => [editorId],
+  },
+
+  /**
+   * @description 특정 장소 상세 조회용 쿼리키
+   * @returns ['getMyPlaceDetail', 'applyFilters', placeId, useMock]
+   */
+  getMyPlaceDetail: {
+    all: null,
+    applyFilters: (params: { placeId: number; useMock?: boolean }) => [
+      params.placeId,
+      params.useMock ?? false,
+    ],
+  },
+
+  /**
+   * @description 특정 게시글 장소 조회용 쿼리키
+   * @returns ['getPostByPlace', 'applyFilters', postId, useMock]
+   */
+  getPostByPlaceId: {
+    all: null,
+    applyFilters: (params: { postPlaceId: number; useMock?: boolean }) => [
+      params.postPlaceId,
+      params.useMock ?? false,
+    ],
   },
 });

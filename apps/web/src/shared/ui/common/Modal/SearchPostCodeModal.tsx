@@ -54,7 +54,7 @@ export const SearchPostCodeModal = ({ isOpen, onClose, onComplete }: ISearchPost
   if (!isOpen) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} className="w-1/2 max-w-md">
+    <Modal isOpen={isOpen} onClose={onClose} className="w-[374px] max-w-md">
       <div className="flex flex-col w-full">
         <div className="flex items-center justify-between mb-4">
           <h2 className="body-16-bold">주소검색</h2>
