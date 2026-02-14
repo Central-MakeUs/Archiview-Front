@@ -37,6 +37,14 @@ export const useDeletePlaceCardMutation = (options?: IUseDeletePlaceCardOptions)
       const message = error.errorData?.message ?? error.message ?? '알 수 없는 오류';
       toast.error(message);
     },
+
+    onSettled: async (_data, _error, variables) => {
+      await queryClient.invalidateQueries({
+        queryKey: archiverKeys.getArchivePlaces.applyFilters({ useMock: variables.useMock })
+          .queryKey,
+        exact: true,
+      });
+    },
   });
 
   return {
