@@ -1,6 +1,9 @@
+import { useRouter } from 'next/navigation';
+
 import type { ExtendedKyHttpError } from '@/shared/lib/api/common';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { invalidateAllArchiverQueries } from '@/shared/lib/query-keys';
 
 import { archiverReportPost } from '../api/archiverReport-post';
 import type { IReportPostPlaceResponseDTO } from '../model/archiverReport.type';
@@ -10,10 +13,16 @@ interface IUseReportPostPlaceOptions {
 }
 
 export const useReportPostPlace = (options?: IUseReportPostPlaceOptions) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
   const { mutate: reportPostPlace } = useMutation({
     mutationFn: archiverReportPost.reportPostPlace,
-    onSuccess: (data: IReportPostPlaceResponseDTO) => {
+    onSuccess: async (data: IReportPostPlaceResponseDTO) => {
       toast.success('신고가 접수되었습니다.');
+      await router.replace('/archiver/home');
+      await invalidateAllArchiverQueries(queryClient);
+
       options?.onSuccess?.(data);
     },
     onError: (error: ExtendedKyHttpError) => {

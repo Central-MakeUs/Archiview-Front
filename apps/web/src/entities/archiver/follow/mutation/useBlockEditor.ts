@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
-import { archiverKeys } from '@/shared/lib/query-keys';
+import { invalidateAllArchiverQueries } from '@/shared/lib/query-keys';
 import type { ExtendedKyHttpError } from '@/shared/lib/api/common';
 
 import { archiverFollowPost } from '../api/archiverFollow-post';
@@ -14,7 +15,7 @@ interface IUseBlockEditorOptions {
 
 export const useBlockEditor = (options?: IUseBlockEditorOptions) => {
   const queryClient = useQueryClient();
-  const useMock = options?.useMock ?? false;
+  const router = useRouter();
 
   const { mutate: blockEditor, ...rest } = useMutation<
     IBlockEditorResponseDTO,
@@ -24,9 +25,8 @@ export const useBlockEditor = (options?: IUseBlockEditorOptions) => {
     mutationFn: (editorId: string) => archiverFollowPost.blockEditor(editorId),
 
     onSuccess: async (data) => {
-      await queryClient.invalidateQueries({
-        queryKey: archiverKeys.getBlockedEditors.applyFilters({ useMock }).queryKey,
-      });
+      await router.replace('/archiver/home');
+      await invalidateAllArchiverQueries(queryClient);
 
       options?.onSuccess?.(data);
     },

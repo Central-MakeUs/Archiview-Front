@@ -21,7 +21,7 @@ export interface IBlockedEditorResponse {
 }
 
 export const BlockedEditorPage = () => {
-  const { data, isLoading, isError, error } = useGetBlockedEditors({ useMock: true });
+  const { data, isLoading, isError, error } = useGetBlockedEditors({ useMock: false });
 
   const blockedEditors = data?.data?.editors ?? [];
 

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { archiverKeys } from '@/shared/lib/query-keys';
+import { invalidateAllArchiverQueries } from '@/shared/lib/query-keys';
 import type { ExtendedKyHttpError } from '@/shared/lib/api/common';
 
 import { archiverFollowDelete } from '../api/archiverFollow-delete';
@@ -14,7 +14,6 @@ interface IUseUnBlockEditorOptions {
 
 export const useUnBlockEditor = (options?: IUseUnBlockEditorOptions) => {
   const queryClient = useQueryClient();
-  const useMock = options?.useMock ?? false;
 
   const { mutate: unBlockEditor, ...rest } = useMutation<
     IUnBlockEditorResponseDTO,
@@ -24,9 +23,7 @@ export const useUnBlockEditor = (options?: IUseUnBlockEditorOptions) => {
     mutationFn: (editorId: string) => archiverFollowDelete.unBlockEditor(editorId),
 
     onSuccess: async (data) => {
-      await queryClient.invalidateQueries({
-        queryKey: archiverKeys.getBlockedEditors.applyFilters({ useMock }).queryKey,
-      });
+      await invalidateAllArchiverQueries(queryClient);
 
       options?.onSuccess?.(data);
     },

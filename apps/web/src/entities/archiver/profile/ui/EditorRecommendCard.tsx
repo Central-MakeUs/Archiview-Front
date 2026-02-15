@@ -19,7 +19,7 @@ console.log(editor.profileImageUrl);
       <Kard className="shrink-0 h-52 w-46 shadow-default overflow-hidden border-none">
         <div className="relative w-full shrink-0 overflow-hidden" style={{ height: '99px' }}>
           <Image
-            src={editor.profileImageUrl}
+            src={editor.profileImageUrl ?? ""}
             alt=""
             width={200}
             height={90}
