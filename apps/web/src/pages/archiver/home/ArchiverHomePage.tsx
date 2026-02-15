@@ -44,7 +44,7 @@ export const ArchiverHomePage = (): React.ReactElement => {
             height={124}
             className="absolute top-8 right-9.75"
           />
-          <Link
+          {/* <Link
             href={'search-result'}
             className="absolute left-5 right-5 -bottom-5 flex items-center rounded-full bg-transparent shadow-[0_0_11px_0_rgba(144,144,144,0.40)] "
           >
@@ -53,7 +53,7 @@ export const ArchiverHomePage = (): React.ReactElement => {
               onChange={(e) => setSearchedText(e)}
               onSubmit={() => {}}
             />
-          </Link>
+          </Link> */}
         </div>
         <div className="p-5">
           <CategorySection />

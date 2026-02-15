@@ -7,6 +7,7 @@ import { useAuth, SwitchRoleError } from '@/entities/auth/hooks/useAuth';
 import { LOCAL_STORAGE_KEYS, type StoredUserRole } from '@/shared/constants/localStorageKeys';
 import { ChangeRoleModal } from '@/entities/auth/ui/ChangeRoleModal';
 import { useLogout } from '@/entities/auth/hooks/useLogout';
+import { openInAppBrowser } from '@/shared/lib/native-bridge';
 import { EditorMyPage } from './editor/EditorMyPage';
 import { ArchiverMyPage } from './archiver/ArchiverMyPage';
 import { useGetMyProfile } from '@/entities/archiver/profile/queries/useGetMyProfile';
@@ -62,31 +63,65 @@ export const MyPage = (): React.ReactElement => {
     logout();
   }, [logout]);
 
-  const handleWithdraw = useCallback(() => {
-    window.open(reportSubmitUrl, '_blank');
+  const openExternalUrl = useCallback(async (url: string | undefined) => {
+    if (!url) {
+      console.error('[MyPage] external url is missing');
+      return;
+    }
+
+    try {
+      const opened = await openInAppBrowser(url);
+      if (opened) return;
+    } catch (e) {
+      console.error('[MyPage] Failed to open external url via native bridge', e);
+    }
+
+    window.open(url, '_blank', 'noopener,noreferrer');
   }, []);
+
+  const handleWithdraw = useCallback(() => {
+    // eslint-disable-next-line no-void
+    void openExternalUrl(reportSubmitUrl);
+  }, [openExternalUrl, reportSubmitUrl]);
 
   const handleContact = useCallback(() => {
-    window.open(enquiryUrl, '_blank');
-  }, []);
+    // eslint-disable-next-line no-void
+    void openExternalUrl(enquiryUrl);
+  }, [enquiryUrl, openExternalUrl]);
 
   const handleReportBug = useCallback(() => {
-    window.open(errorReportUrl, '_blank');
-  }, []);
+    // eslint-disable-next-line no-void
+    void openExternalUrl(errorReportUrl);
+  }, [errorReportUrl, openExternalUrl]);
 
-  const handleTermsClick = useCallback((key: string) => {
-    if (key === 'service-terms') {
-      window.open(termsOfServiceUrl, '_blank');
-    } else if (key === 'location-terms') {
-      window.open(geoLocationTermsOfServiceUrl, '_blank');
-    } else if (key === 'editor-policy') {
-      window.open(editorPolicyUrl, '_blank');
-    } else if (key === 'privacy-policy') {
-      window.open(privacyPolicyUrl, '_blank');
-    } else if (key === 'open-license') {
-      window.open(editorAgreementUrl, '_blank');
-    }
-  }, []);
+  const handleTermsClick = useCallback(
+    (key: string) => {
+      if (key === 'service-terms') {
+        // eslint-disable-next-line no-void
+        void openExternalUrl(termsOfServiceUrl);
+      } else if (key === 'location-terms') {
+        // eslint-disable-next-line no-void
+        void openExternalUrl(geoLocationTermsOfServiceUrl);
+      } else if (key === 'editor-policy') {
+        // eslint-disable-next-line no-void
+        void openExternalUrl(editorPolicyUrl);
+      } else if (key === 'privacy-policy') {
+        // eslint-disable-next-line no-void
+        void openExternalUrl(privacyPolicyUrl);
+      } else if (key === 'open-license') {
+        // eslint-disable-next-line no-void
+        void openExternalUrl(editorAgreementUrl);
+      }
+    },
+    [
+      editorAgreementUrl,
+      editorPolicyUrl,
+      geoLocationTermsOfServiceUrl,
+      openExternalUrl,
+      privacyPolicyUrl,
+      termsOfServiceUrl,
+    ],
+  );
 
   if (isMyDataLoading) {
     return (
