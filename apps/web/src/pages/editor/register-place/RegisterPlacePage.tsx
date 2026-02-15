@@ -18,6 +18,7 @@ import {
 
 import { useEditorCreatePost } from '@/entities/editor/place/mutations/useEditorCreatePost';
 import { useEditorEditPosts } from '@/entities/editor/place/mutations/useEditorEditPosts';
+import { useEditorDeletePost } from '@/entities/editor/place/mutations/useEditorDeletePost';
 import { useEditorGetPlaceByPostPlaceId } from '@/entities/editor/place/mutations/useEditorGetPlaceByPostPlaceId';
 
 const createDefaultPlace = () => createPlaceDefault();
@@ -82,6 +83,7 @@ export const RegisterPlacePage = () => {
   });
 
   const { editEditorPost } = useEditorEditPosts();
+  const { deleteEditorPost } = useEditorDeletePost();
 
   const onSubmit = (data: ICreateEditorPostRequest | IEditEditorPostRequest) => {
     const placeInfoRequestList = data.placeInfoRequestList.map((place) => ({
@@ -156,6 +158,19 @@ export const RegisterPlacePage = () => {
                 className="w-full h-12 rounded-xl bg-primary-40 text-neutral-10"
               >
                 등록하기
+              </button>
+            )}
+            {isEdit && (
+              <button
+                type="button"
+                onClick={() => {
+                  const postId = placeData?.data?.postId ?? createdPostId;
+                  if (!postId) return;
+                  deleteEditorPost(postId);
+                }}
+                className="w-full h-12 rounded-xl border-neutral-30 bg-transparent body-16-semibold text-neutral-40"
+              >
+                게시글 전체 삭제
               </button>
             )}
           </div>

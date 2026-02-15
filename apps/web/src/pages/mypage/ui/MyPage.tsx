@@ -12,6 +12,7 @@ import { EditorMyPage } from './editor/EditorMyPage';
 import { ArchiverMyPage } from './archiver/ArchiverMyPage';
 import { useGetMyProfile } from '@/entities/archiver/profile/queries/useGetMyProfile';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
+import { useMinLoading } from '@/shared/hooks/useMinLoading';
 
 const isStoredUserRole = (value: string | null): value is StoredUserRole => {
   return value === 'GUEST' || value === 'ARCHIVER' || value === 'EDITOR';
@@ -123,14 +124,14 @@ export const MyPage = (): React.ReactElement => {
     ],
   );
 
-  if (isMyDataLoading) {
+  const showLoading = useMinLoading(isMyDataLoading, 1500);
+  if (showLoading)
     return (
       <LoadingPage
         text="내 정보를 불러오는 중입니다."
         role={role === 'EDITOR' ? 'EDITOR' : 'ARCHIVER'}
       />
     );
-  }
 
   const commonHandlers = {
     onLogout: handleLogout,

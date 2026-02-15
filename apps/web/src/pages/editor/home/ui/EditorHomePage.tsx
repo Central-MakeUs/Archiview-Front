@@ -43,7 +43,7 @@ export const EditorHomePage = () => {
   const isError = isInsightError || isPlaceError;
 
   const showLoading = useMinLoading(isLoading, 1500);
-  if (showLoading) return <LoadingPage text="로딩 중입니다" role="EDITOR" />;
+  if (showLoading) return <LoadingPage text="에디터 홈페이지를 로딩 중입니다" role="EDITOR" />;
 
   if (isError)
     return <div className="flex h-screen items-center justify-center">에러가 발생했습니다</div>;

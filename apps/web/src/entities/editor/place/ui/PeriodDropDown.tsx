@@ -33,7 +33,7 @@ export const PeriodDropdown = ({ value }: { value: InsightPeriod }) => {
     <div className="relative">
       <Button
         onClick={() => setOpen((v) => !v)}
-        className="h-6.5 w-22 flex flex-row rounded-md border caption-12-semibold bg-white border-primary-40 text-primary-40 justify-between items-center px-1"
+        className="h-6.5 w-22 flex flex-row rounded-md border caption-12-semibold bg-white hover:bg-white border-primary-40 text-primary-40 justify-between items-center px-1"
       >
         {currentLabel}
         <span
@@ -58,21 +58,21 @@ export const PeriodDropdown = ({ value }: { value: InsightPeriod }) => {
         <Button
           type="button"
           onClick={() => setPeriod('ALL')}
-          className="w-full justify-start px-4 py-2 rounded-none active:bg-primary-10 bg-white caption-12-medium text-neutral-50"
+          className="w-full justify-start px-4 py-2 rounded-none active:bg-primary-10 bg-white hover:bg-white caption-12-medium text-neutral-50"
         >
           전체 기간
         </Button>
         <Button
           type="button"
           onClick={() => setPeriod('WEEK')}
-          className="w-full justify-start px-4 py-2 rounded-none active:bg-primary-10 bg-white caption-12-medium text-neutral-50"
+          className="w-full justify-start px-4 py-2 rounded-none active:bg-primary-10 bg-white hover:bg-white caption-12-medium text-neutral-50"
         >
           7일
         </Button>
         <Button
           type="button"
           onClick={() => setPeriod('MONTH')}
-          className="w-full justify-start px-4 py-2 rounded-none active:bg-primary-10 bg-white caption-12-medium text-neutral-50"
+          className="w-full justify-start px-4 py-2 rounded-none active:bg-primary-10 bg-white hover:bg-white caption-12-medium text-neutral-50"
         >
           30일
         </Button>

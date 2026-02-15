@@ -45,6 +45,7 @@ export const PlaceOptionTabs = ({ value }: { value: PlaceOption }) => {
       value={current}
       onChange={setMetric}
       containerClassName="flex gap-2 overflow-x-auto whitespace-nowrap scroll-none pl-5 pr-5"
+      inactiveClassName="bg-neutral-20 text-neutral-40 hover:text-neutral-10"
     />
   );
 };

@@ -11,7 +11,7 @@ export const Loading = ({ text, role }: ILoadingProps) => {
 
   return (
     <div className="flex h-full w-full items-center justify-center p-20">
-      <div className="flex w-full flex-col items-center gap-7 rounded-[20px] bg-neutral-10 px-5 py-9 shadow-default">
+      <div className="flex w-full flex-col items-center gap-7 rounded-[20px] bg-neutral-10 px-5 py-9">
         <BlueFolderIcon className="h-11 w-11" />
         <div className="flex w-full flex-col items-center gap-7">
           <div className="flex w-full flex-col items-center gap-1">
