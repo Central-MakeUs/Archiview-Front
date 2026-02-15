@@ -13,6 +13,7 @@ export const EditorPlaceItemList = ({
         //TODO: 상세페이지 조회 API 나오면 상세페이지로 route 변경 및 데이터 연결
         <Link href={`/editor/register-place?placeId=${place.placeId}`} key={place.placeId}>
           <EditorPlaceItem
+            placeId={place.placeId}
             name={place.placeName}
             description={place.editorSummary}
             savedCount={place.stats.saveCount}
