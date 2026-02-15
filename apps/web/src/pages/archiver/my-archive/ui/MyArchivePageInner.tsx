@@ -44,13 +44,13 @@ export const MyArchivePageInner = () => {
   const [location, setLocation] = useState<GeoLocation | null>(null);
   const { data, isLoading, isError } = useGetMyArchives({ useMock: false });
 
-  useEffect(() => {
-    const run = async () => {
-      const loc = await getCurrentLocation();
-      setLocation(loc);
-    };
-    run().catch(console.error);
-  }, []);
+  // useEffect(() => {
+  //   const run = async () => {
+  //     const loc = await getCurrentLocation();
+  //     setLocation(loc);
+  //   };
+  //   run().catch(console.error);
+  // }, []);
 
   const places: IPlace[] = useMemo(() => {
     const postPlaces = data?.data?.postPlaces ?? [];

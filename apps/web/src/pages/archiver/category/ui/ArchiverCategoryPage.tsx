@@ -67,9 +67,11 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
     let cancelled = false;
 
     const run = async () => {
-      const location = await getCurrentLocation();
-      const latitude = location?.coords?.latitude ?? FALLBACK_LATITUDE;
-      const longitude = location?.coords?.longitude ?? FALLBACK_LONGITUDE;
+      // const location = await getCurrentLocation();
+      // const latitude = location?.coords?.latitude ?? FALLBACK_LATITUDE;
+      const latitude = FALLBACK_LATITUDE;
+      // const longitude = location?.coords?.longitude ?? FALLBACK_LONGITUDE;
+      const longitude = FALLBACK_LONGITUDE;
 
       if (cancelled) return;
       setCoords({ latitude, longitude });
