@@ -95,7 +95,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
     isError: isCategoryError,
   } = useGetCategoryPlaceList({
     categoryId,
-    useMock: true,
+    useMock: false,
     enabled: !isNear,
   });
 
@@ -106,7 +106,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
   } = useGetNearbyPlaces({
     latitude: coords?.latitude ?? FALLBACK_LATITUDE,
     longitude: coords?.longitude ?? FALLBACK_LONGITUDE,
-    useMock: true,
+    useMock: false,
     enabled: isNear && Boolean(coords),
   });
 
