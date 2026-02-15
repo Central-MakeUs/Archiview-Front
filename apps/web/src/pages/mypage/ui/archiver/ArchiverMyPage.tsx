@@ -47,7 +47,7 @@ export const ArchiverMyPage = ({
   };
 
   const handleManageBlockedEditors = () => {
-    // TODO: 차단한 에디터 관리 페이지로 이동
+    router.push("blocked-editor")
   };
 
   const handleContact = () => {
