@@ -8,6 +8,8 @@ import { OptionTabs } from '@/shared/ui/common/Tabs/OptionTabs';
 import { useGetCategoryPlaceList } from '@/entities/archiver/category/queries/useGetCategoryPlaceList';
 import { useGetNearbyPlaces } from '@/entities/archiver/place/queries/useGetNearbyPlaces';
 import { getCurrentLocation } from '@/shared/lib/native-bridge/nativeMethods.client';
+import { KakaoMap } from '@/shared/ui/KakaoMap';
+import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import { Item } from '@/shared/ui/common/Item';
 import { EyeIcon, FolderOutlineIcon, RightArrowIcon } from '@/shared/ui/icon';
 
@@ -55,6 +57,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
     [categoryId],
   );
 
+  const [sheetOpen, setSheetOpen] = useState(true);
   const [coords, setCoords] = useState<{ latitude: number; longitude: number } | null>(null);
 
   useEffect(() => {
@@ -115,7 +118,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
   const places = data?.data?.places ?? [];
   const totalCount = data?.data?.totalCount ?? 0;
 
-  const canShowList = !isLoading && !isError && !apiErrorMessage && (!isNear || Boolean(coords));
+  const canShowCategoryList = !isNear && !isLoading && !isError && !apiErrorMessage;
 
   return (
     <div className="flex h-full flex-col min-h-0">
@@ -126,50 +129,125 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
         containerClassName="px-5 flex gap-2 overflow-x-auto whitespace-nowrap scroll-none pt-4"
       />
 
-      <div className="px-5 pt-6">
-        <p className="heading-20-bold">
-          {isNear ? '내주변' : categoryName} <span className="text-primary-40">{totalCount}</span>
-        </p>
-      </div>
+      {isNear ? (
+        <div className="flex-1 min-h-0 pt-6">
+          <KakaoMap
+            lat={coords?.latitude ?? FALLBACK_LATITUDE}
+            lng={coords?.longitude ?? FALLBACK_LONGITUDE}
+            level={3}
+          />
 
-      {isNear && !coords ? <div className="px-5 pt-6">위치 불러오는 중...</div> : null}
-      {isLoading ? <div className="px-5 pt-6">로딩중...</div> : null}
-      {isError ? <div className="px-5 pt-6">불러오기 실패</div> : null}
-      {apiErrorMessage ? <div className="px-5 pt-6">{apiErrorMessage}</div> : null}
-
-      {canShowList ? (
-        <div className="flex-1 min-h-0 pt-2">
-          {places.map((p) => (
-            <Item
-              key={p.placeId}
-              thumbnail={<div className="h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30" />}
-              onClick={() => router.push(`/archiver/place-info/${p.placeId}`)}
-            >
-              <div className="flex flex-col pl-2 min-w-0">
-                <p className="body-16-semibold flex flex-row items-center justify-between">
-                  <span className="truncate">{p.placeName}</span>
-                  <RightArrowIcon />
+          <BottomSheet
+            isOpen={sheetOpen}
+            onOpenChange={setSheetOpen}
+            height={500}
+            peekHeight={72}
+            header={
+              <div className="px-5 pb-4 pt-2.5">
+                <p className="heading-20-bold">
+                  내주변 <span className="text-primary-40 pl-1">{totalCount}</span>
                 </p>
-
-                <p className="body-14-semibold text-neutral-50 w-53 truncate pt-0.75">
-                  {p.latestDescription}
-                </p>
-
-                <div className="flex flex-row gap-2 caption-12-regular text-primary-50 pt-1">
-                  <p className="flex flex-row items-center gap-1">
-                    <FolderOutlineIcon className="w-4 text-primary-30" />
-                    {p.saveCount}
-                  </p>
-                  <p className="flex flex-row items-center gap-1">
-                    <EyeIcon className="w-4 text-primary-30" />
-                    {p.viewCount}
-                  </p>
-                </div>
               </div>
-            </Item>
-          ))}
+            }
+            contentClassName="overflow-y-auto px-0 pb-6"
+          >
+            {!coords ? <div className="px-5 pt-6">위치 불러오는 중...</div> : null}
+            {coords && isLoading ? <div className="px-5 pt-6">로딩중...</div> : null}
+            {coords && isError ? <div className="px-5 pt-6">불러오기 실패</div> : null}
+            {coords && apiErrorMessage ? <div className="px-5 pt-6">{apiErrorMessage}</div> : null}
+
+            {coords && !isLoading && !isError && !apiErrorMessage ? (
+              places.length === 0 ? (
+                <div className="px-5 pt-6">표시할 장소가 없습니다.</div>
+              ) : (
+                places.map((p) => (
+                  <Item
+                    key={p.placeId}
+                    thumbnail={
+                      <div className="h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30" />
+                    }
+                    onClick={() => router.push(`/archiver/place-info/${p.placeId}`)}
+                  >
+                    <div className="flex flex-col pl-2 min-w-0">
+                      <p className="body-16-semibold flex flex-row items-center justify-between">
+                        <span className="truncate">{p.placeName}</span>
+                        <RightArrowIcon />
+                      </p>
+
+                      <p className="body-14-semibold text-neutral-50 w-53 truncate pt-0.75">
+                        {p.latestDescription}
+                      </p>
+
+                      <div className="flex flex-row gap-2 caption-12-regular text-primary-50 pt-1">
+                        <p className="flex flex-row items-center gap-1">
+                          <FolderOutlineIcon className="w-4 text-primary-30" />
+                          {p.saveCount}
+                        </p>
+                        <p className="flex flex-row items-center gap-1">
+                          <EyeIcon className="w-4 text-primary-30" />
+                          {p.viewCount}
+                        </p>
+                      </div>
+                    </div>
+                  </Item>
+                ))
+              )
+            ) : null}
+          </BottomSheet>
         </div>
-      ) : null}
+      ) : (
+        <>
+          <div className="px-5 pt-6">
+            <p className="heading-20-bold">
+              {categoryName} <span className="text-primary-40">{totalCount}</span>
+            </p>
+          </div>
+
+          {isLoading ? <div className="px-5 pt-6">로딩중...</div> : null}
+          {isError ? <div className="px-5 pt-6">불러오기 실패</div> : null}
+          {apiErrorMessage ? <div className="px-5 pt-6">{apiErrorMessage}</div> : null}
+
+          {canShowCategoryList ? (
+            <div className="flex-1 min-h-0 pt-2">
+              {places.length === 0 ? (
+                <div className="px-5 pt-6">표시할 장소가 없습니다.</div>
+              ) : (
+                places.map((p) => (
+                  <Item
+                    key={p.placeId}
+                    thumbnail={
+                      <div className="h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30" />
+                    }
+                    onClick={() => router.push(`/archiver/place-info/${p.placeId}`)}
+                  >
+                    <div className="flex flex-col pl-2 min-w-0">
+                      <p className="body-16-semibold flex flex-row items-center justify-between">
+                        <span className="truncate">{p.placeName}</span>
+                        <RightArrowIcon />
+                      </p>
+
+                      <p className="body-14-semibold text-neutral-50 w-53 truncate pt-0.75">
+                        {p.latestDescription}
+                      </p>
+
+                      <div className="flex flex-row gap-2 caption-12-regular text-primary-50 pt-1">
+                        <p className="flex flex-row items-center gap-1">
+                          <FolderOutlineIcon className="w-4 text-primary-30" />
+                          {p.saveCount}
+                        </p>
+                        <p className="flex flex-row items-center gap-1">
+                          <EyeIcon className="w-4 text-primary-30" />
+                          {p.viewCount}
+                        </p>
+                      </div>
+                    </div>
+                  </Item>
+                ))
+              )}
+            </div>
+          ) : null}
+        </>
+      )}
     </div>
   );
 };
