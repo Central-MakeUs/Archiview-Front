@@ -1,5 +1,4 @@
 import { createQueryKeyStore } from '@lukemorales/query-key-factory';
-import { param } from 'framer-motion/client';
 
 export const archiverKeys = createQueryKeyStore({
   /**
@@ -107,5 +106,15 @@ export const archiverKeys = createQueryKeyStore({
       params?.sort ?? 'LATEST',
       params?.useMock ?? false,
     ],
+  },
+
+  /**
+   * @param {{useMock?: boolean}} params
+   * @description 차단한 에디터 목록 조회용 쿼리키
+   * @returns ['getBlockedEditors', 'applyFilters', useMock]
+   */
+  getBlockedEditors: {
+    all: null,
+    applyFilters: (params?: { useMock?: boolean }) => [params?.useMock ?? false],
   },
 });
