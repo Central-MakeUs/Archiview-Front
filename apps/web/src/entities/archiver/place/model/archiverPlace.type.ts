@@ -97,6 +97,7 @@ export interface IArchivePinsResponse {
 }
 
 export interface INearPlaceResponse {
+  totalCount: number;
   places: INearPlace[];
 }
 

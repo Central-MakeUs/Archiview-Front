@@ -117,4 +117,17 @@ export const archiverKeys = createQueryKeyStore({
     all: null,
     applyFilters: (params?: { useMock?: boolean }) => [params?.useMock ?? false],
   },
+
+  /**
+   * @param {{categoryId: number, useMock?: boolean}} params
+   * @description 카테고리별 장소 목록 조회용 쿼리키
+   * @returns ['getCategoryPlaceList', 'applyFilters', categoryId, useMock]
+   */
+  getCategoryPlaceList: {
+    all: null,
+    applyFilters: (params: { categoryId: number; useMock?: boolean }) => [
+      params.categoryId,
+      params?.useMock ?? false,
+    ],
+  },
 });

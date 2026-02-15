@@ -67,8 +67,7 @@ export const AppleLoginButton = ({
     const finalNonce = nonce ?? randomId();
 
     const finalRedirectUri = isLocalhost() && redirectUriDev ? redirectUriDev : redirectUri;
-    console.log(finalRedirectUri)
-    console.log("dfdf")
+
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: finalRedirectUri,

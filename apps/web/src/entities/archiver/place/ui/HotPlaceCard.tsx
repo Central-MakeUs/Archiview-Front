@@ -33,6 +33,7 @@ export const HotPlaceCard = ({
   const hashTag = pickRandom(hashTags);
 
   const stripHash = (tag?: string) => (tag ?? '').trim().replace(/^#/, '');
+  const safeImageUrl = imageUrl?.trimEnd()
 
   return (
     // TODO : 라우팅 연결하기
@@ -41,12 +42,13 @@ export const HotPlaceCard = ({
         {/* 이거 스타일 하드코딩 어케고치지 */}
         <div className="relative w-full shrink-0 overflow-hidden" style={{ height: '99px' }}>
           <Image
-            src={imageUrl}
+            src={safeImageUrl}
             alt=""
             width={200}
             height={90}
             className="object-cover"
             priority={false}
+            unoptimized
           />
         </div>
         <div className="p-3 flex-1 min-h-0">
