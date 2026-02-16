@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { Item } from '@/shared/ui/common/Item';
 import { RightArrowIcon, ProfileDeleteIcon } from '@/shared/ui/icon';
@@ -21,13 +22,15 @@ export const EditorProfileItem = ({
   introduction,
   profileImageUrl,
 }: IEditorProfileItemProps): React.ReactElement => {
+  const router = useRouter();
+
   const [modalOpen, setModalOpen] = useState(false);
   const { unfollowEditor } = useUnfollowEditor();
 
   return (
     <div>
       <Item
-        onClick={() => console.log('에디터 프로필 클릭')}
+        onClick={() => router.replace(`/archiver/editor-profile/${editorId}`)}
         thumbnail={
           <div className="relative h-18 w-18 rounded-2xl overflow-hidden bg-neutral-30">
             <Image src={profileImageUrl} alt={`${nickname} 프로필`} fill className="object-cover" />
