@@ -24,6 +24,8 @@ export interface AppBridgeState extends Bridge {
   getBridgeVersion(): Promise<number>;
   openInAppBrowser(url: string): Promise<void>;
 
+  openExternalUrl(url: string): Promise<boolean>;
+
   openAppSettings(): Promise<void>;
 
   getCurrentLocation(): Promise<GeoLocation | null>;

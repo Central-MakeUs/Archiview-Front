@@ -27,7 +27,7 @@ export const CardSection = ({
   const onFolderClick = (postPlaceId: number) => {
     postPlaceCard({ postPlaceId, placeId, useMock: false });
   };
-  console.log(postPlaces);
+
 
   return (
     <section className="p-5 flex flex-col gap-4">

@@ -127,7 +127,10 @@ export const CardSection = ({
                     <FolderIcon active={post.isArchived} />
                   </button>
                   <button
-                    onClick={() => window.open(post.instagramUrl, '_blank', 'noopener,noreferrer')}
+                    onClick={() => {
+                      console.log(post.instagramUrl);
+                      window.open(post.instagramUrl, '_blank', 'noopener,noreferrer');
+                    }}
                   >
                     <Image
                       src="/images/instagramColoredIcon.svg"

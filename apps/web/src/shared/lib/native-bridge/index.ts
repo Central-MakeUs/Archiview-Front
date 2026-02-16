@@ -5,6 +5,7 @@ export {
   getToken,
   isNativeMethodAvailable,
   isWebViewBridgeAvailable,
+  openExternalUrl,
   openAppSettings,
   openInAppBrowser,
   setToken,

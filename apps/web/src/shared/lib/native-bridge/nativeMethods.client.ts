@@ -25,6 +25,13 @@ export const openInAppBrowser = async (url: string): Promise<boolean> => {
   return true;
 };
 
+export const openExternalUrl = async (url: string): Promise<boolean> => {
+  if (!nativeBridge.isNativeMethodAvailable('openExternalUrl')) {
+    return false;
+  }
+  return nativeBridge.openExternalUrl(url);
+};
+
 export const openAppSettings = async (): Promise<boolean> => {
   if (!nativeBridge.isNativeMethodAvailable('openAppSettings')) {
     return false;
