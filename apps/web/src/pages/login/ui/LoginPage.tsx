@@ -98,7 +98,7 @@ export const LoginPage = () => {
               clientId={process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!}
               redirectUri={process.env.NEXT_PUBLIC_APPLE_REDIRECT_URI!}
               redirectUriDev={process.env.NEXT_PUBLIC_APPLE_REDIRECT_URI_DEV}
-              className="w-full rounded-xl bg-black px-4 py-3 text-white"
+              className="w-full rounded-xl bg-black px-4 py-3 text-white flex items-center justify-center"
             >
               Apple로 로그인
             </AppleLoginButton>
