@@ -2,31 +2,26 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 
-import {
-  LocationPinIcon,
-  UserCircleIcon,
-  HomeIcon,
-  NavigationFooterFolderIcon,
-} from '../../shared/ui/icon';
+import { LocationPinIcon, UserCircleIcon, HomeIcon, ProfileAddIcon } from '../../shared/ui/icon';
 
 // TODO : 라우팅 수정
 export const ARCHIVER_NAVIGATION_FOOTER_ITEMS = [
   {
     key: 'home',
     label: '홈',
-    href: '',
+    href: '/archiver/home',
     icon: HomeIcon,
   },
   {
     key: 'follow',
     label: '팔로우',
-    href: 'follow-list',
-    icon: NavigationFooterFolderIcon,
+    href: '/archiver/follow-list',
+    icon: ProfileAddIcon,
   },
   {
     key: 'archive',
     label: '아카이브',
-    href: 'my-archive',
+    href: '/archiver/my-archive',
     icon: LocationPinIcon,
   },
   {
@@ -36,6 +31,8 @@ export const ARCHIVER_NAVIGATION_FOOTER_ITEMS = [
     icon: UserCircleIcon,
   },
 ] as const;
+
+type ArchiverNavigationFooterKey = (typeof ARCHIVER_NAVIGATION_FOOTER_ITEMS)[number]['key'];
 
 const ArchiverNavigationFooterItem = ({
   icon,
@@ -65,15 +62,22 @@ const ArchiverNavigationFooterItem = ({
   );
 };
 
-export const ArchiverNavigationFooter = (): React.ReactElement => {
+export const ArchiverNavigationFooter = ({
+  activeKey,
+}: {
+  activeKey?: ArchiverNavigationFooterKey;
+}): React.ReactElement => {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() ?? '';
 
   return (
-    <div className="h-18 bottom-0 px-4 border-t border-neutral-40 pt-2 pb-3">
+    <div className="h-18 bottom-0 px-4 border-t border-neutral-40 pt-2 pb-3 z-50 bg-white">
       <div className="flex items-center justify-between gap-2">
         {ARCHIVER_NAVIGATION_FOOTER_ITEMS.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive =
+            activeKey === item.key ||
+            pathname === item.href ||
+            pathname.startsWith(`${item.href}/`);
 
           return (
             <ArchiverNavigationFooterItem

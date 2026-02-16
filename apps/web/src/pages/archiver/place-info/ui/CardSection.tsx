@@ -7,6 +7,7 @@ import { FolderIcon } from '@/shared/ui/icon';
 import { usePostPlaceCardMutation } from '@/entities/archiver/place/mutation/usePostPlaceCard';
 import { useDeletePlaceCardMutation } from '@/entities/archiver/place/mutation/useDeletePlaceCard';
 import { useReportPostPlace } from '@/entities/archiver/report/mutation/useReportPostPlace';
+import { openInstagramUrlDeepLinkOrPopup } from '@/shared/lib/external/openInstagramUrl.client';
 
 import { ReportEditorCardModal } from './ReportEditorCardModal';
 import { ArchivePlaceFinishModal } from './ArchivePlaceFinishModal';
@@ -77,7 +78,6 @@ export const CardSection = ({
     postPlaceCard({ postPlaceId, placeId, useMock: false });
   };
 
-  console.log(postPlaces);
   return (
     <section className="p-5 flex flex-col gap-4">
       <ArchivePlaceFinishModal
@@ -127,7 +127,9 @@ export const CardSection = ({
                     <FolderIcon active={post.isArchived} />
                   </button>
                   <button
-                    onClick={() => window.open(post.instagramUrl, '_blank', 'noopener,noreferrer')}
+                    onClick={() => {
+                      openInstagramUrlDeepLinkOrPopup(post.instagramUrl);
+                    }}
                   >
                     <Image
                       src="/images/instagramColoredIcon.svg"

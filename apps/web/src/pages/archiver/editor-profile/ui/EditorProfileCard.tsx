@@ -6,6 +6,11 @@ import { Kard } from '@/shared/ui/common/Kard';
 import { DotThreeIcon, ProfileAddIcon } from '@/shared/ui/icon';
 import { useFollowEditor } from '@/entities/archiver/follow/mutation/useFollowEditor';
 import { useBlockEditor } from '@/entities/archiver/follow/mutation/useBlockEditor';
+import {
+  isWebViewBridgeAvailable,
+  openExternalUrl,
+  openInAppBrowser,
+} from '@/shared/lib/native-bridge';
 
 import { ReportBottomSheetModal } from './ReportBottomSheetModal';
 import { ReportModal, BlockModal } from './ReportModal';
@@ -23,6 +28,118 @@ interface IEditorProfileCardProps {
   editorId: string;
   editorData: IEditorProfile;
 }
+
+const isIos = () => /iPad|iPhone|iPod/.test(navigator.userAgent);
+const isAndroid = () => /Android/.test(navigator.userAgent);
+
+const openCenteredPopup = (url: string, name: string) => {
+  const width = 480;
+  const height = 800;
+
+  const left = Math.max(0, Math.round(window.screenX + (window.outerWidth - width) / 2));
+  const top = Math.max(0, Math.round(window.screenY + (window.outerHeight - height) / 2));
+
+  const features = [
+    'popup=yes',
+    `width=${width}`,
+    `height=${height}`,
+    `left=${left}`,
+    `top=${top}`,
+    'scrollbars=yes',
+    'resizable=yes',
+  ].join(',');
+
+  const popup = window.open(url, name, features);
+  if (popup) popup.opener = null;
+  return popup;
+};
+
+const writePopupLoading = (popup: Window) => {
+  try {
+    popup.document.title = 'Instagram';
+    popup.document.body.style.margin = '0';
+    popup.document.body.style.fontFamily = 'system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
+    popup.document.body.innerHTML =
+      '<div style="padding:16px;line-height:1.4;">' +
+      '<div style="font-size:14px;font-weight:600;">Instagram을 여는 중...</div>' +
+      '<div style="margin-top:6px;font-size:12px;color:#6b7280;">앱이 설치되어 있지 않으면 웹으로 열립니다.</div>' +
+      '</div>';
+  } catch {
+    return;
+  }
+};
+
+const openInstagramProfileDeepLinkOrPopup = (instagramId: string) => {
+  const username = instagramId.trim();
+  if (!username) return;
+
+  const encodedUsername = encodeURIComponent(username);
+  const webUrl = `https://www.instagram.com/${encodedUsername}/`;
+  const deepLinkUrl = `instagram://user?username=${encodedUsername}`;
+
+  const openWebUrlViaNativeOrFallback = () => {
+    openInAppBrowser(webUrl)
+      .then((opened) => {
+        if (opened) return;
+        const popup = openCenteredPopup(webUrl, 'archiview-instagram');
+        if (!popup) window.location.href = webUrl;
+      })
+      .catch(() => {
+        const popup = openCenteredPopup(webUrl, 'archiview-instagram');
+        if (!popup) window.location.href = webUrl;
+      });
+  };
+
+  if (isWebViewBridgeAvailable()) {
+    openExternalUrl(deepLinkUrl)
+      .then((opened) => {
+        if (opened) return;
+        openWebUrlViaNativeOrFallback();
+      })
+      .catch(() => {
+        openWebUrlViaNativeOrFallback();
+      });
+    return;
+  }
+
+  const popup = openCenteredPopup('about:blank', 'archiview-instagram');
+  if (popup) writePopupLoading(popup);
+
+  if (!isIos() && !isAndroid()) {
+    if (popup) popup.location.href = webUrl;
+    else window.location.href = webUrl;
+    return;
+  }
+
+  let didHide = false;
+  const onVisibilityChange = () => {
+    if (!document.hidden) return;
+    didHide = true;
+    document.removeEventListener('visibilitychange', onVisibilityChange);
+    if (popup && !popup.closed) popup.close();
+  };
+  document.addEventListener('visibilitychange', onVisibilityChange);
+
+  if (isIos()) {
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = deepLinkUrl;
+    document.body.appendChild(iframe);
+    window.setTimeout(() => {
+      iframe.parentNode?.removeChild(iframe);
+    }, 1000);
+  } else {
+    window.location.href = deepLinkUrl;
+  }
+
+  window.setTimeout(() => {
+    document.removeEventListener('visibilitychange', onVisibilityChange);
+    if (didHide) return;
+
+    if (popup && !popup.closed) popup.location.href = webUrl;
+    else window.location.href = webUrl;
+  }, 1400);
+};
 
 export const EditorProfileCard = ({ editorId, editorData }: IEditorProfileCardProps) => {
   const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
@@ -64,11 +181,7 @@ export const EditorProfileCard = ({ editorId, editorData }: IEditorProfileCardPr
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    window.open(
-                      `https://www.instagram.com/${editorData.instagramId}`,
-                      '_blank',
-                      'noopener,noreferrer',
-                    );
+                    openInstagramProfileDeepLinkOrPopup(editorData.instagramId);
                   }}
                   className="inline-flex items-center justify-center"
                 >
@@ -111,9 +224,7 @@ export const EditorProfileCard = ({ editorId, editorData }: IEditorProfileCardPr
 
         {/* 하단(화이트 영역) */}
         <div className="bg-white px-5 pb-5 pt-4">
-          <p className="body-14-medium text-primary-40">
-            50자 이내로 자기소개합니다. 50자 이내로 자기소개합니다. 50자 이내로 자기소개합니다.
-          </p>
+          <p className="body-14-medium text-primary-40">{editorData.introduction}</p>
         </div>
       </Kard>
 

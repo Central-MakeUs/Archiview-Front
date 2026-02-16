@@ -7,7 +7,8 @@ export default function Index() {
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
       <WebView
         style={{ flex: 1 }}
-        source={{ uri: 'https://archiview.space/' }}
+        // source={{ uri: 'https://archiview.space/' }}
+        source={{ uri: 'http://192.168.0.6:3000' }}
         javaScriptEnabled
         domStorageEnabled
         // 중요: iOS에서 리다이렉트/쿠키/세션 꼬이면 여기서 터짐

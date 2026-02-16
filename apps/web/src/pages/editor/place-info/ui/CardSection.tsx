@@ -7,6 +7,7 @@ import { usePostPlaceCardMutation } from '@/entities/archiver/place/mutation/use
 import { IEditorInsightPlaceDetail } from '@/entities/editor/place/model/editorPlace.type';
 import { PencilIcon } from '@/shared/ui/icon/place-info/PencilIcon';
 import { useRouter } from 'next/navigation';
+import { openInstagramUrlDeepLinkOrPopup } from '@/shared/lib/external/openInstagramUrl.client';
 
 export const CardSection = ({
   postPlaces,
@@ -27,7 +28,6 @@ export const CardSection = ({
   const onFolderClick = (postPlaceId: number) => {
     postPlaceCard({ postPlaceId, placeId, useMock: false });
   };
-  console.log(postPlaces);
 
   return (
     <section className="p-5 flex flex-col gap-4">
@@ -45,7 +45,7 @@ export const CardSection = ({
               <div className="flex gap-1">
                 <button
                   className="cursor-pointer"
-                  onClick={() => window.open(post.postUrl, '_blank', 'noopener,noreferrer')}
+                  onClick={() => openInstagramUrlDeepLinkOrPopup(post.postUrl)}
                 >
                   <Image
                     src="/images/instagramColoredIcon.svg"

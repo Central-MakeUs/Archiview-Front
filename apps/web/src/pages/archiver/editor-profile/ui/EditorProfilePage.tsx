@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
-import { CategoryOptionTabs } from '@/pages/editor/profile/CategoryOptionTabs';
+import { CategoryOptionTabs, type CategoryTab } from '@/pages/editor/profile/CategoryOptionTabs';
 import { useGetEditorProfile } from '@/entities/archiver/profile/queries/useGetEditorProfile';
 import { useGetEditorPlaceList } from '@/entities/archiver/profile/queries/useGetEditorPlaceList';
 
@@ -14,24 +14,13 @@ import { EditorProfileCard } from './EditorProfileCard';
 import { SortDropdown } from './SortDropDown';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 
-export type CategoryTab =
-  | 'ALL'
-  | 'NEAR'
-  | 'KOREAN'
-  | 'WESTERN'
-  | 'JAPANESE'
-  | 'IZAKAYA'
-  | 'CAFE'
-  | 'DATE'
-  | 'ETC';
-
 type SortKey = 'LATEST' | 'OLDEST';
 
 export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
-  const [category, setCategory] = useState<CategoryTab>('ALL');
+  const [category, setCategory] = useState<CategoryTab>('전체');
   const [sort, setSort] = useState<SortKey>('LATEST');
 
   const { data: editorData } = useGetEditorProfile({
@@ -48,10 +37,10 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   const places = placeListData?.data?.postPlaces ?? [];
 
   const filteredPlaces = useMemo(() => {
-    if (category === 'ALL') return places;
+    if (category === '전체') return places;
 
     // NEAR는 지금 지도 기반 로직이 없으니 일단 전체 반환(또는 빈 배열)
-    if (category === 'NEAR') return places;
+    if (category === '내주변') return places;
 
     return places.filter((p: any) => {
       // p.categoryNames가 string[]이라고 가정
@@ -79,34 +68,35 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
           // TODO: 마커
         />
 
-        <BottomSheet
-          isOpen={open}
-          onOpenChange={setOpen}
-          height={500}
-          peekHeight={72}
-          header={
-            <div className="flex flex-row justify-between pb-4 pt-2.5 px-5">
-              <p className="heading-20-bold">
-                업로드한 장소 <span className="text-primary-40 pl-1">숫자</span>
-              </p>
-              <SortDropdown value={sort} onChange={setSort} />
-            </div>
-          }
-          contentClassName="overflow-y-auto px-5 pb-6"
-        >
-          {filteredPlaces.map((p) => (
-            //  TODO : onClick 이벤트 처리
-            <ArchiverPlaceItem
-              key={p.postPlaceId}
-              name={p.placeName}
-              thumbnail={p.imageUrl}
-              description={p.description}
-              savedCount={p.saveCount}
-              viewCount={p.viewCount}
-              onClick={() => router.push(`/archiver/place-info/${p.postPlaceId}`)}
-            />
-          ))}
-        </BottomSheet>
+
+          <BottomSheet
+            isOpen={open}
+            onOpenChange={setOpen}
+            height={500}
+            peekHeight={72}
+            header={
+              <div className="flex flex-row justify-between pb-4 pt-2.5 px-5">
+                <p className="heading-20-bold">
+                  업로드한 장소 <span className="text-primary-40 pl-1">{filteredPlaces.length}</span>
+                </p>
+                <SortDropdown value={sort} onChange={setSort} />
+              </div>
+            }
+            contentClassName="overflow-y-auto px-5 pb-6"
+          >
+            {filteredPlaces.map((p) => (
+              <ArchiverPlaceItem
+                key={p.postPlaceId}
+                name={p.placeName}
+                thumbnail={p.imageUrl}
+                description={p.description}
+                savedCount={p.saveCount}
+                viewCount={p.viewCount}
+                onClick={() => router.push(`/archiver/place-info/${p.postPlaceId}`)}
+              />
+            ))}
+          </BottomSheet>
+
       </div>
     </div>
   );

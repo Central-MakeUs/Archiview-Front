@@ -2,27 +2,28 @@
 
 import { OptionTabs } from '@/shared/ui/common/Tabs/OptionTabs';
 
+// TODO : 주석 해제 (내주변 기능 추가)
 export type CategoryTab =
-  | 'ALL'
-  | 'NEAR'
-  | 'KOREAN'
-  | 'WESTERN'
-  | 'JAPANESE'
-  | 'IZAKAYA'
-  | 'CAFE'
-  | 'DATE'
-  | 'ETC';
+  | '전체'
+  | '내주변'
+  | '한식'
+  | '양식'
+  | '일식'
+  | '이자카야'
+  | '카페'
+  | '데이트'
+  | '기타';
 
 const CATEGORY_TABS: { label: string; value: CategoryTab }[] = [
-  { label: '전체', value: 'ALL' },
-  { label: '내주변', value: 'NEAR' },
-  { label: '한식', value: 'KOREAN' },
-  { label: '양식', value: 'WESTERN' },
-  { label: '일식', value: 'JAPANESE' },
-  { label: '이자카야', value: 'IZAKAYA' },
-  { label: '카페', value: 'CAFE' },
-  { label: '데이트', value: 'DATE' },
-  { label: '기타', value: 'ETC' },
+  { label: '전체', value: '전체' },
+  { label: '내주변', value: '내주변' },
+  { label: '한식', value: '한식' },
+  { label: '양식', value: '양식' },
+  { label: '일식', value: '일식' },
+  { label: '이자카야', value: '이자카야' },
+  { label: '카페', value: '카페' },
+  { label: '데이트', value: '데이트' },
+  { label: '기타', value: '기타' },
 ];
 
 interface IProps {

@@ -5,7 +5,7 @@ import type { IFollowResponseDTO, IBlockEditorResponseDTO } from '../model/archi
 export const archiverFollowPost = {
   followEditor: async (editorId: string): Promise<IFollowResponseDTO> => {
     const response = await clientApi
-      .post(`archivers/follows`, { json: { editorId } })
+      .post(`archivers/follows/${editorId}`)
       .json<IFollowResponseDTO>();
     return response;
   },

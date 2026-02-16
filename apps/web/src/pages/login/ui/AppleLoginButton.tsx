@@ -44,7 +44,7 @@ const randomId = () => {
 const isLocalhost = () => {
   if (typeof window === 'undefined') return false;
   const h = window.location.hostname;
-  return h === 'localhost' || h === '127.0.0.1';
+  return h === 'localhost' || h === '127.0.0.1' || h === '192.168.0.6';
 };
 
 export const AppleLoginButton = ({

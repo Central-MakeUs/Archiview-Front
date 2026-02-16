@@ -4,22 +4,11 @@ import { useMemo, useState } from 'react';
 
 import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
-import { CategoryOptionTabs } from '@/pages/editor/profile/CategoryOptionTabs';
+import { CategoryOptionTabs, type CategoryTab } from '@/pages/editor/profile/CategoryOptionTabs';
 import { HamburgerIcon } from '@/shared/ui/icon/HamburgerIcon';
 import { ArchiverPlaceItem } from '@/pages/archiver/my-archive/ui/ArchiverPlaceItem';
 
 import { TrialFinishModal } from './TrialFinishModal';
-
-export type CategoryTab =
-  | 'ALL'
-  | 'NEAR'
-  | 'KOREAN'
-  | 'WESTERN'
-  | 'JAPANESE'
-  | 'IZAKAYA'
-  | 'CAFE'
-  | 'DATE'
-  | 'ETC';
 
 interface IPlace {
   id: string;
@@ -35,12 +24,12 @@ interface IPlace {
 
 export const TrialPageInner = ({ initialPlaces }: { initialPlaces: IPlace[] }) => {
   const [open, setOpen] = useState(false);
-  const [category, setCategory] = useState<CategoryTab>('ALL');
+  const [category, setCategory] = useState<CategoryTab>('전체');
 
   const [trialFinishOpen, setTrialFinishOpen] = useState(false);
 
   const filteredPlaces = useMemo(() => {
-    if (category === 'ALL') return initialPlaces;
+    if (category === '전체' || category === '내주변') return initialPlaces;
     return initialPlaces.filter((p) => p.category === category);
   }, [initialPlaces, category]);
 

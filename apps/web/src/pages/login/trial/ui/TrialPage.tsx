@@ -1,15 +1,5 @@
 import { TrialPageInner } from './TrialPageInner';
-
-export type CategoryTab =
-  | 'ALL'
-  | 'NEAR'
-  | 'KOREAN'
-  | 'WESTERN'
-  | 'JAPANESE'
-  | 'IZAKAYA'
-  | 'CAFE'
-  | 'DATE'
-  | 'ETC';
+import type { CategoryTab } from '@/pages/editor/profile/CategoryOptionTabs';
 
 interface IPlace {
   id: string;
@@ -33,7 +23,7 @@ export const TrialPage = () => {
       lng: 126.978,
       description:
         '가게설명가게설명가게설명가게설명가게설명가게설명가게설명가게설명가게설명가게설명가게설명',
-      category: 'CAFE',
+      category: '카페',
       savedCount: 12,
       viewCount: 345,
     },
@@ -45,7 +35,7 @@ export const TrialPage = () => {
       lng: 126.978,
       description:
         '가게설명가게설명가게설명가게설명가게설명가게설명가게설명가게설명가게설명가게설명가게설명',
-      category: 'CAFE',
+      category: '카페',
       savedCount: 12,
       viewCount: 345,
     },
@@ -57,7 +47,7 @@ export const TrialPage = () => {
       lng: 126.978,
       description:
         '가게설명가게설명가게설명가게설명가게설명가게설명가게설명가게설명가게설명가게설명가게설명',
-      category: 'CAFE',
+      category: '카페',
       savedCount: 12,
       viewCount: 345,
     },

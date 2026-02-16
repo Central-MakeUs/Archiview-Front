@@ -6,22 +6,11 @@ import { getCurrentLocation } from '@/shared/lib/native-bridge/nativeMethods.cli
 import type { GeoLocation } from '@archiview/webview-bridge-contract';
 import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
-import { CategoryOptionTabs } from '@/pages/editor/profile/CategoryOptionTabs';
+import { CategoryOptionTabs, type CategoryTab } from '@/pages/editor/profile/CategoryOptionTabs';
 import { useGetMyArchives } from '@/entities/archiver/place/queries/useGetMyArchives';
 
 import { ArchiverPlaceItem } from './ArchiverPlaceItem';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
-
-export type CategoryTab =
-  | 'ALL'
-  | 'NEAR'
-  | 'KOREAN'
-  | 'WESTERN'
-  | 'JAPANESE'
-  | 'IZAKAYA'
-  | 'CAFE'
-  | 'DATE'
-  | 'ETC';
 
 interface IPlace {
   id: string;
@@ -39,7 +28,7 @@ export const MyArchivePageInner = () => {
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
-  const [category, setCategory] = useState<CategoryTab>('ALL');
+  const [category, setCategory] = useState<CategoryTab>('전체');
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [location, setLocation] = useState<GeoLocation | null>(null);
   const { data, isLoading, isError } = useGetMyArchives({ useMock: false });
@@ -52,6 +41,16 @@ export const MyArchivePageInner = () => {
   //   run().catch(console.error);
   // }, []);
 
+  // TODO : 내주변 가드한거 치우기
+  const handleCategoryChange = (next: CategoryTab) => {
+    if (next === '내주변') {
+      alert('준비중이에요!');
+      return;
+    }
+
+    setCategory(next);
+  };
+
   const places: IPlace[] = useMemo(() => {
     const postPlaces = data?.data?.postPlaces ?? [];
 
@@ -62,14 +61,15 @@ export const MyArchivePageInner = () => {
       description: p.description ?? '',
       lat: 37.5665,
       lng: 126.978,
-      category: 'ALL',
+      category: '전체',
       savedCount: p.saveCount,
       viewCount: p.viewCount,
     }));
   }, [data]);
 
   const filteredPlaces = useMemo(() => {
-    if (category === 'ALL') return places;
+    // TODO : 주석 해제
+    if (category === '전체' || category === '내주변') return places;
     return places.filter((p) => p.category === category);
   }, [places, category]);
 
@@ -88,11 +88,11 @@ export const MyArchivePageInner = () => {
 
   return (
     <div className="flex h-full flex-col min-h-0">
-      <CategoryOptionTabs value={category} onChange={setCategory} />
+      <CategoryOptionTabs value={category} onChange={handleCategoryChange} />
       <pre>
-        {location
+        {/* {location
           ? JSON.stringify(location, null, 2)
-          : 'loading (or not in WebView / permission denied)'}
+          : 'loading (or not in WebView / permission denied)'} */}
       </pre>
       <div className="flex-1 min-h-0 pt-6">
         <KakaoMap
@@ -101,16 +101,19 @@ export const MyArchivePageInner = () => {
           level={3}
           // TODO: 마커
         />
-
+        {/* TODO : 주석 해제 */}
         <BottomSheet
-          isOpen={open}
+          // isOpen={open}
+          isOpen={true}
+          lockOpen={true}
           onOpenChange={setOpen}
-          height={500}
+          // height={500}
+          height={600}
           peekHeight={72}
           header={
             <div className="px-5 pb-4 pt-2.5">
               <p className="heading-20-bold">
-                내주변 <span className="text-primary-40 pl-1">{filteredPlaces.length}</span>
+                {category} <span className="text-primary-40 pl-1">{filteredPlaces.length}</span>
               </p>
             </div>
           }

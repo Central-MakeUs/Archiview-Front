@@ -7,23 +7,12 @@ import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 
 import { EditorPlaceItem } from '../../../../entities/editor/place/ui/EditorPlaceItem';
 
-import { CategoryOptionTabs } from '../CategoryOptionTabs';
+import { CategoryOptionTabs, type CategoryTab } from '../CategoryOptionTabs';
 import { HamburgerIcon } from '@/shared/ui/icon/HamburgerIcon';
 import { EditorProfileCard } from './EditorProfileCard';
 
 import type { IEditorInsightPlace } from '@/entities/editor/place/model/editorPlace.type';
 import { useRouter } from 'next/navigation';
-
-export type CategoryTab =
-  | 'ALL'
-  | 'NEAR'
-  | 'KOREAN'
-  | 'WESTERN'
-  | 'JAPANESE'
-  | 'IZAKAYA'
-  | 'CAFE'
-  | 'DATE'
-  | 'ETC';
 
 interface IEditorProfile {
   nickname: string;
@@ -42,7 +31,7 @@ export const EditorProfilePageInner = ({
 }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [category, setCategory] = useState<CategoryTab>('ALL');
+  const [category, setCategory] = useState<CategoryTab>('전체');
 
   const handleEditProfile = () => {
     router.push('/mypage/edit-profile');

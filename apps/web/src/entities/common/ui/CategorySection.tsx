@@ -1,22 +1,43 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { cn } from '@/shared/lib/cn';
+
 const CategoryItem = ({
   icon,
   label,
   path,
+  onClick,
 }: {
   icon: React.ReactNode;
   label: string;
-  path: string;
+  path?: string;
+  onClick?: () => void;
 }): React.ReactElement => {
-  return (
-    <Link href={path} className="flex flex-col gap-1.5 items-center">
+  const content = (
+    <>
       <div className="h-13 w-13 rounded-xl flex items-center justify-center bg-primary-30">
         {icon}
       </div>
       <div className="body-12-medium">{label}</div>
-    </Link>
+    </>
+  );
+
+  const baseClass = cn('flex flex-col gap-1.5 items-center');
+
+  if (path) {
+    return (
+      <Link href={path} className={baseClass}>
+        {content}
+      </Link>
+    );
+  }
+
+
+  return (
+    <button type="button" className={baseClass} onClick={onClick}>
+      {content}
+    </button>
   );
 };
 
@@ -35,7 +56,8 @@ export const CategorySection = (): React.ReactElement => {
               />
             }
             label="내주변"
-            path="/archiver/category?categoryId=0"
+            onClick={() => alert('준비중이에요!')}
+            // path="/archiver/category?categoryId=0"
           />
           <CategoryItem
             icon={

@@ -85,7 +85,13 @@ export const BottomSheetModal = ({
             exit={{ y: '100%' }}
             transition={{ type: 'tween', duration: 0.25, ease: 'easeOut' }}
           >
-            <BottomSheet isOpen={true} onOpenChange={onOpenChange} height={height} peekHeight={0}>
+            <BottomSheet
+              isOpen={true}
+              onOpenChange={onOpenChange}
+              height={height}
+              peekHeight={0}
+              bottomOffset={0}
+            >
               {children}
             </BottomSheet>
           </motion.div>

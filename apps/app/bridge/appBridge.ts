@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Location from 'expo-location';
-import { Linking } from 'react-native';
+import { Linking, Platform } from 'react-native';
 
 import { bridge } from '@webview-bridge/react-native';
 import type { AppBridgeState, GeoLocation } from '@archiview/webview-bridge-contract';
@@ -15,6 +15,20 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => ({
 
   async openInAppBrowser(url: string) {
     await WebBrowser.openBrowserAsync(url);
+  },
+
+  async openExternalUrl(url: string) {
+    if (Platform.OS === 'ios') {
+      const canOpen = await Linking.canOpenURL(url);
+      if (!canOpen) return false;
+    }
+
+    try {
+      await Linking.openURL(url);
+      return true;
+    } catch {
+      return false;
+    }
   },
 
   async openAppSettings() {
