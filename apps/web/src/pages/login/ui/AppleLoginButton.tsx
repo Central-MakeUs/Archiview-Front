@@ -89,7 +89,7 @@ export const AppleLoginButton = ({
 
   return (
     <button type="button" className={className} disabled={disabled} onClick={handleClick}>
-      <AppleIcon /> {children}
+      <AppleIcon className="mr-2" /> {children}
     </button>
   );
 };
