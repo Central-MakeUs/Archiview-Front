@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.archiview.app",
       "infoPlist": {
         "LSApplicationQueriesSchemes": ["instagram"]
@@ -42,7 +42,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/archiviewSplashImage.png",
+          "image": "./assets/images/splashImage.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
