@@ -15,9 +15,19 @@ export const useFollowEditor = (options?: IUseFollowEditorOptions) => {
 
   const { mutate: followEditor } = useMutation({
     mutationFn: (editorId: string) => archiverFollowPost.followEditor(editorId),
-    onSuccess: async (data: IFollowResponseDTO) => {
+    onSuccess: async (data: IFollowResponseDTO, editorId: string) => {
       toast.success('팔로우 완료');
-      await qc.invalidateQueries({ queryKey: archiverKeys.getMyFollows.all.queryKey });
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: archiverKeys.getMyFollows.all.queryKey }),
+        qc.invalidateQueries({
+          queryKey: archiverKeys.getEditorProfile.applyFilters({ editorId, useMock: false })
+            .queryKey,
+        }),
+        qc.invalidateQueries({
+          queryKey: archiverKeys.getEditorProfile.applyFilters({ editorId, useMock: true })
+            .queryKey,
+        }),
+      ]);
       options?.onSuccess?.(data);
     },
     onError: (error: ExtendedKyHttpError) => {
