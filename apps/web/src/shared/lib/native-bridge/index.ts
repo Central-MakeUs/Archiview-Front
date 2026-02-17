@@ -8,6 +8,7 @@ export {
   openExternalUrl,
   openAppSettings,
   openInAppBrowser,
+  pickImage,
   setToken,
 } from './nativeMethods.client';
 export { registerNativeBridgeEventForwarders, subscribeNativeEvent } from './nativeEvents.client';

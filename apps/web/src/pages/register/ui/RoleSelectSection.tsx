@@ -7,13 +7,14 @@ import { useRouter } from 'next/navigation';
 
 import { Kard } from '@/shared/ui/common/Kard';
 import { Button } from '@/shared/ui/button';
-import { authPost } from '@/entities/auth/api/auth-post';
+import { useRegisterOnboarding } from '@/entities/auth/mutations/useRegisterOnboarding';
 
 type Role = 'EDITOR' | 'ARCHIVER';
 
 export const RoleSelectSection = () => {
   const [role, setRole] = useState<Role | null>(null);
   const router = useRouter();
+  const registerMutation = useRegisterOnboarding();
   const buttonVariant = role ? 'contained' : 'outlined';
 
   const buttonLabel = role
@@ -28,7 +29,8 @@ export const RoleSelectSection = () => {
     switch (role) {
       case 'ARCHIVER': {
         try {
-          await authPost.register({ role });
+          await registerMutation.mutateAsync({ role });
+
           router.push(`/register-finish?role=${role}`);
         } catch (e) {
           // TODO: 토스트/에러 처리

@@ -1,9 +1,25 @@
+import * as ImagePicker from 'expo-image-picker';
 import * as WebBrowser from 'expo-web-browser';
 import * as Location from 'expo-location';
 import { Linking, Platform } from 'react-native';
 
 import { bridge } from '@webview-bridge/react-native';
-import type { AppBridgeState, GeoLocation } from '@archiview/webview-bridge-contract';
+import type {
+  AppBridgeState,
+  GeoLocation,
+  PickImageAsset,
+  PickImageOptions,
+  PickImageResult,
+} from '@archiview/webview-bridge-contract';
+
+const toPickImageAsset = (asset: ImagePicker.ImagePickerAsset): PickImageAsset => {
+  return {
+    uri: asset.uri,
+    base64: asset.base64 ?? null,
+    fileName: asset.fileName ?? null,
+    mimeType: asset.mimeType ?? null,
+  };
+};
 
 export const appBridge = bridge<AppBridgeState>(({ get, set }) => ({
   bridgeVersion: 1,
@@ -33,6 +49,66 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => ({
 
   async openAppSettings() {
     await Linking.openSettings();
+  },
+
+  async pickImage(options: PickImageOptions): Promise<PickImageResult> {
+    const { source, base64 = false, quality, allowsEditing, aspect } = options;
+
+    try {
+      if (source === 'camera') {
+        const permission = await ImagePicker.requestCameraPermissionsAsync();
+        if (!permission.granted) {
+          return { cancelled: false, error: 'permission-denied' };
+        }
+
+        const result = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          base64,
+          quality,
+          allowsEditing,
+          aspect,
+        });
+
+        if (result.canceled) {
+          return { cancelled: true };
+        }
+
+        const asset = result.assets?.[0];
+        if (!asset) return { cancelled: false, error: 'unknown' };
+
+        return {
+          cancelled: false,
+          asset: toPickImageAsset(asset),
+        };
+      }
+
+      const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!permission.granted) {
+        return { cancelled: false, error: 'permission-denied' };
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        base64,
+        quality,
+        allowsEditing,
+        aspect,
+      });
+
+      if (result.canceled) {
+        return { cancelled: true };
+      }
+
+      const asset = result.assets?.[0];
+      if (!asset) return { cancelled: false, error: 'unknown' };
+
+      return {
+        cancelled: false,
+        asset: toPickImageAsset(asset),
+      };
+    } catch {
+      return { cancelled: false, error: 'unknown' };
+    }
   },
 
   async getCurrentLocation(): Promise<GeoLocation | null> {

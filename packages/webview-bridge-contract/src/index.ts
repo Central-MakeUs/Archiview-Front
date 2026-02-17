@@ -17,6 +17,31 @@ export type GeoLocation = {
   timestamp: number;
 };
 
+export type PickImageSource = 'camera' | 'library';
+
+export type PickImageError = 'permission-denied' | 'unavailable' | 'unknown';
+
+export type PickImageAsset = {
+  uri: string;
+  base64?: string | null;
+  fileName?: string | null;
+  mimeType?: string | null;
+};
+
+export type PickImageOptions = {
+  source: PickImageSource;
+  base64?: boolean;
+  quality?: number;
+  allowsEditing?: boolean;
+  aspect?: [number, number];
+};
+
+export type PickImageResult = {
+  cancelled: boolean;
+  error?: PickImageError;
+  asset?: PickImageAsset;
+};
+
 export interface AppBridgeState extends Bridge {
   bridgeVersion: number;
   token: NativeToken;
@@ -27,6 +52,8 @@ export interface AppBridgeState extends Bridge {
   openExternalUrl(url: string): Promise<boolean>;
 
   openAppSettings(): Promise<void>;
+
+  pickImage(options: PickImageOptions): Promise<PickImageResult>;
 
   getCurrentLocation(): Promise<GeoLocation | null>;
 

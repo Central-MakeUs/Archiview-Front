@@ -15,6 +15,9 @@ import { NickNameInput } from '@/entities/editor/profile/ui/NickNameInput';
 import { InstagramUrlInput } from '@/entities/editor/profile/ui/InstagramUrlInput';
 import { InstagramIdInput } from '@/entities/editor/profile/ui/InstagramIdInput';
 import { HashTagInput } from '@/entities/editor/profile/ui/HashTagInput';
+import { CameraPermissionModal } from '@/shared/ui/permission/CameraPermissionModal';
+import { ImageSourceBottomSheetModal } from '@/shared/ui/permission/ImageSourceBottomSheetModal';
+import { isWebViewBridgeAvailable, openAppSettings, pickImage } from '@/shared/lib/native-bridge';
 
 import { RegisterFinishModal } from './RegisterFinishModal';
 
@@ -36,18 +39,27 @@ export const RegisterEditorPage = () => {
   const [isInstagramUrlDisabled, setIsInstagramUrlDisabled] = useState(false);
 
   const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
+  const [isCameraPermissionModalOpen, setIsCameraPermissionModalOpen] = useState(false);
+  const [isImageSourceSheetOpen, setIsImageSourceSheetOpen] = useState(false);
 
   const { getPresignedUrl } = useEditorGetPresignedUrl();
   const { putImage } = usePutImage();
 
   const { mutate: registerEditor } = useRegisterEditorProfile();
 
-  const openFilePicker = () => fileRef.current?.click();
+  const openFilePicker = () => {
+    const input = fileRef.current;
+    if (!input) return;
 
-  const handleThumbnailFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    if (isWebViewBridgeAvailable()) {
+      setIsImageSourceSheetOpen(true);
+      return;
+    }
 
+    input.click();
+  };
+
+  const uploadFile = (file: File) => {
     const preview = URL.createObjectURL(file);
     setProfileImagePreViewUrl(preview);
 
@@ -68,10 +80,46 @@ export const RegisterEditorPage = () => {
         },
       },
     );
+  };
+
+  const pickImageFromNative = async (source: 'camera' | 'library') => {
+    setIsImageSourceSheetOpen(false);
+
+    const res = await pickImage({ source, base64: true });
+
+    if (res.error === 'unavailable') {
+      fileRef.current?.click();
+      return;
+    }
+
+    if (res.error === 'permission-denied') {
+      setIsCameraPermissionModalOpen(true);
+      return;
+    }
+
+    if (res.cancelled) return;
+
+    if (!res.asset?.base64) return;
+
+    const mimeType = res.asset.mimeType ?? 'image/jpeg';
+    const fileName = res.asset.fileName ?? `profile.${mimeType.includes('png') ? 'png' : 'jpg'}`;
+
+    const binary = atob(res.asset.base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+    const file = new File([bytes], fileName, { type: mimeType });
+    uploadFile(file);
+  };
+
+  const handleThumbnailFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    uploadFile(file);
 
     e.target.value = '';
   };
-  console.log(hashtags);
+
   const payload = useMemo(
     () => ({
       profileImageUrl,
@@ -131,6 +179,29 @@ export const RegisterEditorPage = () => {
 
   return (
     <div className="px-5 flex flex-col h-full overflow-y-auto">
+      <CameraPermissionModal
+        isOpen={isCameraPermissionModalOpen}
+        onClose={() => setIsCameraPermissionModalOpen(false)}
+        onOpenSettings={async () => {
+          try {
+            await openAppSettings();
+          } finally {
+            setIsCameraPermissionModalOpen(false);
+          }
+        }}
+      />
+
+      <ImageSourceBottomSheetModal
+        open={isImageSourceSheetOpen}
+        onOpenChange={setIsImageSourceSheetOpen}
+        onPickLibrary={() => {
+          void pickImageFromNative('library');
+        }}
+        onPickCamera={() => {
+          void pickImageFromNative('camera');
+        }}
+      />
+
       <div className="flex flex-col gap-5">
         <div className="pt-6 flex justify-center">
           <button

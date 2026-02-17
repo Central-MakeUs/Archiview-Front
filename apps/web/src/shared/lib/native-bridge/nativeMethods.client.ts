@@ -1,6 +1,11 @@
 'use client';
 
-import type { GeoLocation, NativeToken } from '@archiview/webview-bridge-contract';
+import type {
+  GeoLocation,
+  NativeToken,
+  PickImageOptions,
+  PickImageResult,
+} from '@archiview/webview-bridge-contract';
 
 import { nativeBridge } from './bridge.client';
 
@@ -38,6 +43,13 @@ export const openAppSettings = async (): Promise<boolean> => {
   }
   await nativeBridge.openAppSettings();
   return true;
+};
+
+export const pickImage = async (options: PickImageOptions): Promise<PickImageResult> => {
+  if (!nativeBridge.isNativeMethodAvailable('pickImage')) {
+    return { cancelled: false, error: 'unavailable' };
+  }
+  return nativeBridge.pickImage(options);
 };
 
 export const getCurrentLocation = async (): Promise<GeoLocation | null> => {
