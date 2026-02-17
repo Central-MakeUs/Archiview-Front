@@ -1,4 +1,5 @@
 'use client';
+
 import type { HTTPError } from 'ky';
 import { useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -33,15 +34,25 @@ export const useAuth = () => {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
 
-  const hasAccessTokenInQuery = useMemo(() => !!searchParams?.get('accessToken'), [searchParams]);
-
-  useAccessToken({
+  const { token: accessTokenFromQuery, isPersisted: isAccessTokenPersisted } = useAccessToken({
     storageKey: LOCAL_STORAGE_KEYS.accessToken,
     queryKey: 'accessToken',
   });
 
+  const shouldSaveRole = useMemo(() => {
+    if (accessTokenFromQuery) return isAccessTokenPersisted;
+
+    try {
+      const storedToken = localStorage.getItem(LOCAL_STORAGE_KEYS.accessToken);
+      const storedRole = localStorage.getItem(LOCAL_STORAGE_KEYS.role);
+      return !!storedToken && (!storedRole || storedRole === 'GUEST');
+    } catch {
+      return false;
+    }
+  }, [accessTokenFromQuery, isAccessTokenPersisted]);
+
   const authQuery = useSaveRole({
-    enabled: hasAccessTokenInQuery,
+    enabled: shouldSaveRole,
   });
 
   const changeRoleMutation = useMutation({

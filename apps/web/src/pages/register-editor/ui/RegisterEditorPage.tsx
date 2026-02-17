@@ -71,7 +71,7 @@ export const RegisterEditorPage = () => {
 
     e.target.value = '';
   };
-  console.log(hashtags);
+
   const payload = useMemo(
     () => ({
       profileImageUrl,

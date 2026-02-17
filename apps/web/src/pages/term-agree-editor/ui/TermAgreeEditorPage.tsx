@@ -5,11 +5,12 @@ import { useRouter } from 'next/navigation';
 
 import { Button } from '@/shared/ui/button';
 import { useAuth } from '@/entities/auth/hooks/useAuth';
-import { authPost } from '@/entities/auth/api/auth-post';
 import { CheckItem } from '@/pages/term-agree/ui/CheckItem';
+import { useRegisterOnboarding } from '@/entities/auth/mutations/useRegisterOnboarding';
 
 export const TermAgreeEditorPage = () => {
   const router = useRouter();
+  const registerMutation = useRegisterOnboarding();
 
   const [copyWrite, setCopyWrite] = useState(false);
   const [guideLine, setGuideLine] = useState(false);
@@ -26,7 +27,8 @@ export const TermAgreeEditorPage = () => {
   // TODO : 추후 분리
   const handleClick = async () => {
     try {
-      await authPost.register({ role: 'EDITOR' });
+      await registerMutation.mutateAsync({ role: 'EDITOR' });
+
       router.push(`/register-finish?role=EDITOR`);
     } catch (e) {
       // TODO: 토스트/에러 처리

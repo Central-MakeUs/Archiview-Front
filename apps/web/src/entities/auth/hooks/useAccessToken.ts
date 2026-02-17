@@ -1,7 +1,7 @@
 // 이름 너무 구린데 바꾸기;;
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface IOptions {
@@ -49,18 +49,20 @@ export const useAccessToken = (options: IOptions = {}) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const [isPersisted, setIsPersisted] = useState(false);
+
   const token = useMemo(() => searchParams?.get(queryKey) ?? null, [searchParams, queryKey]);
 
   useEffect(() => {
+    setIsPersisted(false);
     if (!token) return;
 
     try {
       const existing = localStorage.getItem(storageKey);
       const shouldWrite = overwrite || !existing;
 
-      if (shouldWrite) {
-        localStorage.setItem(storageKey, token);
-      }
+      if (shouldWrite) localStorage.setItem(storageKey, token);
+      setIsPersisted(true);
     } catch (e) {
       console.error('Failed to write accessToken to localStorage', e);
       return;
@@ -74,5 +76,5 @@ export const useAccessToken = (options: IOptions = {}) => {
     }
   }, [token, storageKey, overwrite, replaceAfterPersist, replaceTo, pathname, router]);
 
-  return { token };
+  return { token, isPersisted };
 };
