@@ -65,36 +65,42 @@ export const EditorProfilePageInner = ({
           // TODO: 마커
         />
 
-        <BottomSheet isOpen={open} onOpenChange={setOpen} height={500} peekHeight={72}>
-          <div className="px-5 pb-6">
-            <div className="flex flex-row justify-between pb-4 pt-2.5">
+        <BottomSheet
+          isOpen={open}
+          onOpenChange={setOpen}
+          height={500}
+          peekHeight={72}
+          header={
+            <div className="flex flex-row justify-between pb-4 pt-2.5 px-5">
               <p className="heading-20-bold">
                 업로드한 장소 <span className="text-primary-40 pl-1">{places.length}</span>
               </p>
               <HamburgerIcon />
             </div>
-            {places.map((place) => (
-              <EditorPlaceItem
-                key={place.placeId}
-                placeId={place.placeId}
-                name={place.placeName}
-                description={place.editorSummary}
-                savedCount={place.stats.saveCount}
-                viewCount={place.stats.viewCount}
-                shareCount={place.stats.directionCount}
-                instagramCount={place.stats.instagramInflowCount}
-                thumbnail={
-                  place.placeImageUrl ? (
-                    <img
-                      src={place.placeImageUrl}
-                      alt={place.placeName}
-                      className="h-18 w-18 rounded-2xl object-cover"
-                    />
-                  ) : undefined
-                }
-              />
-            ))}
-          </div>
+          }
+          contentClassName="overflow-y-auto px-5 pb-6"
+        >
+          {places.map((place) => (
+            <EditorPlaceItem
+              key={place.placeId}
+              placeId={place.placeId}
+              name={place.placeName}
+              description={place.editorSummary}
+              savedCount={place.stats.saveCount}
+              viewCount={place.stats.viewCount}
+              shareCount={place.stats.directionCount}
+              instagramCount={place.stats.instagramInflowCount}
+              thumbnail={
+                place.placeImageUrl ? (
+                  <img
+                    src={place.placeImageUrl}
+                    alt={place.placeName}
+                    className="h-18 w-18 rounded-2xl object-cover"
+                  />
+                ) : undefined
+              }
+            />
+          ))}
         </BottomSheet>
       </div>
     </div>

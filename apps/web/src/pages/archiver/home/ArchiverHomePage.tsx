@@ -1,28 +1,47 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 
 import { Badge } from '@/shared/ui/Badge';
-import { SearchBar } from '@/shared/ui/SearchBar';
 import { CategorySection } from '@/entities/common/ui/CategorySection';
 import { HotPlaceSection } from '@/features/archiver/place/ui/HotPlaceSection';
 import { EditorTrustedSection } from '@/features/archiver/profile/ui/EditorTrustedSection';
 import { useGetMyProfile } from '@/entities/archiver/profile/queries/useGetMyProfile';
+import { useGetHotPlace } from '@/entities/archiver/place/queries/useGetHotPlace';
+import { useGetEditorTrusted } from '@/entities/archiver/profile/queries/useGetEditorTrusted';
 import { useAuth } from '@/entities/auth/hooks/useAuth';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
+import { useMinLoading } from '@/shared/hooks/useMinLoading';
 
 export const ArchiverHomePage = (): React.ReactElement => {
-  const [searchedText, setSearchedText] = useState<string>('');
-
   useAuth();
 
-  const { data: myData, isLoading, isError } = useGetMyProfile({ useMock: false });
+  const {
+    data: myData,
+    isLoading: isMyProfileLoading,
+    isError: isMyProfileError,
+  } = useGetMyProfile({ useMock: false });
+  const {
+    data: hotPlaceData,
+    isLoading: isHotPlaceLoading,
+    isError: isHotPlaceError,
+  } = useGetHotPlace({ useMock: false });
+  const {
+    data: editorTrustedData,
+    isLoading: isEditorTrustedLoading,
+    isError: isEditorTrustedError,
+  } = useGetEditorTrusted({ useMock: false });
 
-  if (isLoading) return <LoadingPage text="아카이버 홈 화면으로 이동중" role="ARCHIVER" />;
+  const isLoading = isMyProfileLoading || isHotPlaceLoading || isEditorTrustedLoading;
+  const isError = isMyProfileError || isHotPlaceError || isEditorTrustedError;
+  const showLoading = useMinLoading(isLoading);
+
+  if (showLoading) return <LoadingPage text="아카이버 홈 화면으로 이동중" role="ARCHIVER" />;
 
   if (isError) return <div className="mb-5">에러</div>;
+
+  const hotPlaces = hotPlaceData?.data?.places ?? [];
+  const editorTrusted = editorTrustedData?.data?.editors ?? [];
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -44,21 +63,11 @@ export const ArchiverHomePage = (): React.ReactElement => {
             height={124}
             className="absolute top-8 right-9.75"
           />
-          {/* <Link
-            href={'search-result'}
-            className="absolute left-5 right-5 -bottom-5 flex items-center rounded-full bg-transparent shadow-[0_0_11px_0_rgba(144,144,144,0.40)] "
-          >
-            <SearchBar
-              value={searchedText}
-              onChange={(e) => setSearchedText(e)}
-              onSubmit={() => {}}
-            />
-          </Link> */}
         </div>
         <div className="p-5">
           <CategorySection />
-          <HotPlaceSection />
-          <EditorTrustedSection />
+          <HotPlaceSection hotPlaces={hotPlaces} />
+          <EditorTrustedSection editors={editorTrusted} />
         </div>
       </div>
     </div>

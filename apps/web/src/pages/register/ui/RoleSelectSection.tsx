@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -48,7 +49,11 @@ export const RoleSelectSection = () => {
     <div className="pt-11.5 flex justify-between h-full flex-col">
       <div className="flex flex-col h-full gap-4">
         {/* 에디터 */}
-        <Kard selected={role === 'EDITOR'} onClick={() => setRole('EDITOR')} className="p-5">
+        <Kard
+          selected={role === 'EDITOR'}
+          onClick={() => setRole('EDITOR')}
+          className="relative p-5 overflow-hidden"
+        >
           <div className="flex flex-1 flex-col gap-2">
             <span className="inline-flex w-fit rounded-full bg-primary-40 px-3 py-1 caption-12-semibold text-white">
               에디터
@@ -66,10 +71,22 @@ export const RoleSelectSection = () => {
               <li>자동으로 정리</li>
             </ul>
           </div>
+
+          <Image
+            src="/images/RegisterEditorImage.svg"
+            alt=""
+            width={67}
+            height={54}
+            className="absolute right-3 bottom-3 pointer-events-none"
+          />
         </Kard>
 
         {/* 아카이버 */}
-        <Kard selected={role === 'ARCHIVER'} onClick={() => setRole('ARCHIVER')} className="p-5">
+        <Kard
+          selected={role === 'ARCHIVER'}
+          onClick={() => setRole('ARCHIVER')}
+          className="relative p-5 overflow-hidden"
+        >
           <div className="flex flex-col gap-2">
             <span className="inline-flex w-fit rounded-full bg-neutral-90 px-3 py-1 caption-12-semibold text-white">
               아카이버
@@ -86,6 +103,14 @@ export const RoleSelectSection = () => {
               <li>자동으로 정리</li>
             </ul>
           </div>
+
+          <Image
+            src="/images/RegisterArchiverImage.svg"
+            alt=""
+            width={67}
+            height={52}
+            className="absolute right-3 bottom-3 pointer-events-none"
+          />
         </Kard>
       </div>
 

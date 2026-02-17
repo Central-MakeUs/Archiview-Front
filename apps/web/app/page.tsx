@@ -7,7 +7,7 @@ export default function Page() {
 
   return (
     <main className="flex min-h-dvh items-center justify-center">
-      <p className="body-14-regular text-neutral-60">이동중...</p>
+      {/* <p className="body-14-regular text-neutral-60">이동중...</p> */}
     </main>
   );
 }

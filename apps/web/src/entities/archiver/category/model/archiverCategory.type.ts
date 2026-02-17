@@ -3,6 +3,7 @@ import { ApiResponse } from '@/shared/lib/api/common';
 export interface IPlace {
   placeId: number;
   placeName: string;
+  imageUrl: string;
   latestDescription: string;
   viewCount: number;
   saveCount: number;

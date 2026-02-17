@@ -6,7 +6,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { BoxInput } from '@/shared/ui/common/Input/BoxInput';
 import { usePostCode } from '@/shared/hooks/usePostCode';
 import { SearchPostCodeModal } from '@/shared/ui/common/Modal/SearchPostCodeModal';
-import { CaretUpCircleIcon, PictureIcon } from '@/shared/ui/icon';
+import { CaretUpCircleIcon, PictureIcon, XIcon } from '@/shared/ui/icon';
 import { useEditorGetPresignedUrl } from '@/entities/editor/place/mutations/useEditorGetPresignedUrl';
 import { usePutImage } from '@/entities/editor/place/mutations/usePutImage';
 import { CategoryChipGroup } from './CategoryChipGroup';
@@ -18,9 +18,11 @@ const MAX_CATEGORIES = 2;
 
 interface IRegisterPlaceCardProps {
   placeIndex: number;
+  canDelete: boolean;
+  onRemove: () => void;
 }
 
-export const RegisterPlaceCard = ({ placeIndex }: IRegisterPlaceCardProps) => {
+export const RegisterPlaceCard = ({ placeIndex, canDelete, onRemove }: IRegisterPlaceCardProps) => {
   const index = placeIndex - 1;
   const base = `placeInfoRequestList.${index}` as const;
 
@@ -174,6 +176,15 @@ export const RegisterPlaceCard = ({ placeIndex }: IRegisterPlaceCardProps) => {
               setFormValue(`${base}.categoryIds`, next);
             }}
           />
+
+          {canDelete && (
+            <div className="flex items-center justify-end w-full">
+              <button type="button" onClick={onRemove} className="flex items-center gap-1">
+                <span className="body-14-semibold text-neutral-60">이 장소 삭제</span>
+                <XIcon className="w-3 h-3 text-neutral-60" />
+              </button>
+            </div>
+          )}
         </div>
       )}
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { AppleIcon } from '@/shared/ui/icon/AppleIcon';
 import React from 'react';
 
 interface AppleLoginButtonProps {
@@ -88,7 +89,7 @@ export const AppleLoginButton = ({
 
   return (
     <button type="button" className={className} disabled={disabled} onClick={handleClick}>
-      {children}
+      <AppleIcon className="mr-2" /> {children}
     </button>
   );
 };

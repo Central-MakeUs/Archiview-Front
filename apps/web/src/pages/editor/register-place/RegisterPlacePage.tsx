@@ -11,11 +11,6 @@ import { RegisterPlaceCard } from './ui/RegisterPlaceCard';
 import { createPlaceDefault } from './model/place.default';
 import { registerPlaceSchema } from './model/place.schema';
 
-import {
-  ICreateEditorPostRequest,
-  IEditEditorPostRequest,
-} from '@/entities/editor/place/model/editorPlace.type';
-
 import { useEditorCreatePost } from '@/entities/editor/place/mutations/useEditorCreatePost';
 import { useEditorEditPosts } from '@/entities/editor/place/mutations/useEditorEditPosts';
 import { useEditorDeletePost } from '@/entities/editor/place/mutations/useEditorDeletePost';
@@ -42,7 +37,7 @@ export const RegisterPlacePage = () => {
 
   const { control, handleSubmit, reset } = methods;
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'placeInfoRequestList',
   });
@@ -58,6 +53,7 @@ export const RegisterPlacePage = () => {
       url,
       hashTags: hashTags ?? [],
       placeInfoRequestList: postPlaces.map((place) => ({
+        postPlaceId: place.postPlaceId,
         placeName: place.placeName,
         description: place.description ?? '',
         addressName: place.addressName ?? '',
@@ -85,20 +81,28 @@ export const RegisterPlacePage = () => {
   const { editEditorPost } = useEditorEditPosts();
   const { deleteEditorPost } = useEditorDeletePost();
 
-  const onSubmit = (data: ICreateEditorPostRequest | IEditEditorPostRequest) => {
-    const placeInfoRequestList = data.placeInfoRequestList.map((place) => ({
-      placeName: place.placeName,
-      description: place.description ?? '',
-      addressName: place.addressName,
-      roadAddressName: place.roadAddressName,
-      latitude: place.latitude,
-      longitude: place.longitude,
-      categoryIds: place.categoryIds,
-      nearestStationWalkTime: place.nearestStationWalkTime,
-      placeUrl: place.placeUrl,
-      phoneNumber: place.phoneNumber,
-      imageUrl: place.imageUrl,
-    }));
+  const onSubmit = (data: z.infer<typeof registerPlaceSchema>) => {
+    const placeInfoRequestList = data.placeInfoRequestList.map((place) => {
+      const base = {
+        placeName: place.placeName,
+        description: place.description ?? '',
+        addressName: place.addressName,
+        roadAddressName: place.roadAddressName,
+        latitude: place.latitude,
+        longitude: place.longitude,
+        categoryIds: place.categoryIds,
+        nearestStationWalkTime: place.nearestStationWalkTime,
+        placeUrl: place.placeUrl,
+        phoneNumber: place.phoneNumber,
+        imageUrl: place.imageUrl,
+      };
+
+      if (place.postPlaceId) {
+        return { ...base, postPlaceId: place.postPlaceId };
+      }
+
+      return base;
+    });
 
     if (!isEdit) {
       createEditorPost({
@@ -134,7 +138,12 @@ export const RegisterPlacePage = () => {
         <div className="-mx-5 py-8 bg-neutral-20">
           <div className="px-5 flex flex-col gap-4">
             {fields.map((field, index) => (
-              <RegisterPlaceCard key={field.id} placeIndex={index + 1} />
+              <RegisterPlaceCard
+                key={field.id}
+                placeIndex={index + 1}
+                canDelete={fields.length >= 2}
+                onRemove={() => remove(index)}
+              />
             ))}
 
             <button

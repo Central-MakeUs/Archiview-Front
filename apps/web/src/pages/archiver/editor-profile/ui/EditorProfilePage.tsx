@@ -13,6 +13,7 @@ import { ArchiverPlaceItem } from '../../my-archive/ui/ArchiverPlaceItem';
 import { EditorProfileCard } from './EditorProfileCard';
 import { SortDropdown } from './SortDropDown';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
+import { useMinLoading } from '@/shared/hooks/useMinLoading';
 
 type SortKey = 'LATEST' | 'OLDEST';
 
@@ -23,12 +24,11 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   const [category, setCategory] = useState<CategoryTab>('전체');
   const [sort, setSort] = useState<SortKey>('LATEST');
 
-  const { data: editorData } = useGetEditorProfile({
+  const { data: editorData, isLoading: isEditorDataLoading } = useGetEditorProfile({
     editorId,
     useMock: false,
   });
-  console.log(editorData);
-  const { data: placeListData } = useGetEditorPlaceList({
+  const { data: placeListData, isLoading: isPlaceListLoading } = useGetEditorPlaceList({
     userId: editorId,
     sort,
     useMock: false,
@@ -50,7 +50,11 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
 
   const editor = editorData?.data;
 
-  if (!editor) return <LoadingPage text="에디터 프로필을 불러오는 중입니다." role="ARCHIVER" />;
+  const showLoading = useMinLoading(isEditorDataLoading || isPlaceListLoading, 1500);
+  if (!editor)
+    return showLoading ? (
+      <LoadingPage text="에디터 프로필을 불러오는 중입니다." role="ARCHIVER" />
+    ) : null;
 
   return (
     <div className="flex h-full flex-col min-h-0">

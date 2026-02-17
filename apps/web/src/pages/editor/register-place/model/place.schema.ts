@@ -1,6 +1,7 @@
 import z from 'zod';
 
 export const placeSchema = z.object({
+  postPlaceId: z.number().optional(),
   placeName: z.string().min(1, '장소 이름을 입력해주세요'),
   description: z.string().min(1, '장소 설명을 입력해주세요'),
   addressName: z.string().min(1, '주소를 입력해주세요'),

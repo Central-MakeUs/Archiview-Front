@@ -36,7 +36,7 @@ export interface IAddressValues {
  * }
  */
 export interface IRegisterPlaceCardValue extends IAddressValues {
-  placeId?: number;
+  postPlaceId?: number;
   description: string;
   categoryIds: number[];
   nearestStationWalkTime: string;

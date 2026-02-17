@@ -143,14 +143,13 @@ export const CardSection = ({
               </div>
               <div className="caption-12-regular text-neutral-50">{post.description}</div>
               <div className="flex gap-1">
-                <Chip
-                  label={Array.isArray(post.hashTags) ? (post.hashTags[0] ?? '') : '#테스트'}
-                  className="bg-primary-40 text-neutral-10 border-none"
-                />
-                <Chip
-                  label={Array.isArray(post.hashTags) ? (post.hashTags[1] ?? '') : '#테스트'}
-                  className="bg-primary-10 text-primary-40 border-none"
-                />
+                {post.hashTags.map((tag) => (
+                  <Chip
+                    key={tag}
+                    label={tag}
+                    className="bg-primary-40 text-neutral-10 border-none"
+                  />
+                ))}
                 <button
                   type="button"
                   className="ml-auto caption-12-regular text-neutral-50"

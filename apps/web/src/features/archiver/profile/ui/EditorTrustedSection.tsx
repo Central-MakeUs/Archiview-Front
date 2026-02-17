@@ -1,21 +1,15 @@
-import { useGetEditorTrusted } from '@/entities/archiver/profile/queries/useGetEditorTrusted';
 import { IEditor } from '@/entities/archiver/profile/model/archiverProfile.type';
-
 import { EditorRecommendCard } from '@/entities/archiver/profile/ui/EditorRecommendCard';
-import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 
-// TODO : 믿고먹는 에디터 응답값이 이거맞는지..?
-export const EditorTrustedSection = (): React.ReactElement => {
-  const { data: EditorTrustedData, isLoading, isError } = useGetEditorTrusted({ useMock: false });
+interface IEditorTrustedSectionProps {
+  editors: IEditor[];
+}
 
-  if (isLoading)
-    return <LoadingPage text="믿고 먹는 에디터를 불러오는 중입니다." role="ARCHIVER" />;
-  if (isError) return <div className="mb-5">에러</div>;
-
-  const EditorTrusted = EditorTrustedData?.data?.editors ?? [];
-  console.log(EditorTrustedData);
-  if (EditorTrusted.length === 0) {
-    return <div>표시할 장소가 없습니다.</div>;
+export const EditorTrustedSection = ({
+  editors,
+}: IEditorTrustedSectionProps): React.ReactElement => {
+  if (editors.length === 0) {
+    return <div>표시할 에디터가 없습니다.</div>;
   }
 
   return (
@@ -24,7 +18,7 @@ export const EditorTrustedSection = (): React.ReactElement => {
         <span className="heading-20-bold">믿고 먹는 에디터</span>
       </div>
       <div className="flex overflow-x-scroll gap-3 scroll-none">
-        {EditorTrusted.map((editor: IEditor) => (
+        {editors.map((editor: IEditor) => (
           <EditorRecommendCard key={editor.editorId} editor={editor} />
         ))}
       </div>

@@ -33,7 +33,7 @@ export const HotPlaceCard = ({
   const hashTag = pickRandom(hashTags);
 
   const stripHash = (tag?: string) => (tag ?? '').trim().replace(/^#/, '');
-  const safeImageUrl = imageUrl?.trimEnd()
+  const safeImageUrl = imageUrl?.trimEnd();
 
   return (
     // TODO : 라우팅 연결하기
@@ -57,15 +57,25 @@ export const HotPlaceCard = ({
           </div>
           <div className="caption-12-regular text-neutral-50 mb-3">{address}</div>
           <div className="flex items-center gap-1">
-            <span>
+            {/* <span>
               <Badge variant="contained" className="rounded-xl bg-primary-40">
                 {categoryName}
               </Badge>
-            </span>
+            </span> */}
             <span>
-              <Badge variant="contained" className="rounded-xl bg-primary-10 text-primary-40">
+              {hashTags.length > 0 &&
+                hashTags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant="contained"
+                    className="rounded-xl bg-primary-10 text-primary-40 mr-1"
+                  >
+                    {stripHash(tag)}
+                  </Badge>
+                ))}
+              {/* <Badge variant="contained" className="rounded-xl bg-primary-10 text-primary-40">
                 {stripHash(hashTag)}
-              </Badge>
+              </Badge> */}
             </span>
           </div>
         </div>

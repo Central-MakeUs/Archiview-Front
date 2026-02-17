@@ -104,6 +104,7 @@ export interface IPlaceInfo {
 }
 
 export interface IPlaceInfoRequest {
+  postPlaceId?: number;
   placeName: string;
   description: string;
   addressName: string;

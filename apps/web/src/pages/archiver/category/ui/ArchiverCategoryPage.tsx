@@ -12,6 +12,9 @@ import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import { Item } from '@/shared/ui/common/Item';
 import { EyeIcon, FolderOutlineIcon, RightArrowIcon } from '@/shared/ui/icon';
+import Image from 'next/image';
+import { useMinLoading } from '@/shared/hooks/useMinLoading';
+import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 
 const NEAR_CATEGORY_ID = 0;
 const DEFAULT_CATEGORY_ID = NEAR_CATEGORY_ID;
@@ -117,15 +120,16 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
     useMock: false,
     enabled: isNear && Boolean(coords),
   });
+  console.log(categoryData);
 
   const data = isNear ? nearData : categoryData;
-  const isLoading = isNear ? isNearLoading : isCategoryLoading;
+  const isRawLoading = isNear ? isNearLoading : isCategoryLoading;
+  const isLoading = useMinLoading(isRawLoading);
   const isError = isNear ? isNearError : isCategoryError;
 
   const apiErrorMessage = data && data.data === null ? data.message : null;
   const places = data?.data?.places ?? [];
   const totalCount = data?.data?.totalCount ?? 0;
-
   const canShowCategoryList = !isNear && !isLoading && !isError && !apiErrorMessage;
 
   return (
@@ -160,19 +164,27 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
             contentClassName="overflow-y-auto px-0 pb-6"
           >
             {!coords ? <div className="px-5 pt-6">위치 불러오는 중...</div> : null}
-            {coords && isLoading ? <div className="px-5 pt-6">로딩중...</div> : null}
+            {coords && isLoading ? (
+              <LoadingPage text="장소를 불러오는 중..." role="ARCHIVER" />
+            ) : null}
             {coords && isError ? <div className="px-5 pt-6">불러오기 실패</div> : null}
             {coords && apiErrorMessage ? <div className="px-5 pt-6">{apiErrorMessage}</div> : null}
 
             {coords && !isLoading && !isError && !apiErrorMessage ? (
               places.length === 0 ? (
-                <div className="px-5 pt-6">표시할 장소가 없습니다.</div>
+                <div className="flex flex-1 items-center justify-center py-30">
+                  <p className="body-16-semibold text-neutral-40 text-center whitespace-pre-wrap">
+                    {'이 카테고리에 저장된 장소가 없어요.\n다른 카테고리를 선택해 보세요.'}
+                  </p>
+                </div>
               ) : (
                 places.map((p) => (
                   <Item
                     key={p.placeId}
                     thumbnail={
-                      <div className="h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30" />
+                      <div className="relative h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30">
+                        <Image src={p.imageUrl} alt={p.placeName} fill className="object-cover" />
+                      </div>
                     }
                     onClick={() => router.push(`/archiver/place-info/${p.placeId}`)}
                   >
@@ -211,20 +223,26 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
             </p>
           </div>
 
-          {isLoading ? <div className="px-5 pt-6">로딩중...</div> : null}
+          {isLoading ? <LoadingPage text="장소를 불러오는 중..." role="ARCHIVER" /> : null}
           {isError ? <div className="px-5 pt-6">불러오기 실패</div> : null}
           {apiErrorMessage ? <div className="px-5 pt-6">{apiErrorMessage}</div> : null}
 
           {canShowCategoryList ? (
             <div className="flex-1 min-h-0 pt-2">
               {places.length === 0 ? (
-                <div className="px-5 pt-6">표시할 장소가 없습니다.</div>
+                <div className="flex flex-1 items-center justify-center py-30">
+                  <p className="body-16-semibold text-neutral-40 text-center whitespace-pre-wrap">
+                    {'이 카테고리에 저장된 장소가 없어요.\n다른 카테고리를 선택해 보세요.'}
+                  </p>
+                </div>
               ) : (
                 places.map((p) => (
                   <Item
                     key={p.placeId}
                     thumbnail={
-                      <div className="h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30" />
+                      <div className="relative h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30">
+                        <Image src={p.imageUrl} alt={p.placeName} fill className="object-cover" />
+                      </div>
                     }
                     onClick={() => router.push(`/archiver/place-info/${p.placeId}`)}
                   >

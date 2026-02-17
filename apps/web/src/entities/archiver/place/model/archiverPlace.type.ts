@@ -70,6 +70,7 @@ export interface IPin {
 export interface INearPlace {
   placeId: number;
   placeName: string;
+  imageUrl: string;
   latestDescription: string;
   viewCount: number;
   saveCount: number;

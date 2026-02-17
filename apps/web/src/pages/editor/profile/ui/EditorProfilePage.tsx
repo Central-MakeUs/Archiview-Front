@@ -5,6 +5,7 @@ import { EditorProfilePageInner } from './EditorProfilePageInner';
 import { useGetMyPlaceList } from '@/entities/editor/place/queries/useGetMyPlaceList';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
+import { EditorNavigationFooter } from '@/widgets/navigation/EditorNavigationFooter';
 
 export const EditorProfilePage = () => {
   const { data: editorUserData, isLoading: isEditorUserDataLoading } = useEditorGetMyProfile();
@@ -24,5 +25,9 @@ export const EditorProfilePage = () => {
 
   const places = placeListData?.data?.places ?? [];
 
-  return <EditorProfilePageInner places={places} profile={profile} />;
+  return (
+    <div className="flex h-full flex-col">
+      <EditorProfilePageInner places={places} profile={profile} />
+    </div>
+  );
 };
