@@ -310,7 +310,7 @@ export const EditProfilePage = () => {
         <div>
           <div className="flex flex-row justify-between mb-3">
             <p className="body-14-semibold">나를 표현하는 해시태그를 자유롭게 설정해보세요!</p>
-            <p className="caption-12-medium text-primary-40">*최대 2개</p>
+            <p className="caption-12-medium text-primary-40">*2개 필수</p>
           </div>
           <HashTagInput value={hashtags} onChange={setHashtags} max={2} />
         </div>
