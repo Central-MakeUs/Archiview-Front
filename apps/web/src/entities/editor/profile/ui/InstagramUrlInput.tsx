@@ -27,7 +27,7 @@ const validateInstagramUrl = (raw: string): ValidationResult => {
 
   return ok
     ? { state: 'success', message: '인스타그램 링크가 정상적으로 인식됐어요' }
-    : { state: 'error', message: '링크는 https://instagram.com 으로 시작해야 해요' };
+    : { state: 'error', message: '링크는 https://www.instagram.com 으로 시작해야 해요' };
 };
 
 export const InstagramUrlInput = ({
@@ -97,7 +97,7 @@ export const InstagramUrlInput = ({
         <input
           value={value}
           onChange={(e) => handleChange(e.target.value)}
-          placeholder="인스타그램 프로필 링크를 입력해주세요."
+          placeholder="https://www.instagram.com/username"
           disabled={isDisabled}
         />
       </BoxInput>
