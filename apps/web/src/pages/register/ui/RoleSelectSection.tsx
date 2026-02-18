@@ -39,9 +39,16 @@ export const RoleSelectSection = () => {
         break;
       }
 
-      case 'EDITOR':
-        router.push('/term-agree-editor');
+      case 'EDITOR': {
+        try {
+          await registerMutation.mutateAsync({ role });
+
+          router.push('/term-agree-editor');
+        } catch (e) {
+          console.error(e);
+        }
         break;
+      }
     }
   };
 
