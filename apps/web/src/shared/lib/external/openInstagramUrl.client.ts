@@ -13,26 +13,28 @@ const normalizeUrl = (rawUrl: string) => {
   return `https://${trimmed.replace(/^\/+/, '')}`;
 };
 
-const openCenteredPopup = (url: string, name: string) => {
-  const width = 480;
-  const height = 800;
+const openInBrowserNewTab = (url: string) => {
+  const newTab = window.open(url, '_blank');
+  if (newTab) {
+    newTab.opener = null;
+    return;
+  }
 
-  const left = Math.max(0, Math.round(window.screenX + (window.outerWidth - width) / 2));
-  const top = Math.max(0, Math.round(window.screenY + (window.outerHeight - height) / 2));
+  window.location.href = url;
+};
 
-  const features = [
-    'popup=yes',
-    `width=${width}`,
-    `height=${height}`,
-    `left=${left}`,
-    `top=${top}`,
-    'scrollbars=yes',
-    'resizable=yes',
-  ].join(',');
-
-  const popup = window.open(url, name, features);
-  if (popup) popup.opener = null;
-  return popup;
+const openInWebView = async (url: string) => {
+  try {
+    const opened = await openExternalUrl(url);
+    if (opened) return;
+    await openInAppBrowser(url);
+  } catch {
+    try {
+      await openInAppBrowser(url);
+    } catch {
+      return;
+    }
+  }
 };
 
 export const openInstagramUrlDeepLinkOrPopup = (rawUrl: string) => {
@@ -40,20 +42,9 @@ export const openInstagramUrlDeepLinkOrPopup = (rawUrl: string) => {
   if (!url) return;
 
   if (isWebViewBridgeAvailable()) {
-    openExternalUrl(url)
-      .then((opened) => {
-        if (opened) return;
-        return openInAppBrowser(url);
-      })
-      .catch(() => {
-        return openInAppBrowser(url);
-      })
-      .catch(() => {
-        return;
-      });
+    openInWebView(url).catch(() => undefined);
     return;
   }
 
-  const popup = openCenteredPopup(url, 'archiview-instagram');
-  if (!popup) window.location.href = url;
+  openInBrowserNewTab(url);
 };

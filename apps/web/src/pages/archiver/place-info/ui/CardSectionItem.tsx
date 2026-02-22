@@ -47,11 +47,13 @@ export const CardSectionItem = ({
           </div>
           <div className="flex gap-1">
             <button
+              type="button"
               onClick={() => onFolderClick(post.postPlaceId, post.isArchived, post.editorName)}
             >
               <FolderIcon active={post.isArchived} />
             </button>
             <button
+              type="button"
               onClick={() => {
                 openInstagramUrlDeepLinkOrPopup(post.instagramUrl);
               }}
