@@ -20,7 +20,7 @@ export const ReportBottomSheetModal = ({
       <BottomSheetModal open={open} onOpenChange={setOpen} height={360} className="z-100">
         <div className="p-5 text-left">
           <div className="flex justify-end">
-            <XIcon onClick={() => setOpen(false)} className="w-6" />
+            <XIcon onClick={() => setOpen(false)} className="top-4 w-4" />
           </div>
           <p className="heading-20-semibold">신고 / 차단하기</p>
           <p className="body-14-medium text-neutral-40 mt-3">

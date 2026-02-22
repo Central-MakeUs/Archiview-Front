@@ -63,7 +63,7 @@ const writePopupLoading = (popup: Window) => {
     popup.document.body.style.fontFamily = 'system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
     popup.document.body.innerHTML =
       '<div style="padding:16px;line-height:1.4;">' +
-      '<div style="font-size:14px;font-weight:600;">Instagram을 여는 중...</div>' +
+      '<div style="font-size:14px;font-weight:600;">Instagram을 여는 중입니다.</div>' +
       '<div style="margin-top:6px;font-size:12px;color:#6b7280;">앱이 설치되어 있지 않으면 웹으로 열립니다.</div>' +
       '</div>';
   } catch {

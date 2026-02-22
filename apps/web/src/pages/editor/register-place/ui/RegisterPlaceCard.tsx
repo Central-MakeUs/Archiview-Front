@@ -110,7 +110,7 @@ export const RegisterPlaceCard = ({ placeIndex, canDelete, onRemove }: IRegister
       >
         <p className="body-14-semibold">{value?.placeName || `장소 ${placeIndex}`}</p>
         <CaretUpCircleIcon
-          className={`w-4 h-4 transition-transform ${isExpanded ? '' : 'rotate-180'}`}
+          className={`w-4 h-4 transition-transform ${isExpanded ? '' : 'rotate-180'} text-neutral-40`}
         />
       </button>
 

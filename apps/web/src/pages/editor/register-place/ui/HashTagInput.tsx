@@ -60,7 +60,7 @@ export const HashTagInput = ({ className }: { className?: string }) => {
       <div className="flex flex-col gap-2.5">
         <div className="flex justify-between">
           <p className="body-14-semibold mb-3">게시글의 해시태그를 자유롭게 설정해보세요</p>
-          <p className="caption-12-medium text-neutral-40">*선택</p>
+          <p className="caption-12-medium text-primary-40">*최대 3개</p>
         </div>
 
         <div className="flex gap-3">

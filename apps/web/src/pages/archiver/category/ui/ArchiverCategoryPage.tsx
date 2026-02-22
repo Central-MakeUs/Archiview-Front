@@ -163,9 +163,9 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
             }
             contentClassName="overflow-y-auto px-0 pb-6"
           >
-            {!coords ? <div className="px-5 pt-6">위치 불러오는 중...</div> : null}
+            {!coords ? <div className="px-5 pt-6">위치 불러오는 중입니다.</div> : null}
             {coords && isLoading ? (
-              <LoadingPage text="장소를 불러오는 중..." role="ARCHIVER" />
+              <LoadingPage text="장소를 불러오는 중입니다." role="ARCHIVER" />
             ) : null}
             {coords && isError ? <div className="px-5 pt-6">불러오기 실패</div> : null}
             {coords && apiErrorMessage ? <div className="px-5 pt-6">{apiErrorMessage}</div> : null}
@@ -223,7 +223,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
             </p>
           </div>
 
-          {isLoading ? <LoadingPage text="장소를 불러오는 중..." role="ARCHIVER" /> : null}
+          {isLoading ? <LoadingPage text="장소를 불러오는 중입니다." role="ARCHIVER" /> : null}
           {isError ? <div className="px-5 pt-6">불러오기 실패</div> : null}
           {apiErrorMessage ? <div className="px-5 pt-6">{apiErrorMessage}</div> : null}
 
@@ -248,7 +248,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
                   >
                     <div className="flex flex-col pl-2 min-w-0">
                       <p className="body-16-semibold flex flex-row items-center justify-between">
-                        <span className="truncate">{p.placeName}</span>
+                        <span className="truncate text-primary-40">{p.placeName}</span>
                         <RightArrowIcon />
                       </p>
 
