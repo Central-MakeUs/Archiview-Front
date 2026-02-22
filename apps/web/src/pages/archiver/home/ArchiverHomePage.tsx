@@ -16,9 +16,21 @@ import { useMinLoading } from '@/shared/hooks/useMinLoading';
 export const ArchiverHomePage = (): React.ReactElement => {
   useAuth();
 
-  const { data: myData, isLoading: isMyProfileLoading, isError: isMyProfileError } = useGetMyProfile({ useMock: false });
-  const { data: hotPlaceData, isLoading: isHotPlaceLoading, isError: isHotPlaceError } = useGetHotPlace({ useMock: false });
-  const { data: editorTrustedData, isLoading: isEditorTrustedLoading, isError: isEditorTrustedError } = useGetEditorTrusted({ useMock: false });
+  const {
+    data: myData,
+    isLoading: isMyProfileLoading,
+    isError: isMyProfileError,
+  } = useGetMyProfile({ useMock: false });
+  const {
+    data: hotPlaceData,
+    isLoading: isHotPlaceLoading,
+    isError: isHotPlaceError,
+  } = useGetHotPlace({ useMock: false });
+  const {
+    data: editorTrustedData,
+    isLoading: isEditorTrustedLoading,
+    isError: isEditorTrustedError,
+  } = useGetEditorTrusted({ useMock: false });
 
   const isLoading = isMyProfileLoading || isHotPlaceLoading || isEditorTrustedLoading;
   const isError = isMyProfileError || isHotPlaceError || isEditorTrustedError;

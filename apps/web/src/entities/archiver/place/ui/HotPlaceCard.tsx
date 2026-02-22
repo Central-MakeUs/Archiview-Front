@@ -11,14 +11,6 @@ interface IHotPlaceCardProps {
   address: string;
   categoryNames: string[];
   hashTags: string[];
-  // viewCount: number;
-}
-
-// TODO : 이것을 쓸까요?
-function pickRandom<T>(arr: readonly T[]): T | undefined {
-  if (arr.length === 0) return undefined;
-  const idx = Math.floor(Math.random() * arr.length);
-  return arr[idx];
 }
 
 export const HotPlaceCard = ({
@@ -29,54 +21,40 @@ export const HotPlaceCard = ({
   hashTags,
   address,
 }: IHotPlaceCardProps) => {
-  const categoryName = pickRandom(categoryNames);
-  const hashTag = pickRandom(hashTags);
-
   const stripHash = (tag?: string) => (tag ?? '').trim().replace(/^#/, '');
   const safeImageUrl = imageUrl?.trimEnd();
 
   return (
-    // TODO : 라우팅 연결하기
     <Link href={`place-info/${placeId}`} className="block shrink-0">
-      <Kard className="flex flex-col h-52 w-46 shadow-default overflow-hidden border-none">
-        {/* 이거 스타일 하드코딩 어케고치지 */}
-        <div className="relative w-full shrink-0 overflow-hidden" style={{ height: '99px' }}>
+      <Kard className="flex flex-col w-52 shadow-default overflow-hidden border-none">
+        <div className="relative w-full aspect-[4/3] shrink-0 overflow-hidden">
           <Image
             src={safeImageUrl}
-            alt=""
-            width={200}
-            height={90}
+            alt={name}
+            fill
             className="object-cover"
             priority={false}
             unoptimized
           />
         </div>
-        <div className="p-3 flex-1 min-h-0">
-          <div className="flex items-center justify-between">
-            <span className="body-14-semibold">{name}</span>
-          </div>
-          <div className="caption-12-regular text-neutral-50 mb-3">{address}</div>
-          <div className="flex items-center gap-1">
-            {/* <span>
-              <Badge variant="contained" className="rounded-xl bg-primary-40">
-                {categoryName}
+        <div className="p-3 flex flex-col gap-2">
+          <span className="body-16-bold truncate">{name}</span>
+          <span className="caption-12-regular text-neutral-50">{address}</span>
+          <div className="flex flex-wrap items-center gap-1">
+            {categoryNames.map((cat) => (
+              <Badge key={cat} variant="contained" className="rounded-xl bg-primary-40">
+                {cat}
               </Badge>
-            </span> */}
-            <span>
-              {hashTags.length > 0 &&
-                hashTags.map((tag) => (
-                  <Badge
-                    key={tag}
-                    variant="contained"
-                    className="rounded-xl bg-primary-10 text-primary-40 mr-1"
-                  >
-                    {stripHash(tag)}
-                  </Badge>
-                ))}
-              {/* <Badge variant="contained" className="rounded-xl bg-primary-10 text-primary-40">
-                {stripHash(hashTag)}
-              </Badge> */}
-            </span>
+            ))}
+            {hashTags.map((tag) => (
+              <Badge
+                key={tag}
+                variant="contained"
+                className="rounded-xl bg-primary-10 text-primary-40"
+              >
+                {stripHash(tag)}
+              </Badge>
+            ))}
           </div>
         </div>
       </Kard>

@@ -15,7 +15,7 @@ export const Loading = ({ text, role }: ILoadingProps) => {
         <BlueFolderIcon className="h-11 w-11" />
         <div className="flex w-full flex-col items-center gap-7">
           <div className="flex w-full flex-col items-center gap-1">
-            <p className="body-16-bold text-center text-neutral-90">
+            <p className="body-16-bold text-center text-neutral-90 whitespace-nowrap">
               {text}
               {/* <br />
               {roleLabel} 화면으로 이동 중 */}

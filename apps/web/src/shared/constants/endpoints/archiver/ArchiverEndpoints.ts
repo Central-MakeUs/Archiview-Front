@@ -15,8 +15,10 @@ export const ARCHIVER_ENDPOINTS = {
   },
   archivers: {
     postPlaces: {
-      directionFlow: (postPlaceId: number) => `archivers/post-places/${postPlaceId}/direction-flow`,
-      instagramFlow: (postPlaceId: number) => `archivers/post-places/${postPlaceId}/instagram-flow`,
+      directionFlow: (postPlaceId: number) =>
+        `archivers/post-places/${postPlaceId}/direction-inflow`,
+      instagramFlow: (postPlaceId: number) =>
+        `archivers/post-places/${postPlaceId}/instagram-inflow`,
     },
   },
 } as const;

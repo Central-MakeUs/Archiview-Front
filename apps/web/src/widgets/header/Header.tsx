@@ -11,7 +11,7 @@ interface IHeaderProps {
 export const Header = ({ title, left, right, className }: IHeaderProps) => {
   return (
     <header className={cn('flex h-15 w-full items-center border-none px-5', className)}>
-      <div className="flex min-w-0 flex-1 items-center justify-start">
+      <div className="flex min-w-0 h-full flex-1 items-center justify-start">
         {left ?? <span aria-hidden="true" />}
       </div>
 

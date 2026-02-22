@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { Header } from '@/widgets/header';
-import { ArchiviewLogoIcon } from '@/shared/ui/icon';
+import { LogoHeader } from '@/widgets/header';
 import { ArchiverNavigationFooter } from '@/widgets/navigation/ArchiverNavigationFooter';
 
 export default function RegisterLayout({
@@ -14,7 +13,7 @@ export default function RegisterLayout({
       className="flex h-dvh flex-col"
       style={{ '--navigation-footer-height': '72px' } as React.CSSProperties}
     >
-      <Header left={<ArchiviewLogoIcon />} />
+      <LogoHeader />
       <main className="flex-1 min-h-0 overflow-y-auto scroll-none">{children}</main>
       <ArchiverNavigationFooter />
     </div>

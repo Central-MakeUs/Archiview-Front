@@ -6,11 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/shared/ui/button';
 
 import { EditorInfoCard } from './EditorInfoCard';
-import {
-  AccountManagementSection,
-  InfoSupportSection,
-  TermsConditionsSection,
-} from '../common';
+import { AccountManagementSection, InfoSupportSection, TermsConditionsSection } from '../common';
 import { EllipseArrowIcons } from '@/shared/ui/icon/EllipseArrowIcons';
 import { useEditorGetMyProfile } from '@/entities/editor/profile/queries/useEditorGetMyProfile';
 
@@ -19,7 +15,6 @@ const EDITOR_TERMS_ITEMS = [
   { label: '위치 기반 서비스 이용약관', key: 'location-terms' },
   { label: '에디터 운영 정책', key: 'editor-policy' },
   { label: '개인정보 처리 방침', key: 'privacy-policy' },
-  { label: '오픈 라이선스', key: 'open-license' },
 ] as const;
 
 interface IEditorMyPageProps {
