@@ -1,6 +1,7 @@
 export { nativeBridge } from './bridge.client';
 export {
   clearToken,
+  getCurrentLocation,
   getBridgeVersion,
   getToken,
   isNativeMethodAvailable,

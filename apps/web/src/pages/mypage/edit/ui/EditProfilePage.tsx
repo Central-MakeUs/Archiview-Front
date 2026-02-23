@@ -22,7 +22,11 @@ import { editorKeys } from '@/shared/lib/query-keys';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import { CameraPermissionModal } from '@/shared/ui/permission/CameraPermissionModal';
 import { ImageSourceBottomSheetModal } from '@/shared/ui/permission/ImageSourceBottomSheetModal';
-import { isWebViewBridgeAvailable, openAppSettings, pickImage } from '@/shared/lib/native-bridge';
+import {
+  isAppWebView,
+  openNativeAppSettings,
+  requestNativeImage,
+} from '@/shared/lib/native-actions';
 
 export const EditProfilePage = () => {
   const queryClient = useQueryClient();
@@ -67,7 +71,7 @@ export const EditProfilePage = () => {
     const input = fileRef.current;
     if (!input) return;
 
-    if (isWebViewBridgeAvailable()) {
+    if (isAppWebView()) {
       setIsImageSourceSheetOpen(true);
       return;
     }
@@ -101,7 +105,7 @@ export const EditProfilePage = () => {
   const pickImageFromNative = async (source: 'camera' | 'library') => {
     setIsImageSourceSheetOpen(false);
 
-    const res = await pickImage({ source, base64: true });
+    const res = await requestNativeImage({ source, base64: true });
 
     if (res.error === 'unavailable') {
       fileRef.current?.click();
@@ -208,7 +212,7 @@ export const EditProfilePage = () => {
         onClose={() => setIsCameraPermissionModalOpen(false)}
         onOpenSettings={async () => {
           try {
-            await openAppSettings();
+            await openNativeAppSettings();
           } finally {
             setIsCameraPermissionModalOpen(false);
           }
@@ -219,10 +223,10 @@ export const EditProfilePage = () => {
         open={isImageSourceSheetOpen}
         onOpenChange={setIsImageSourceSheetOpen}
         onPickLibrary={() => {
-          void pickImageFromNative('library');
+          pickImageFromNative('library').catch(() => undefined);
         }}
         onPickCamera={() => {
-          void pickImageFromNative('camera');
+          pickImageFromNative('camera').catch(() => undefined);
         }}
       />
 

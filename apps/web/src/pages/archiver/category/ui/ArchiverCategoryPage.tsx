@@ -7,7 +7,7 @@ import { CATEGORIES } from '@/shared/constants/category';
 import { OptionTabs } from '@/shared/ui/common/Tabs/OptionTabs';
 import { useGetCategoryPlaceList } from '@/entities/archiver/category/queries/useGetCategoryPlaceList';
 import { useGetNearbyPlaces } from '@/entities/archiver/place/queries/useGetNearbyPlaces';
-import { getCurrentLocation } from '@/shared/lib/native-bridge/nativeMethods.client';
+import { requestNativeCurrentLocation as getCurrentLocation } from '@/shared/lib/native-actions';
 import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import { Item } from '@/shared/ui/common/Item';

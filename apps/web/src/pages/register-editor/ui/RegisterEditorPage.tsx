@@ -17,7 +17,11 @@ import { InstagramIdInput } from '@/entities/editor/profile/ui/InstagramIdInput'
 import { HashTagInput } from '@/entities/editor/profile/ui/HashTagInput';
 import { CameraPermissionModal } from '@/shared/ui/permission/CameraPermissionModal';
 import { ImageSourceBottomSheetModal } from '@/shared/ui/permission/ImageSourceBottomSheetModal';
-import { isWebViewBridgeAvailable, openAppSettings, pickImage } from '@/shared/lib/native-bridge';
+import {
+  isAppWebView,
+  openNativeAppSettings,
+  requestNativeImage,
+} from '@/shared/lib/native-actions';
 
 import { RegisterFinishModal } from './RegisterFinishModal';
 
@@ -51,7 +55,7 @@ export const RegisterEditorPage = () => {
     const input = fileRef.current;
     if (!input) return;
 
-    if (isWebViewBridgeAvailable()) {
+    if (isAppWebView()) {
       setIsImageSourceSheetOpen(true);
       return;
     }
@@ -85,7 +89,7 @@ export const RegisterEditorPage = () => {
   const pickImageFromNative = async (source: 'camera' | 'library') => {
     setIsImageSourceSheetOpen(false);
 
-    const res = await pickImage({ source, base64: true });
+    const res = await requestNativeImage({ source, base64: true });
 
     if (res.error === 'unavailable') {
       fileRef.current?.click();
@@ -234,7 +238,7 @@ export const RegisterEditorPage = () => {
         onClose={() => setIsCameraPermissionModalOpen(false)}
         onOpenSettings={async () => {
           try {
-            await openAppSettings();
+            await openNativeAppSettings();
           } finally {
             setIsCameraPermissionModalOpen(false);
           }
@@ -245,10 +249,10 @@ export const RegisterEditorPage = () => {
         open={isImageSourceSheetOpen}
         onOpenChange={setIsImageSourceSheetOpen}
         onPickLibrary={() => {
-          void pickImageFromNative('library');
+          pickImageFromNative('library').catch(() => undefined);
         }}
         onPickCamera={() => {
-          void pickImageFromNative('camera');
+          pickImageFromNative('camera').catch(() => undefined);
         }}
       />
 

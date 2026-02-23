@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { getCurrentLocation } from '@/shared/lib/native-bridge/nativeMethods.client';
+import { requestNativeCurrentLocation as getCurrentLocation } from '@/shared/lib/native-actions';
 import type { GeoLocation } from '@archiview/webview-bridge-contract';
 import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';

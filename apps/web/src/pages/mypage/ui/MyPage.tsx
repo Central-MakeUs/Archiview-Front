@@ -8,7 +8,7 @@ import { LOCAL_STORAGE_KEYS, type StoredUserRole } from '@/shared/constants/loca
 import { ChangeRoleModal } from '@/entities/auth/ui/ChangeRoleModal';
 import { useLogout } from '@/entities/auth/hooks/useLogout';
 import { useWithdraw } from '@/entities/auth/hooks/useWithdraw';
-import { openInAppBrowser } from '@/shared/lib/native-bridge';
+import { openInAppBrowserOrBrowserNewTab } from '@/shared/lib/native-actions';
 import { EditorMyPage } from './editor/EditorMyPage';
 import { ArchiverMyPage } from './archiver/ArchiverMyPage';
 import { useGetMyProfile } from '@/entities/archiver/profile/queries/useGetMyProfile';
@@ -81,13 +81,10 @@ export const MyPage = (): React.ReactElement => {
     }
 
     try {
-      const opened = await openInAppBrowser(url);
-      if (opened) return;
+      await openInAppBrowserOrBrowserNewTab(url);
     } catch (e) {
       console.error('[MyPage] Failed to open external url via native bridge', e);
     }
-
-    window.open(url, '_blank', 'noopener,noreferrer');
   }, []);
 
   const handleWithdraw = useCallback(() => {

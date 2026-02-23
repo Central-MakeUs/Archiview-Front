@@ -7,10 +7,10 @@ import { DotThreeIcon, ProfileAddIcon } from '@/shared/ui/icon';
 import { useFollowEditor } from '@/entities/archiver/follow/mutation/useFollowEditor';
 import { useBlockEditor } from '@/entities/archiver/follow/mutation/useBlockEditor';
 import {
-  isWebViewBridgeAvailable,
-  openExternalUrl,
-  openInAppBrowser,
-} from '@/shared/lib/native-bridge';
+  isAppWebView,
+  tryOpenExternalUrlViaNative,
+  tryOpenInAppBrowserViaNative,
+} from '@/shared/lib/native-actions';
 
 import { ReportBottomSheetModal } from './ReportBottomSheetModal';
 import { ReportModal, BlockModal } from './ReportModal';
@@ -80,7 +80,7 @@ const openInstagramProfileDeepLinkOrPopup = (instagramId: string) => {
   const deepLinkUrl = `instagram://user?username=${encodedUsername}`;
 
   const openWebUrlViaNativeOrFallback = () => {
-    openInAppBrowser(webUrl)
+    tryOpenInAppBrowserViaNative(webUrl)
       .then((opened) => {
         if (opened) return;
         const popup = openCenteredPopup(webUrl, 'archiview-instagram');
@@ -92,8 +92,8 @@ const openInstagramProfileDeepLinkOrPopup = (instagramId: string) => {
       });
   };
 
-  if (isWebViewBridgeAvailable()) {
-    openExternalUrl(deepLinkUrl)
+  if (isAppWebView()) {
+    tryOpenExternalUrlViaNative(deepLinkUrl)
       .then((opened) => {
         if (opened) return;
         openWebUrlViaNativeOrFallback();
