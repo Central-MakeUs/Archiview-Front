@@ -10,7 +10,15 @@ export const ARCHIVER_ENDPOINTS = {
     trusted: `archivers/editors/trusted`,
   },
   follows: `archivers/follows`,
-  archives : {
+  archives: {
     postPlaces: (postPlaceId: number) => `archivers/archives/post-places/${postPlaceId}`,
-  }
+  },
+  archivers: {
+    postPlaces: {
+      directionFlow: (postPlaceId: number) =>
+        `archivers/post-places/${postPlaceId}/direction-inflow`,
+      instagramFlow: (postPlaceId: number) =>
+        `archivers/post-places/${postPlaceId}/instagram-inflow`,
+    },
+  },
 } as const;

@@ -6,7 +6,23 @@ import { useReportPostPlace } from '@/entities/archiver/report/mutation/useRepor
 
 import { ReportEditorCardModal } from './ReportEditorCardModal';
 import { ArchivePlaceFinishModal } from './ArchivePlaceFinishModal';
+<<<<<<< HEAD
 import { CardSectionItem, type IPostPlace } from './CardSectionItem';
+=======
+import { usePostInstagramFlow } from '@/entities/archiver/place/mutation/usePostInstagramFlow';
+interface IPostPlace {
+  postPlaceId: number;
+  postId: number;
+  instagramUrl: string;
+  hashTags: string[];
+  description: string;
+  imageUrl: string;
+  categoryNames: string[];
+  editorName: string;
+  editorInstagramId: string;
+  isArchived: boolean; // 안씀
+}
+>>>>>>> main
 
 export const CardSection = ({
   postPlaces,
@@ -28,6 +44,8 @@ export const CardSection = ({
   const { postPlaceCard } = usePostPlaceCardMutation({
     onSuccess: () => setOpenPlaceFinishModal(true),
   });
+
+  const { mutate: postInstagramFlow } = usePostInstagramFlow();
 
   const { deletePlaceCard } = useDeletePlaceCardMutation({
     onSuccess: () => setOpenPlaceFinishModal(true),

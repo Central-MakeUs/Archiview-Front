@@ -102,6 +102,16 @@ export interface INearPlaceResponse {
   places: INearPlace[];
 }
 
+export interface IInstagramFlowResponse {
+  postPlaceId: number;
+  instagramInflowCount: number;
+}
+
+export interface IDirectionFlowResponse {
+  postPlaceId: number;
+  directionCount: number;
+}
+
 // 장소 상세 조회
 export type IPlaceDetailResponseDTO = ApiResponse<IPlaceDetailResponse>;
 
@@ -122,3 +132,9 @@ export type INearPlaceResponseDTO = ApiResponse<INearPlaceResponse>;
 
 // 아카이브 장소카드 해제
 export type IDeletePlaceResponseDTO = ApiResponse<Record<string, never>>;
+
+// 인스타그램 플로우 조회
+export type IInstagramFlowResponseDTO = ApiResponse<IInstagramFlowResponse>;
+
+// 방향 플로우 조회
+export type IDirectionFlowResponseDTO = ApiResponse<IDirectionFlowResponse>;

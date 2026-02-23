@@ -41,7 +41,7 @@ export const EditorPlaceItem = ({
     >
       <div className="flex flex-col pl-2 min-w-0">
         <p className="body-16-semibold flex flex-row items-center justify-between">
-          <span className="truncate">{name}</span>
+          <span className="truncate text-primary-40">{name}</span>
           <RightArrowIcon />
         </p>
 

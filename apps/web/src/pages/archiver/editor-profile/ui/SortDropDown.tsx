@@ -44,10 +44,10 @@ export const SortDropdown = ({
 
       <div
         className={[
-          'absolute right-0 mt-3 w-64 rounded-2xl bg-white shadow-xl border border-neutral-30 overflow-hidden',
-          'origin-top-right transition-all duration-200 ease-out',
+          'absolute right-0 mt-2 w-40 rounded-2xl bg-white shadow-lg border border-neutral-30 overflow-hidden',
+          'origin-top-right transition-all duration-250 ease-out',
           open
-            ? 'opacity-100 scale-100 translate-y-0'
+            ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 scale-95 -translate-y-1 pointer-events-none',
         ].join(' ')}
       >

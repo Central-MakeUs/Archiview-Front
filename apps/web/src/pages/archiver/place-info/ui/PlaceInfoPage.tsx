@@ -8,6 +8,7 @@ import { InfoSection } from './InfoSection';
 import { CardSection } from './CardSection';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
+import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
 
 export const PlaceInfoPage = ({ placeId }: { placeId: number }) => {
   const {
@@ -21,7 +22,7 @@ export const PlaceInfoPage = ({ placeId }: { placeId: number }) => {
 
   const showLoading = useMinLoading(isLoading, 1500);
   if (showLoading) return <LoadingPage text="장소 정보를 불러오는 중입니다." role="ARCHIVER" />;
-  if (isError) return <div>에러</div>;
+  if (isError) return <ErrorPage />;
 
   return (
     <div className="h-full flex flex-col">

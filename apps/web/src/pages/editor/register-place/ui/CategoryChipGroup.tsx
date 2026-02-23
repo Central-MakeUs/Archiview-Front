@@ -18,7 +18,7 @@ export const CategoryChipGroup = ({ selectedIds, onToggle }: ICategoryChipGroupP
           label={category.name}
           selected={selectedIds.includes(category.id)}
           onClick={() => onToggle(category.id)}
-          className="h-9 px-4 rounded-xl"
+          className="h-9 px-4 rounded-xl border-none bg-neutral-20 text-neutral-40"
         />
       ))}
     </div>
