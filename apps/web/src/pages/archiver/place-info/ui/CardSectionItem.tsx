@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Chip } from '@/shared/ui/Chip';
 import { FolderIcon } from '@/shared/ui/icon';
 import { openInstagramUrlDeepLinkOrPopup } from '@/shared/lib/external/openInstagramUrl.client';
+import { usePostInstagramFlow } from '@/entities/archiver/place/mutation/usePostInstagramFlow';
 
 export interface IPostPlace {
   postPlaceId: number;
@@ -26,6 +27,8 @@ export const CardSectionItem = ({
   onFolderClick: (postPlaceId: number, isArchived: boolean, editorName: string) => void;
   onClickReport: (postPlaceId: number) => void;
 }) => {
+  const { mutate: postInstagramFlow } = usePostInstagramFlow();
+
   return (
     <div className="flex h-full">
       <div className="rounded-l-default bg-neutral-40 w-20 relative overflow-hidden">
@@ -56,6 +59,7 @@ export const CardSectionItem = ({
               type="button"
               onClick={() => {
                 openInstagramUrlDeepLinkOrPopup(post.instagramUrl);
+                postInstagramFlow(post.postPlaceId);
               }}
             >
               <Image

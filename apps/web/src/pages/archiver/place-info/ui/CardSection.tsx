@@ -7,7 +7,6 @@ import { useReportPostPlace } from '@/entities/archiver/report/mutation/useRepor
 import { ReportEditorCardModal } from './ReportEditorCardModal';
 import { ArchivePlaceFinishModal } from './ArchivePlaceFinishModal';
 import { CardSectionItem, type IPostPlace } from './CardSectionItem';
-import { usePostInstagramFlow } from '@/entities/archiver/place/mutation/usePostInstagramFlow';
 
 export const CardSection = ({
   postPlaces,
@@ -29,8 +28,6 @@ export const CardSection = ({
   const { postPlaceCard } = usePostPlaceCardMutation({
     onSuccess: () => setOpenPlaceFinishModal(true),
   });
-
-  const { mutate: postInstagramFlow } = usePostInstagramFlow();
 
   const { deletePlaceCard } = useDeletePlaceCardMutation({
     onSuccess: () => setOpenPlaceFinishModal(true),

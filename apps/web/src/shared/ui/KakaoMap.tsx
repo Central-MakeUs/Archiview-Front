@@ -6,15 +6,32 @@ interface IKakaoMapProps {
   lat: number;
   lng: number;
   level?: number;
+  marker?: {
+    lat: number;
+    lng: number;
+  };
+  markers?: Array<{
+    lat: number;
+    lng: number;
+    imageSrc?: string;
+    imageSize?: {
+      width: number;
+      height: number;
+    };
+    imageOffset?: {
+      x: number;
+      y: number;
+    };
+  }>;
   onReady?: (ctx: { kakao: typeof window.kakao; map: kakao.maps.Map }) => void;
   className?: string;
 }
 
-function waitForKakao(maxWaitMs = 5000): Promise<typeof window.kakao> {
+function waitForKakao(maxWaitMs: number = 5000): Promise<typeof window.kakao> {
   return new Promise((resolve, reject) => {
     const start = Date.now();
 
-    const tick = () => {
+    const tick = (): void => {
       if (typeof window !== 'undefined' && window.kakao?.maps) return resolve(window.kakao);
       if (Date.now() - start > maxWaitMs) return reject(new Error('Kakao Maps SDK not loaded'));
       setTimeout(tick, 50);
@@ -24,11 +41,20 @@ function waitForKakao(maxWaitMs = 5000): Promise<typeof window.kakao> {
   });
 }
 
-export const KakaoMap = ({ lat, lng, level = 3, onReady, className }: IKakaoMapProps) => {
+export const KakaoMap = ({
+  lat,
+  lng,
+  level = 3,
+  marker,
+  markers,
+  onReady,
+  className,
+}: IKakaoMapProps) => {
   const elRef = useRef<HTMLDivElement>(null);
 
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const kakaoRef = useRef<typeof window.kakao | null>(null);
+  const markersRef = useRef<kakao.maps.Marker[]>([]);
 
   const onReadyRef = useRef<IKakaoMapProps['onReady']>(onReady);
   const latestRef = useRef({ lat, lng, level });
@@ -72,6 +98,8 @@ export const KakaoMap = ({ lat, lng, level = 3, onReady, className }: IKakaoMapP
 
     return () => {
       cancelled = true;
+      markersRef.current.forEach((item) => item.setMap(null));
+      markersRef.current = [];
       mapRef.current = null;
       kakaoRef.current = null;
     };
@@ -87,6 +115,56 @@ export const KakaoMap = ({ lat, lng, level = 3, onReady, className }: IKakaoMapP
     map.setCenter(center);
     map.setLevel(level);
   }, [lat, lng, level]);
+
+  useEffect(() => {
+    const kakao = kakaoRef.current;
+    const map = mapRef.current;
+    if (!kakao || !map) return;
+
+    markersRef.current.forEach((item) => item.setMap(null));
+    markersRef.current = [];
+
+    if (Array.isArray(markers) && markers.length > 0) {
+      markersRef.current = markers.map((item) => {
+        const position = new kakao.maps.LatLng(item.lat, item.lng);
+
+        if (item.imageSrc) {
+          const markerImage = new kakao.maps.MarkerImage(
+            item.imageSrc,
+            new kakao.maps.Size(item.imageSize?.width ?? 40, item.imageSize?.height ?? 40),
+            item.imageOffset
+              ? {
+                  offset: new kakao.maps.Point(item.imageOffset.x, item.imageOffset.y),
+                }
+              : undefined,
+          );
+
+          return new kakao.maps.Marker({
+            position,
+            map,
+            image: markerImage,
+          });
+        }
+
+        return new kakao.maps.Marker({
+          position,
+          map,
+        });
+      });
+      return;
+    }
+
+    if (!marker) return;
+
+    const position = new kakao.maps.LatLng(marker.lat, marker.lng);
+
+    markersRef.current = [
+      new kakao.maps.Marker({
+        position,
+        map,
+      }),
+    ];
+  }, [marker, markers]);
 
   if (error) return <div>지도 로드 실패: {error}</div>;
 

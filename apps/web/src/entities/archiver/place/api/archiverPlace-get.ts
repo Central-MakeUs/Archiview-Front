@@ -46,6 +46,36 @@ export const archiverPlaceGet = {
     return response;
   },
 
+  // 아카이브한 장소 핀 지도 조회
+  getArchivePins: async (params: {
+    filter?: 'ALL' | 'NEARBY';
+    latitude: number;
+    longitude: number;
+    useMock?: boolean;
+  }): Promise<IArchivePinsResponseDTO> => {
+    const filter = params?.filter ?? 'ALL';
+
+    const searchParams: {
+      filter: 'ALL' | 'NEARBY';
+      useMock: boolean;
+      latitude: number;
+      longitude: number;
+    } = {
+      filter,
+      latitude: params.latitude,
+      longitude: params.longitude,
+      useMock: params?.useMock ?? false,
+    };
+
+    const response = await clientApi
+      .get(`${ARCHIVER_ENDPOINTS.archives.map.places}`, {
+        searchParams,
+      })
+      .json<IArchivePinsResponseDTO>();
+
+    return response;
+  },
+
   // 내 주변 1km 장소 조회
   getNearbyPlaces: async (params: {
     latitude: number;

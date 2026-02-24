@@ -17,6 +17,8 @@ interface IBrowserNewTabOptions {
   setNoOpener?: boolean;
 }
 
+type CurrentLocationResult = Awaited<ReturnType<typeof getCurrentLocation>>;
+
 const openBrowserNewTab = (url: string, options: IBrowserNewTabOptions = {}) => {
   const tab =
     options.features === undefined
@@ -85,6 +87,47 @@ export const openNativeAppSettings = async (): Promise<boolean> => {
   return openAppSettings();
 };
 
-export const requestNativeCurrentLocation = async () => {
-  return getCurrentLocation();
+const requestBrowserCurrentLocation = async (): Promise<CurrentLocationResult> => {
+  if (typeof window === 'undefined' || !window.navigator.geolocation) {
+    return null;
+  }
+
+  return new Promise<CurrentLocationResult>((resolve) => {
+    window.navigator.geolocation.getCurrentPosition(
+      (position) => {
+        resolve({
+          coords: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy ?? undefined,
+            altitude: position.coords.altitude ?? undefined,
+            altitudeAccuracy: position.coords.altitudeAccuracy ?? undefined,
+            heading: position.coords.heading ?? undefined,
+            speed: position.coords.speed ?? undefined,
+          },
+          timestamp: position.timestamp,
+        });
+      },
+      () => {
+        resolve(null);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 8000,
+        maximumAge: 30000,
+      },
+    );
+  });
+};
+
+export const requestNativeCurrentLocation = async (): Promise<CurrentLocationResult> => {
+  if (isWebViewBridgeAvailable()) {
+    try {
+      return await getCurrentLocation();
+    } catch {
+      return null;
+    }
+  }
+
+  return requestBrowserCurrentLocation();
 };

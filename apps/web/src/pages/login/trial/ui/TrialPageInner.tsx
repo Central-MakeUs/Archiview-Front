@@ -2,9 +2,14 @@
 
 import { useMemo, useState } from 'react';
 
+import { CATEGORIES } from '@/shared/constants/category';
 import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
-import { CategoryOptionTabs, type CategoryTab } from '@/pages/editor/profile/CategoryOptionTabs';
+import {
+  CategoryOptionTabs,
+  type CategoryTab,
+  type ICategoryOptionValue,
+} from '@/pages/editor/profile/CategoryOptionTabs';
 import { HamburgerIcon } from '@/shared/ui/icon/HamburgerIcon';
 import { ArchiverPlaceItem } from '@/pages/archiver/my-archive/ui/ArchiverPlaceItem';
 
@@ -24,18 +29,34 @@ interface IPlace {
 
 export const TrialPageInner = ({ initialPlaces }: { initialPlaces: IPlace[] }) => {
   const [open, setOpen] = useState(false);
-  const [category, setCategory] = useState<CategoryTab>('전체');
+  const [categoryFilter, setCategoryFilter] = useState<ICategoryOptionValue>({
+    scope: '전체',
+    categoryIds: [],
+  });
 
   const [trialFinishOpen, setTrialFinishOpen] = useState(false);
 
+  const selectedCategoryNames = useMemo(() => {
+    const names: CategoryTab[] = [];
+
+    categoryFilter.categoryIds.forEach((id) => {
+      const category = CATEGORIES.find((item) => item.id === id);
+      if (category) {
+        names.push(category.name);
+      }
+    });
+
+    return names;
+  }, [categoryFilter.categoryIds]);
+
   const filteredPlaces = useMemo(() => {
-    if (category === '전체' || category === '내주변') return initialPlaces;
-    return initialPlaces.filter((p) => p.category === category);
-  }, [initialPlaces, category]);
+    if (categoryFilter.categoryIds.length === 0) return initialPlaces;
+    return initialPlaces.filter((place) => selectedCategoryNames.includes(place.category));
+  }, [categoryFilter.categoryIds.length, initialPlaces, selectedCategoryNames]);
 
   return (
     <div className="flex h-full flex-col min-h-0">
-      <CategoryOptionTabs value={category} onChange={setCategory} />
+      <CategoryOptionTabs value={categoryFilter} onChange={setCategoryFilter} />
 
       <div className="flex-1 min-h-0 pt-6">
         <KakaoMap

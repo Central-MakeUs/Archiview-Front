@@ -7,6 +7,7 @@ import type {
   IMyFollowsResponseDTO,
   IEditorProfileResponseDTO,
   IEditorPlaceResposneDTO,
+  IEditorPlacePinsResponseDTO,
 } from '../model/archiverProfile.type';
 
 export const archiverProfileGet = {
@@ -63,6 +64,43 @@ export const archiverProfileGet = {
         searchParams: { sort: params?.sort ?? 'LATEST', useMock: params?.useMock ?? false },
       })
       .json<IEditorPlaceResposneDTO>();
+    return response;
+  },
+
+  // 에디터 업로드 장소 핀 지도 조회
+  getEditorPlacePins: async (params: {
+    editorId: string;
+    filter?: 'ALL' | 'NEARBY';
+    categoryIds?: number[];
+    latitude?: number;
+    longitude?: number;
+    useMock?: boolean;
+  }): Promise<IEditorPlacePinsResponseDTO> => {
+    const filter = params?.filter ?? 'ALL';
+    const searchParams = new URLSearchParams();
+
+    searchParams.set('filter', filter);
+    searchParams.set('useMock', String(params?.useMock ?? false));
+
+    (params?.categoryIds ?? []).forEach((categoryId) => {
+      searchParams.append('categoryIds', String(categoryId));
+    });
+
+    if (filter === 'NEARBY') {
+      if (Number.isFinite(params?.latitude)) {
+        searchParams.set('latitude', String(params.latitude));
+      }
+
+      if (Number.isFinite(params?.longitude)) {
+        searchParams.set('longitude', String(params.longitude));
+      }
+    }
+
+    const response = await clientApi
+      .get(`archivers/editors/${params.editorId}/map/places`, {
+        searchParams,
+      })
+      .json<IEditorPlacePinsResponseDTO>();
     return response;
   },
 };

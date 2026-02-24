@@ -4,12 +4,13 @@ import { WebView, emitAppReady } from '@/bridge';
 
 export default function Index() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['top', 'bottom']}>
       <WebView
         style={{ flex: 1 }}
         source={{ uri: 'https://archiview.space/' }}
         javaScriptEnabled
         domStorageEnabled
+        mixedContentMode="always"
         // 중요: iOS에서 리다이렉트/쿠키/세션 꼬이면 여기서 터짐
         sharedCookiesEnabled
         thirdPartyCookiesEnabled

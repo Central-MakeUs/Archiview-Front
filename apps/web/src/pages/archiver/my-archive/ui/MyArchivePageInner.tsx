@@ -1,12 +1,16 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { requestNativeCurrentLocation as getCurrentLocation } from '@/shared/lib/native-actions';
+import { requestNativeCurrentLocation } from '@/shared/lib/native-actions';
 import type { GeoLocation } from '@archiview/webview-bridge-contract';
+import { CATEGORIES } from '@/shared/constants/category';
 import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
-import { CategoryOptionTabs, type CategoryTab } from '@/pages/editor/profile/CategoryOptionTabs';
+import {
+  CategoryOptionTabs,
+  type ICategoryOptionValue,
+} from '@/pages/editor/profile/CategoryOptionTabs';
 import { useGetMyArchives } from '@/entities/archiver/place/queries/useGetMyArchives';
 
 import { ArchiverPlaceItem } from './ArchiverPlaceItem';
@@ -21,35 +25,58 @@ interface IPlace {
   lng: number;
   savedCount: number;
   viewCount: number;
-  category: CategoryTab;
+  categoryIds: number[];
+  categoryNames: string[];
 }
 
 export const MyArchivePageInner = () => {
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
-  const [category, setCategory] = useState<CategoryTab>('전체');
-  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<ICategoryOptionValue>({
+    scope: '전체',
+    categoryIds: [],
+  });
+  const [selectedPlaceId] = useState<string | null>(null);
   const [location, setLocation] = useState<GeoLocation | null>(null);
   const { data, isLoading, isError } = useGetMyArchives({ useMock: false });
 
-  // useEffect(() => {
-  //   const run = async () => {
-  //     const loc = await getCurrentLocation();
-  //     setLocation(loc);
-  //   };
-  //   run().catch(console.error);
-  // }, []);
+  const selectedCategoryNames = useMemo(() => {
+    const names: string[] = [];
 
-  // TODO : 내주변 가드한거 치우기
-  const handleCategoryChange = (next: CategoryTab) => {
-    if (next === '내주변') {
-      alert('준비중이에요!');
+    categoryFilter.categoryIds.forEach((id) => {
+      const category = CATEGORIES.find((item) => item.id === id);
+      if (category) {
+        names.push(category.name);
+      }
+    });
+
+    return names;
+  }, [categoryFilter.categoryIds]);
+
+  useEffect(() => {
+    if (categoryFilter.scope !== '내주변') {
+      setLocation(null);
       return;
     }
 
-    setCategory(next);
-  };
+    let cancelled = false;
+
+    const run = async () => {
+      const loc = await requestNativeCurrentLocation();
+      if (cancelled) return;
+      setLocation(loc);
+    };
+
+    run().catch(() => {
+      if (cancelled) return;
+      setLocation(null);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [categoryFilter.scope]);
 
   const places: IPlace[] = useMemo(() => {
     const postPlaces = data?.data?.postPlaces ?? [];
@@ -61,22 +88,38 @@ export const MyArchivePageInner = () => {
       description: p.description ?? '',
       lat: 37.5665,
       lng: 126.978,
-      category: '전체',
+      categoryIds: [],
+      categoryNames: [],
       savedCount: p.saveCount,
       viewCount: p.viewCount,
     }));
   }, [data]);
 
   const filteredPlaces = useMemo(() => {
-    // TODO : 주석 해제
-    if (category === '전체' || category === '내주변') return places;
-    return places.filter((p) => p.category === category);
-  }, [places, category]);
+    if (categoryFilter.categoryIds.length === 0) return places;
+
+    return places.filter((place) => {
+      if (place.categoryIds.some((id) => categoryFilter.categoryIds.includes(id))) {
+        return true;
+      }
+
+      return selectedCategoryNames.some((name) => place.categoryNames.includes(name));
+    });
+  }, [categoryFilter.categoryIds, places, selectedCategoryNames]);
 
   const selectedPlace = useMemo(
     () => filteredPlaces.find((p) => p.id === selectedPlaceId) ?? null,
     [filteredPlaces, selectedPlaceId],
   );
+
+  const mapLat =
+    categoryFilter.scope === '내주변' && location
+      ? location.coords.latitude
+      : (selectedPlace?.lat ?? 37.5665);
+  const mapLng =
+    categoryFilter.scope === '내주변' && location
+      ? location.coords.longitude
+      : (selectedPlace?.lng ?? 126.978);
 
   if (isLoading) {
     return <LoadingPage text="내 아카이브를 불러오는 중입니다." role="ARCHIVER" />;
@@ -88,7 +131,7 @@ export const MyArchivePageInner = () => {
 
   return (
     <div className="flex h-full flex-col min-h-0">
-      <CategoryOptionTabs value={category} onChange={handleCategoryChange} />
+      <CategoryOptionTabs value={categoryFilter} onChange={setCategoryFilter} />
       <pre>
         {/* {location
           ? JSON.stringify(location, null, 2)
@@ -96,24 +139,29 @@ export const MyArchivePageInner = () => {
       </pre>
       <div className="flex-1 min-h-0 pt-6">
         <KakaoMap
-          lat={selectedPlace?.lat ?? 37.5665}
-          lng={selectedPlace?.lng ?? 126.978}
+          lat={mapLat}
+          lng={mapLng}
           level={3}
-          // TODO: 마커
+          marker={
+            categoryFilter.scope === '내주변' && location
+              ? {
+                  lat: location.coords.latitude,
+                  lng: location.coords.longitude,
+                }
+              : undefined
+          }
         />
         {/* TODO : 주석 해제 */}
         <BottomSheet
-          // isOpen={open}
-          isOpen={true}
-          lockOpen={true}
+          isOpen={open}
           onOpenChange={setOpen}
-          // height={500}
-          height={600}
+          height={500}
           peekHeight={72}
           header={
             <div className="px-5 pb-4 pt-2.5">
               <p className="heading-20-bold">
-                {category} <span className="text-primary-40 pl-1">{filteredPlaces.length}</span>
+                {categoryFilter.scope}{' '}
+                <span className="text-primary-40 pl-1">{filteredPlaces.length}</span>
               </p>
             </div>
           }
