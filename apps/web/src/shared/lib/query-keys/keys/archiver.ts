@@ -55,6 +55,21 @@ export const archiverKeys = createQueryKeyStore({
   },
 
   /**
+   * @param {{filter?: 'ALL' | 'NEARBY', latitude: number, longitude: number, useMock?: boolean}} params
+   * @description 아카이브한 장소 핀 지도 조회용 쿼리키
+   * @returns ['getArchivePins', 'applyFilters', filter, latitude, longitude, useMock]
+   */
+  getArchivePins: {
+    all: null,
+    applyFilters: (params: {
+      filter?: 'ALL' | 'NEARBY';
+      latitude: number;
+      longitude: number;
+      useMock?: boolean;
+    }) => [params?.filter ?? 'ALL', params.latitude, params.longitude, params?.useMock ?? false],
+  },
+
+  /**
    * @param {{latitude: number, longitude: number, useMock?: boolean}} params
    * @description 내 주변 1km 장소 조회용 쿼리키
    * @returns ['getNearbyPlaces', 'applyFilters', latitude, longitude, useMock]
@@ -104,6 +119,20 @@ export const archiverKeys = createQueryKeyStore({
     applyFilters: (params: { userId: string; sort?: 'LATEST' | 'OLDEST'; useMock?: boolean }) => [
       params.userId,
       params?.sort ?? 'LATEST',
+      params?.useMock ?? false,
+    ],
+  },
+
+  /**
+   * @param {{editorId: string, filter?: 'ALL' | 'NEARBY', useMock?: boolean}} params
+   * @description 에디터 업로드 장소 핀 지도 조회용 쿼리키
+   * @returns ['getEditorPlacePins', 'applyFilters', editorId, filter, useMock]
+   */
+  getEditorPlacePins: {
+    all: null,
+    applyFilters: (params: { editorId: string; filter?: 'ALL' | 'NEARBY'; useMock?: boolean }) => [
+      params.editorId,
+      params?.filter ?? 'ALL',
       params?.useMock ?? false,
     ],
   },

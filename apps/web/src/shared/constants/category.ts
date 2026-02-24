@@ -7,3 +7,4 @@ export const CATEGORIES = [
   { id: 6, name: '이자카야' },
   { id: 7, name: '기타' },
 ] as const;
+  

@@ -12,6 +12,9 @@ export const ARCHIVER_ENDPOINTS = {
   follows: `archivers/follows`,
   archives: {
     postPlaces: (postPlaceId: number) => `archivers/archives/post-places/${postPlaceId}`,
+    map: {
+      places: `archivers/archives/post-places/map/places`,
+    },
   },
   archivers: {
     postPlaces: {

@@ -7,6 +7,7 @@ import type {
   IMyFollowsResponseDTO,
   IEditorProfileResponseDTO,
   IEditorPlaceResposneDTO,
+  IEditorPlacePinsResponseDTO,
 } from '../model/archiverProfile.type';
 
 export const archiverProfileGet = {
@@ -63,6 +64,20 @@ export const archiverProfileGet = {
         searchParams: { sort: params?.sort ?? 'LATEST', useMock: params?.useMock ?? false },
       })
       .json<IEditorPlaceResposneDTO>();
+    return response;
+  },
+
+  // 에디터 업로드 장소 핀 지도 조회
+  getEditorPlacePins: async (params: {
+    editorId: string;
+    filter?: 'ALL' | 'NEARBY';
+    useMock?: boolean;
+  }): Promise<IEditorPlacePinsResponseDTO> => {
+    const response = await clientApi
+      .get(`archivers/editors/${params.editorId}/map/places`, {
+        searchParams: { filter: params?.filter ?? 'ALL', useMock: params?.useMock ?? false },
+      })
+      .json<IEditorPlacePinsResponseDTO>();
     return response;
   },
 };

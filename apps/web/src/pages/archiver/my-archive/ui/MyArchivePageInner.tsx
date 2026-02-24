@@ -126,7 +126,6 @@ export const MyArchivePageInner = () => {
         {/* TODO : 주석 해제 */}
         <BottomSheet
           isOpen={open}
-          lockOpen={true}
           onOpenChange={setOpen}
           height={500}
           peekHeight={72}

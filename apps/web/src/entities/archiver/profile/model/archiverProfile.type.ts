@@ -45,6 +45,16 @@ export interface IEditorPlace {
   imageUrl: string;
 }
 
+export interface IPin {
+  placeId: number;
+  name: string;
+  placeUrl: string;
+  phoneNumber: string;
+  latitude: number;
+  longitude: number;
+  categoryIds: number[];
+}
+
 export interface IMyFollowsResponse {
   editors: IEditor[];
 }
@@ -63,6 +73,10 @@ export interface IEditorPlaceResposne {
   postPlaces: IEditorPlace[];
 }
 
+export interface IEditorPlacePinsResponse {
+  pins: IPin[];
+}
+
 // 내 프로필 조회(아카이버) API DTO
 export type IArchiverMyProfileResponseDTO = ApiResponse<IMyProfileResponse>;
 
@@ -77,3 +91,6 @@ export type IEditorProfileResponseDTO = ApiResponse<IEditorProfile>;
 
 // 에디터가 업로드한 장소 목록 조회
 export type IEditorPlaceResposneDTO = ApiResponse<IEditorPlaceResposne>;
+
+// 에디터 업로드 장소 핀 지도 조회 (아카이버)
+export type IEditorPlacePinsResponseDTO = ApiResponse<IEditorPlacePinsResponse>;

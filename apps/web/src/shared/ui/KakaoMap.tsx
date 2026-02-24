@@ -10,6 +10,19 @@ interface IKakaoMapProps {
     lat: number;
     lng: number;
   };
+  markers?: Array<{
+    lat: number;
+    lng: number;
+    imageSrc?: string;
+    imageSize?: {
+      width: number;
+      height: number;
+    };
+    imageOffset?: {
+      x: number;
+      y: number;
+    };
+  }>;
   onReady?: (ctx: { kakao: typeof window.kakao; map: kakao.maps.Map }) => void;
   className?: string;
 }
@@ -28,12 +41,20 @@ function waitForKakao(maxWaitMs: number = 5000): Promise<typeof window.kakao> {
   });
 }
 
-export const KakaoMap = ({ lat, lng, level = 3, marker, onReady, className }: IKakaoMapProps) => {
+export const KakaoMap = ({
+  lat,
+  lng,
+  level = 3,
+  marker,
+  markers,
+  onReady,
+  className,
+}: IKakaoMapProps) => {
   const elRef = useRef<HTMLDivElement>(null);
 
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const kakaoRef = useRef<typeof window.kakao | null>(null);
-  const markerRef = useRef<kakao.maps.Marker | null>(null);
+  const markersRef = useRef<kakao.maps.Marker[]>([]);
 
   const onReadyRef = useRef<IKakaoMapProps['onReady']>(onReady);
   const latestRef = useRef({ lat, lng, level });
@@ -67,14 +88,6 @@ export const KakaoMap = ({ lat, lng, level = 3, marker, onReady, className }: IK
         const map = new kakao.maps.Map(elRef.current, { center, level });
         mapRef.current = map;
 
-        if (marker) {
-          const markerPosition = new kakao.maps.LatLng(marker.lat, marker.lng);
-          markerRef.current = new kakao.maps.Marker({
-            position: markerPosition,
-            map,
-          });
-        }
-
         onReadyRef.current?.({ kakao, map });
       });
     };
@@ -85,8 +98,8 @@ export const KakaoMap = ({ lat, lng, level = 3, marker, onReady, className }: IK
 
     return () => {
       cancelled = true;
-      markerRef.current?.setMap(null);
-      markerRef.current = null;
+      markersRef.current.forEach((item) => item.setMap(null));
+      markersRef.current = [];
       mapRef.current = null;
       kakaoRef.current = null;
     };
@@ -108,25 +121,50 @@ export const KakaoMap = ({ lat, lng, level = 3, marker, onReady, className }: IK
     const map = mapRef.current;
     if (!kakao || !map) return;
 
-    if (!marker) {
-      markerRef.current?.setMap(null);
-      markerRef.current = null;
-      return;
-    }
+    markersRef.current.forEach((item) => item.setMap(null));
+    markersRef.current = [];
 
-    const position = new kakao.maps.LatLng(marker.lat, marker.lng);
+    if (Array.isArray(markers) && markers.length > 0) {
+      markersRef.current = markers.map((item) => {
+        const position = new kakao.maps.LatLng(item.lat, item.lng);
 
-    if (!markerRef.current) {
-      markerRef.current = new kakao.maps.Marker({
-        position,
-        map,
+        if (item.imageSrc) {
+          const markerImage = new kakao.maps.MarkerImage(
+            item.imageSrc,
+            new kakao.maps.Size(item.imageSize?.width ?? 40, item.imageSize?.height ?? 40),
+            item.imageOffset
+              ? {
+                  offset: new kakao.maps.Point(item.imageOffset.x, item.imageOffset.y),
+                }
+              : undefined,
+          );
+
+          return new kakao.maps.Marker({
+            position,
+            map,
+            image: markerImage,
+          });
+        }
+
+        return new kakao.maps.Marker({
+          position,
+          map,
+        });
       });
       return;
     }
 
-    markerRef.current.setPosition(position);
-    markerRef.current.setMap(map);
-  }, [marker]);
+    if (!marker) return;
+
+    const position = new kakao.maps.LatLng(marker.lat, marker.lng);
+
+    markersRef.current = [
+      new kakao.maps.Marker({
+        position,
+        map,
+      }),
+    ];
+  }, [marker, markers]);
 
   if (error) return <div>지도 로드 실패: {error}</div>;
 

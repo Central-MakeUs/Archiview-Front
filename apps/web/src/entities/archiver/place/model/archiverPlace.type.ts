@@ -64,7 +64,7 @@ export interface IPin {
   phoneNumber: string;
   latitude: number;
   longitude: number;
-  categories: string[];
+  categoryIds: number[];
 }
 
 export interface INearPlace {
