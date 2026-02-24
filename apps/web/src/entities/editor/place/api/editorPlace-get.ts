@@ -13,6 +13,7 @@ import type {
 } from '../model/editorPlace.type';
 
 export type MapFilter = 'ALL' | 'NEARBY';
+export type MyPlaceSort = 'UPDATED' | 'CREATED';
 
 export const editorPlaceGet = {
   // 에디터 인사이트 장소 목록 조회
@@ -57,7 +58,7 @@ export const editorPlaceGet = {
     return response;
   },
 
-  // 내 장소 지도 핀 조회
+  // 내 장소 지도 핀 조회 (이거 이제 안쓰나?)
   getMyPlacePin: async (params?: {
     filter?: MapFilter;
     categoryIds?: number[];
@@ -88,11 +89,37 @@ export const editorPlaceGet = {
 
   // 내가 업로드한 장소 목록 조회
   getMyPlaceList: async (params?: {
+    filter?: MapFilter;
+    sort?: MyPlaceSort;
+    categoryId?: number;
+    latitude?: number;
+    longitude?: number;
     useMock?: boolean;
   }): Promise<IEditorMeUploadedPlaceListResponseDTO> => {
+    const filter = params?.filter ?? 'ALL';
+    const searchParams = new URLSearchParams();
+
+    searchParams.set('filter', filter);
+    searchParams.set('sort', params?.sort ?? 'UPDATED');
+    searchParams.set('useMock', String(params?.useMock ?? false));
+
+    if (Number.isFinite(params?.categoryId)) {
+      searchParams.set('categoryId', String(params?.categoryId));
+    }
+
+    if (filter === 'NEARBY') {
+      if (Number.isFinite(params?.latitude)) {
+        searchParams.set('latitude', String(params?.latitude));
+      }
+
+      if (Number.isFinite(params?.longitude)) {
+        searchParams.set('longitude', String(params?.longitude));
+      }
+    }
+
     const response = await clientApi
-      .get(`${EDITOR_ENDPOINTS.me.places}`, {
-        searchParams: { useMock: params?.useMock ?? false },
+      .get(`editors/me/places`, {
+        searchParams,
       })
       .json<IEditorMeUploadedPlaceListResponseDTO>();
     return response;
