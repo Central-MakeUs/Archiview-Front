@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { requestNativeCurrentLocation as getCurrentLocation } from '@/shared/lib/native-actions';
+import { requestNativeCurrentLocation } from '@/shared/lib/native-actions';
 import type { GeoLocation } from '@archiview/webview-bridge-contract';
 import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
@@ -33,23 +33,33 @@ export const MyArchivePageInner = () => {
   const [location, setLocation] = useState<GeoLocation | null>(null);
   const { data, isLoading, isError } = useGetMyArchives({ useMock: false });
 
-  // useEffect(() => {
-  //   const run = async () => {
-  //     const loc = await getCurrentLocation();
-  //     setLocation(loc);
-  //   };
-  //   run().catch(console.error);
-  // }, []);
-
-  // TODO : 내주변 가드한거 치우기
   const handleCategoryChange = (next: CategoryTab) => {
-    if (next === '내주변') {
-      alert('준비중이에요!');
+    setCategory(next);
+  };
+
+  useEffect(() => {
+    if (category !== '내주변') {
+      setLocation(null);
       return;
     }
 
-    setCategory(next);
-  };
+    let cancelled = false;
+
+    const run = async () => {
+      const loc = await requestNativeCurrentLocation();
+      if (cancelled) return;
+      setLocation(loc);
+    };
+
+    run().catch(() => {
+      if (cancelled) return;
+      setLocation(null);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [category]);
 
   const places: IPlace[] = useMemo(() => {
     const postPlaces = data?.data?.postPlaces ?? [];
@@ -78,6 +88,11 @@ export const MyArchivePageInner = () => {
     [filteredPlaces, selectedPlaceId],
   );
 
+  const mapLat =
+    category === '내주변' && location ? location.coords.latitude : (selectedPlace?.lat ?? 37.5665);
+  const mapLng =
+    category === '내주변' && location ? location.coords.longitude : (selectedPlace?.lng ?? 126.978);
+
   if (isLoading) {
     return <LoadingPage text="내 아카이브를 불러오는 중입니다." role="ARCHIVER" />;
   }
@@ -96,19 +111,24 @@ export const MyArchivePageInner = () => {
       </pre>
       <div className="flex-1 min-h-0 pt-6">
         <KakaoMap
-          lat={selectedPlace?.lat ?? 37.5665}
-          lng={selectedPlace?.lng ?? 126.978}
+          lat={mapLat}
+          lng={mapLng}
           level={3}
-          // TODO: 마커
+          marker={
+            category === '내주변' && location
+              ? {
+                  lat: location.coords.latitude,
+                  lng: location.coords.longitude,
+                }
+              : undefined
+          }
         />
         {/* TODO : 주석 해제 */}
         <BottomSheet
-          // isOpen={open}
-          isOpen={true}
+          isOpen={open}
           lockOpen={true}
           onOpenChange={setOpen}
-          // height={500}
-          height={600}
+          height={500}
           peekHeight={72}
           header={
             <div className="px-5 pb-4 pt-2.5">

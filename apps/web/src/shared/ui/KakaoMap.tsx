@@ -6,6 +6,10 @@ interface IKakaoMapProps {
   lat: number;
   lng: number;
   level?: number;
+  marker?: {
+    lat: number;
+    lng: number;
+  };
   onReady?: (ctx: { kakao: typeof window.kakao; map: kakao.maps.Map }) => void;
   className?: string;
 }
@@ -24,11 +28,12 @@ function waitForKakao(maxWaitMs = 5000): Promise<typeof window.kakao> {
   });
 }
 
-export const KakaoMap = ({ lat, lng, level = 3, onReady, className }: IKakaoMapProps) => {
+export const KakaoMap = ({ lat, lng, level = 3, marker, onReady, className }: IKakaoMapProps) => {
   const elRef = useRef<HTMLDivElement>(null);
 
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const kakaoRef = useRef<typeof window.kakao | null>(null);
+  const markerRef = useRef<kakao.maps.Marker | null>(null);
 
   const onReadyRef = useRef<IKakaoMapProps['onReady']>(onReady);
   const latestRef = useRef({ lat, lng, level });
@@ -62,6 +67,14 @@ export const KakaoMap = ({ lat, lng, level = 3, onReady, className }: IKakaoMapP
         const map = new kakao.maps.Map(elRef.current, { center, level });
         mapRef.current = map;
 
+        if (marker) {
+          const markerPosition = new kakao.maps.LatLng(marker.lat, marker.lng);
+          markerRef.current = new kakao.maps.Marker({
+            position: markerPosition,
+            map,
+          });
+        }
+
         onReadyRef.current?.({ kakao, map });
       });
     };
@@ -72,6 +85,8 @@ export const KakaoMap = ({ lat, lng, level = 3, onReady, className }: IKakaoMapP
 
     return () => {
       cancelled = true;
+      markerRef.current?.setMap(null);
+      markerRef.current = null;
       mapRef.current = null;
       kakaoRef.current = null;
     };
@@ -87,6 +102,31 @@ export const KakaoMap = ({ lat, lng, level = 3, onReady, className }: IKakaoMapP
     map.setCenter(center);
     map.setLevel(level);
   }, [lat, lng, level]);
+
+  useEffect(() => {
+    const kakao = kakaoRef.current;
+    const map = mapRef.current;
+    if (!kakao || !map) return;
+
+    if (!marker) {
+      markerRef.current?.setMap(null);
+      markerRef.current = null;
+      return;
+    }
+
+    const position = new kakao.maps.LatLng(marker.lat, marker.lng);
+
+    if (!markerRef.current) {
+      markerRef.current = new kakao.maps.Marker({
+        position,
+        map,
+      });
+      return;
+    }
+
+    markerRef.current.setPosition(position);
+    markerRef.current.setMap(map);
+  }, [marker]);
 
   if (error) return <div>지도 로드 실패: {error}</div>;
 
