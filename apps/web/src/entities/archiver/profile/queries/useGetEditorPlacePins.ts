@@ -8,7 +8,7 @@ import { IEditorPlacePinsResponseDTO } from '../model/archiverProfile.type';
 export const useGetEditorPlacePins = (params: {
   editorId: string;
   filter?: 'ALL' | 'NEARBY';
-  categoryIds?: number[];
+  categoryId?: number;
   latitude?: number;
   longitude?: number;
   useMock?: boolean;
@@ -20,7 +20,7 @@ export const useGetEditorPlacePins = (params: {
     queryKey: archiverKeys.getEditorPlacePins.applyFilters({
       editorId: params.editorId,
       filter,
-      categoryIds: params.categoryIds,
+      categoryId: params.categoryId,
       latitude: params.latitude,
       longitude: params.longitude,
       useMock: params.useMock,
@@ -29,7 +29,7 @@ export const useGetEditorPlacePins = (params: {
       archiverProfileGet.getEditorPlacePins({
         editorId: params.editorId,
         filter,
-        categoryIds: params.categoryIds,
+        categoryId: params.categoryId,
         latitude: params.latitude,
         longitude: params.longitude,
         useMock: params.useMock ?? false,

@@ -93,4 +93,4 @@ export type IEditorProfileResponseDTO = ApiResponse<IEditorProfile>;
 export type IEditorPlaceResposneDTO = ApiResponse<IEditorPlaceResposne>;
 
 // 에디터 업로드 장소 핀 지도 조회 (아카이버)
-export type IEditorPlacePinsResponseDTO = ApiResponse<IEditorPlacePinsResponse>;
+export type IEditorPlacePinsResponseDTO = ApiResponse<IEditorPlacePinsResponse>

@@ -55,7 +55,7 @@ export const archiverKeys = createQueryKeyStore({
   },
 
   /**
-   * @param {{filter?: 'ALL' | 'NEARBY', latitude: number, longitude: number, useMock?: boolean}} params
+   * @param {{filter?: 'ALL' | 'NEARBY', latitude?: number, longitude?: number, useMock?: boolean}} params
    * @description 아카이브한 장소 핀 지도 조회용 쿼리키
    * @returns ['getArchivePins', 'applyFilters', filter, latitude, longitude, useMock]
    */
@@ -63,10 +63,15 @@ export const archiverKeys = createQueryKeyStore({
     all: null,
     applyFilters: (params: {
       filter?: 'ALL' | 'NEARBY';
-      latitude: number;
-      longitude: number;
+      latitude?: number;
+      longitude?: number;
       useMock?: boolean;
-    }) => [params?.filter ?? 'ALL', params.latitude, params.longitude, params?.useMock ?? false],
+    }) => [
+      params?.filter ?? 'ALL',
+      params?.latitude ?? 'none',
+      params?.longitude ?? 'none',
+      params?.useMock ?? false,
+    ],
   },
 
   /**
@@ -124,23 +129,23 @@ export const archiverKeys = createQueryKeyStore({
   },
 
   /**
-   * @param {{editorId: string, filter?: 'ALL' | 'NEARBY', categoryIds?: number[], latitude?: number, longitude?: number, useMock?: boolean}} params
+   * @param {{editorId: string, filter?: 'ALL' | 'NEARBY', categoryId?: number, latitude?: number, longitude?: number, useMock?: boolean}} params
    * @description 에디터 업로드 장소 핀 지도 조회용 쿼리키
-   * @returns ['getEditorPlacePins', 'applyFilters', editorId, filter, categoryIds, latitude, longitude, useMock]
+   * @returns ['getEditorPlacePins', 'applyFilters', editorId, filter, categoryId, latitude, longitude, useMock]
    */
   getEditorPlacePins: {
     all: null,
     applyFilters: (params: {
       editorId: string;
       filter?: 'ALL' | 'NEARBY';
-      categoryIds?: number[];
+      categoryId?: number;
       latitude?: number;
       longitude?: number;
       useMock?: boolean;
     }) => [
       params.editorId,
       params?.filter ?? 'ALL',
-      params?.categoryIds ?? [],
+      params?.categoryId ?? 'none',
       params?.latitude ?? 'none',
       params?.longitude ?? 'none',
       params?.useMock ?? false,

@@ -11,8 +11,10 @@ interface IKakaoMapProps {
     lng: number;
   };
   markers?: Array<{
+    id?: number;
     lat: number;
     lng: number;
+    zIndex?: number;
     imageSrc?: string;
     imageSize?: {
       width: number;
@@ -23,6 +25,8 @@ interface IKakaoMapProps {
       y: number;
     };
   }>;
+  onMarkerClick?: (marker: { id?: number; lat: number; lng: number }) => void;
+  onMapClick?: () => void;
   onReady?: (ctx: { kakao: typeof window.kakao; map: kakao.maps.Map }) => void;
   className?: string;
 }
@@ -47,6 +51,8 @@ export const KakaoMap = ({
   level = 3,
   marker,
   markers,
+  onMarkerClick,
+  onMapClick,
   onReady,
   className,
 }: IKakaoMapProps) => {
@@ -57,13 +63,25 @@ export const KakaoMap = ({
   const markersRef = useRef<kakao.maps.Marker[]>([]);
 
   const onReadyRef = useRef<IKakaoMapProps['onReady']>(onReady);
+  const onMarkerClickRef = useRef<IKakaoMapProps['onMarkerClick']>(onMarkerClick);
+  const onMapClickRef = useRef<IKakaoMapProps['onMapClick']>(onMapClick);
   const latestRef = useRef({ lat, lng, level });
+  const markerClickingRef = useRef(false);
 
+  const [isMapReady, setIsMapReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     onReadyRef.current = onReady;
   }, [onReady]);
+
+  useEffect(() => {
+    onMarkerClickRef.current = onMarkerClick;
+  }, [onMarkerClick]);
+
+  useEffect(() => {
+    onMapClickRef.current = onMapClick;
+  }, [onMapClick]);
 
   useEffect(() => {
     latestRef.current = { lat, lng, level };
@@ -87,6 +105,15 @@ export const KakaoMap = ({
 
         const map = new kakao.maps.Map(elRef.current, { center, level });
         mapRef.current = map;
+        setIsMapReady(true);
+
+        kakao.maps.event.addListener(map, 'click', () => {
+          if (markerClickingRef.current) {
+            markerClickingRef.current = false;
+            return;
+          }
+          onMapClickRef.current?.();
+        });
 
         onReadyRef.current?.({ kakao, map });
       });
@@ -109,17 +136,17 @@ export const KakaoMap = ({
   useEffect(() => {
     const kakao = kakaoRef.current;
     const map = mapRef.current;
-    if (!kakao || !map) return;
+    if (!isMapReady || !kakao || !map) return;
 
     const center = new kakao.maps.LatLng(lat, lng);
     map.setCenter(center);
     map.setLevel(level);
-  }, [lat, lng, level]);
+  }, [lat, lng, level, isMapReady]);
 
   useEffect(() => {
     const kakao = kakaoRef.current;
     const map = mapRef.current;
-    if (!kakao || !map) return;
+    if (!isMapReady || !kakao || !map) return;
 
     markersRef.current.forEach((item) => item.setMap(null));
     markersRef.current = [];
@@ -139,17 +166,53 @@ export const KakaoMap = ({
               : undefined,
           );
 
-          return new kakao.maps.Marker({
+          const mapMarker = new kakao.maps.Marker({
             position,
             map,
             image: markerImage,
           });
+
+          if (typeof item.zIndex === 'number') {
+            mapMarker.setZIndex(item.zIndex);
+          }
+
+          kakao.maps.event.addListener(mapMarker, 'click', () => {
+            markerClickingRef.current = true;
+            setTimeout(() => {
+              markerClickingRef.current = false;
+            }, 0);
+            onMarkerClickRef.current?.({
+              id: item.id,
+              lat: item.lat,
+              lng: item.lng,
+            });
+          });
+
+          return mapMarker;
         }
 
-        return new kakao.maps.Marker({
+        const mapMarker = new kakao.maps.Marker({
           position,
           map,
         });
+
+        if (typeof item.zIndex === 'number') {
+          mapMarker.setZIndex(item.zIndex);
+        }
+
+        kakao.maps.event.addListener(mapMarker, 'click', () => {
+          markerClickingRef.current = true;
+          setTimeout(() => {
+            markerClickingRef.current = false;
+          }, 0);
+          onMarkerClickRef.current?.({
+            id: item.id,
+            lat: item.lat,
+            lng: item.lng,
+          });
+        });
+
+        return mapMarker;
       });
       return;
     }
@@ -164,7 +227,7 @@ export const KakaoMap = ({
         map,
       }),
     ];
-  }, [marker, markers]);
+  }, [marker, markers, isMapReady]);
 
   if (error) return <div>지도 로드 실패: {error}</div>;
 

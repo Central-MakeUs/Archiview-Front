@@ -7,8 +7,8 @@ import type { IArchivePinsResponseDTO } from '../model/archiverPlace.type';
 
 interface IParams {
   filter?: 'ALL' | 'NEARBY';
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
   useMock?: boolean;
 }
 
@@ -17,6 +17,7 @@ export const useGetArchivePins = (params: IParams) => {
   const latitude = params.latitude;
   const longitude = params.longitude;
   const useMock = params?.useMock;
+  const hasNearbyCoords = Number.isFinite(latitude) && Number.isFinite(longitude);
 
   return useQuery<IArchivePinsResponseDTO>({
     queryKey: archiverKeys.getArchivePins.applyFilters({
@@ -32,6 +33,6 @@ export const useGetArchivePins = (params: IParams) => {
         longitude,
         useMock,
       }),
-    enabled: Number.isFinite(latitude) && Number.isFinite(longitude),
+    enabled: filter === 'ALL' || hasNearbyCoords,
   });
 };

@@ -49,23 +49,25 @@ export const archiverPlaceGet = {
   // 아카이브한 장소 핀 지도 조회
   getArchivePins: async (params: {
     filter?: 'ALL' | 'NEARBY';
-    latitude: number;
-    longitude: number;
+    latitude?: number;
+    longitude?: number;
     useMock?: boolean;
   }): Promise<IArchivePinsResponseDTO> => {
     const filter = params?.filter ?? 'ALL';
+    const searchParams = new URLSearchParams();
 
-    const searchParams: {
-      filter: 'ALL' | 'NEARBY';
-      useMock: boolean;
-      latitude: number;
-      longitude: number;
-    } = {
-      filter,
-      latitude: params.latitude,
-      longitude: params.longitude,
-      useMock: params?.useMock ?? false,
-    };
+    searchParams.set('filter', filter);
+    searchParams.set('useMock', String(params?.useMock ?? false));
+
+    if (filter === 'NEARBY') {
+      if (Number.isFinite(params?.latitude)) {
+        searchParams.set('latitude', String(params.latitude));
+      }
+
+      if (Number.isFinite(params?.longitude)) {
+        searchParams.set('longitude', String(params.longitude));
+      }
+    }
 
     const response = await clientApi
       .get(`${ARCHIVER_ENDPOINTS.archives.map.places}`, {

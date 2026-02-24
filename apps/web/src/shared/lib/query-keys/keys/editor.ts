@@ -55,13 +55,27 @@ export const editorKeys = createQueryKeyStore({
   },
 
   /**
-   * @param {{useMock?: boolean}} params
-   * @description 내가 업로드한 장소 목록 조회용 쿼리키 (파라미터 없음)
-   * @returns ['getMyPlaceList']
+   * @param {{filter?: 'ALL' | 'NEARBY', sort?: 'UPDATED' | 'CREATED', categoryId?: number, latitude?: number, longitude?: number, useMock?: boolean}} params
+   * @description 내가 업로드한 장소 목록 조회용 쿼리키
+   * @returns ['getMyPlaceList', 'applyFilters', filter, sort, categoryId, latitude, longitude, useMock]
    */
   getMyPlaceList: {
     all: null,
-    applyFilters: (params?: { useMock?: boolean }) => [params?.useMock ?? false],
+    applyFilters: (params?: {
+      filter?: 'ALL' | 'NEARBY';
+      sort?: 'UPDATED' | 'CREATED';
+      categoryId?: number;
+      latitude?: number;
+      longitude?: number;
+      useMock?: boolean;
+    }) => [
+      params?.filter ?? 'ALL',
+      params?.sort ?? 'UPDATED',
+      params?.categoryId ?? 'none',
+      params?.latitude ?? 'none',
+      params?.longitude ?? 'none',
+      params?.useMock ?? false,
+    ],
   },
 
   /**

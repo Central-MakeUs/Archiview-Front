@@ -39,9 +39,7 @@ export const CategoryOptionTabs = ({ value, onChange }: IProps) => {
   };
 
   const handleCategoryToggle = (categoryId: number) => {
-    const nextCategoryIds = value.categoryIds.includes(categoryId)
-      ? value.categoryIds.filter((id) => id !== categoryId)
-      : [...value.categoryIds, categoryId];
+    const nextCategoryIds = value.categoryIds.includes(categoryId) ? [] : [categoryId];
 
     onChange({
       ...value,
@@ -50,42 +48,53 @@ export const CategoryOptionTabs = ({ value, onChange }: IProps) => {
   };
 
   return (
-    <div className="pl-5 flex gap-2 overflow-x-auto whitespace-nowrap scroll-none pt-6">
-      {SCOPE_TABS.map((tab) => {
-        const active = value.scope === tab.value;
+    <div className="pl-5 pt-6 flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-none">
+        {SCOPE_TABS.map((tab) => {
+          const active = value.scope === tab.value;
 
-        return (
-          <button
-            key={tab.value}
-            type="button"
-            onClick={() => handleScopeChange(tab.value)}
-            className={[
-              'h-9 px-3 rounded-xl body-14-semibold flex-none w-auto whitespace-nowrap transition-colors',
-              active ? ACTIVE_BUTTON_CLASS : INACTIVE_BUTTON_CLASS,
-            ].join(' ')}
-          >
-            {tab.label}
-          </button>
-        );
-      })}
+          return (
+            <button
+              key={tab.value}
+              type="button"
+              onClick={() => handleScopeChange(tab.value)}
+              className={[
+                'h-9 px-3 rounded-xl body-14-semibold flex-none w-auto whitespace-nowrap transition-colors',
+                active ? ACTIVE_BUTTON_CLASS : INACTIVE_BUTTON_CLASS,
+              ].join(' ')}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
 
-      {CATEGORY_TABS.map((tab) => {
-        const active = value.categoryIds.includes(tab.value);
+      <div aria-hidden className="w-px h-8 bg-neutral-30 self-center flex-none mx-1" />
 
-        return (
-          <button
-            key={tab.value}
-            type="button"
-            onClick={() => handleCategoryToggle(tab.value)}
-            className={[
-              'h-9 px-3 rounded-xl body-14-semibold flex-none w-auto whitespace-nowrap transition-colors',
-              active ? ACTIVE_BUTTON_CLASS : INACTIVE_BUTTON_CLASS,
-            ].join(' ')}
-          >
-            {tab.label}
-          </button>
-        );
-      })}
+      <div className="min-w-0 flex-1 relative">
+        <div className="min-w-0 flex-1 overflow-x-auto scroll-none">
+          <div className="flex items-center gap-2 pr-5 whitespace-nowrap pl-1">
+            {CATEGORY_TABS.map((tab) => {
+              const active = value.categoryIds.includes(tab.value);
+
+              return (
+                <button
+                  key={tab.value}
+                  type="button"
+                  onClick={() => handleCategoryToggle(tab.value)}
+                  className={[
+                    'h-9 px-3 rounded-xl body-14-semibold flex-none w-auto whitespace-nowrap transition-colors',
+                    active ? ACTIVE_BUTTON_CLASS : INACTIVE_BUTTON_CLASS,
+                  ].join(' ')}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div className="pointer-events-none absolute left-0 top-0 h-full w-2 bg-gradient-to-r from-neutral-10 to-transparent" />
+      </div>
     </div>
   );
 };

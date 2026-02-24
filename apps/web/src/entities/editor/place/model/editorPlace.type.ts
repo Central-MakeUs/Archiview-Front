@@ -12,6 +12,8 @@ export type InsightPeriod = 'ALL' | 'MONTH' | 'WEEK';
 export interface IEditorInsightPlace {
   placeId: number;
   placeName: string;
+  placeUrl: string;
+  phoneNumber: string;
   placeImageUrl: string;
   editorSummary: string;
   stats: {

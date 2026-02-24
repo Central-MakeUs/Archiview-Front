@@ -71,7 +71,7 @@ export const archiverProfileGet = {
   getEditorPlacePins: async (params: {
     editorId: string;
     filter?: 'ALL' | 'NEARBY';
-    categoryIds?: number[];
+    categoryId?: number;
     latitude?: number;
     longitude?: number;
     useMock?: boolean;
@@ -82,9 +82,9 @@ export const archiverProfileGet = {
     searchParams.set('filter', filter);
     searchParams.set('useMock', String(params?.useMock ?? false));
 
-    (params?.categoryIds ?? []).forEach((categoryId) => {
-      searchParams.append('categoryIds', String(categoryId));
-    });
+    if (Number.isFinite(params?.categoryId)) {
+      searchParams.set('categoryId', String(params.categoryId));
+    }
 
     if (filter === 'NEARBY') {
       if (Number.isFinite(params?.latitude)) {
