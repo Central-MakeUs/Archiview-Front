@@ -29,7 +29,7 @@ export const MyArchivePageInner = () => {
 
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState<CategoryTab>('전체');
-  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
+  const [selectedPlaceId] = useState<string | null>(null);
   const [location, setLocation] = useState<GeoLocation | null>(null);
   const { data, isLoading, isError } = useGetMyArchives({ useMock: false });
 

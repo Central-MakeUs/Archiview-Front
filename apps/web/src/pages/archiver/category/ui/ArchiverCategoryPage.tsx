@@ -70,35 +70,31 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
   const [coords, setCoords] = useState<{ latitude: number; longitude: number } | null>(null);
 
   useEffect(() => {
-    if (!isNear) return;
-    if (coords) return;
+    if (!isNear) {
+      setCoords(null);
+      return;
+    }
 
     let cancelled = false;
 
     const run = async () => {
-      // const location = await getCurrentLocation();
-      // const latitude = location?.coords?.latitude ?? FALLBACK_LATITUDE;
-      const latitude = FALLBACK_LATITUDE;
-      // const longitude = location?.coords?.longitude ?? FALLBACK_LONGITUDE;
-      const longitude = FALLBACK_LONGITUDE;
+      const location = await getCurrentLocation();
+      const latitude = location?.coords?.latitude ?? FALLBACK_LATITUDE;
+      const longitude = location?.coords?.longitude ?? FALLBACK_LONGITUDE;
 
       if (cancelled) return;
       setCoords({ latitude, longitude });
     };
 
-    run()
-      .catch(() => {
-        if (cancelled) return;
-        setCoords({ latitude: FALLBACK_LATITUDE, longitude: FALLBACK_LONGITUDE });
-      })
-      .finally(() => {
-        if (cancelled) return;
-      });
+    run().catch(() => {
+      if (cancelled) return;
+      setCoords({ latitude: FALLBACK_LATITUDE, longitude: FALLBACK_LONGITUDE });
+    });
 
     return () => {
       cancelled = true;
     };
-  }, [coords, isNear]);
+  }, [isNear]);
 
   const {
     data: categoryData,
@@ -120,8 +116,6 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
     useMock: false,
     enabled: isNear && Boolean(coords),
   });
-  console.log(categoryData);
-
   const data = isNear ? nearData : categoryData;
   const isRawLoading = isNear ? isNearLoading : isCategoryLoading;
   const isLoading = useMinLoading(isRawLoading);

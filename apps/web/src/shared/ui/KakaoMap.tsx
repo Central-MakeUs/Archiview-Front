@@ -14,11 +14,11 @@ interface IKakaoMapProps {
   className?: string;
 }
 
-function waitForKakao(maxWaitMs = 5000): Promise<typeof window.kakao> {
+function waitForKakao(maxWaitMs: number = 5000): Promise<typeof window.kakao> {
   return new Promise((resolve, reject) => {
     const start = Date.now();
 
-    const tick = () => {
+    const tick = (): void => {
       if (typeof window !== 'undefined' && window.kakao?.maps) return resolve(window.kakao);
       if (Date.now() - start > maxWaitMs) return reject(new Error('Kakao Maps SDK not loaded'));
       setTimeout(tick, 50);
