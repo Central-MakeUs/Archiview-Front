@@ -20,21 +20,22 @@ import { EditorProfileCard } from './EditorProfileCard';
 import type { IEditorInsightPlace } from '@/entities/editor/place/model/editorPlace.type';
 
 const CATEGORY_ID_TO_MARKER_URL: Record<number, string> = {
-  [CATEGORIES[0].id]: '/marker/koreanMarker.svg',
-  [CATEGORIES[1].id]: '/marker/westernMarker.svg',
-  [CATEGORIES[2].id]: '/marker/japaneseMarker.svg',
-  [CATEGORIES[3].id]: '/marker/cafeMarker.svg',
-  [CATEGORIES[4].id]: '/marker/dateMarker.svg',
-  [CATEGORIES[5].id]: '/marker/izakayaMarker.svg',
-  [CATEGORIES[6].id]: '/marker/etcMarker.svg',
+  [CATEGORIES[0].id]: '/marker/koreanMarker.png',
+  [CATEGORIES[1].id]: '/marker/westernMarker.png',
+  [CATEGORIES[2].id]: '/marker/japaneseMarker.png',
+  [CATEGORIES[3].id]: '/marker/cafeMarker.png',
+  [CATEGORIES[4].id]: '/marker/dateMarker.png',
+  [CATEGORIES[5].id]: '/marker/izakayaMarker.png',
+  [CATEGORIES[6].id]: '/marker/etcMarker.png',
 };
 
-const DEFAULT_MARKER_URL = '/marker/defaultMarker.svg';
-const DEFAULT_SELECTED_MARKER_URL = '/marker/defaultMarkerSelected.svg';
+const DEFAULT_MARKER_URL = '/marker/defaultMarker.png';
+const DEFAULT_SELECTED_MARKER_URL = '/marker/defaultMarkerSelected.png';
+const MY_LOCATION_MARKER_URL = '/marker/myMarker.png';
 
 const toSelectedMarkerUrl = (url: string): string => {
-  if (!url.endsWith('.svg')) return url;
-  return `${url.slice(0, -4)}Selected.svg`;
+  if (!url.endsWith('.png')) return url;
+  return `${url.slice(0, -4)}Selected.png`;
 };
 
 interface IEditorProfile {
@@ -176,8 +177,20 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
   }, [categoryFilter.categoryIds, places, selectedCategoryNames]);
 
   const mapMarkers = useMemo(
-    () =>
-      filteredPlaces
+    () => [
+      ...(categoryFilter.scope === '내주변' && location
+        ? [
+            {
+              lat: location.coords.latitude,
+              lng: location.coords.longitude,
+              zIndex: 200,
+              imageSrc: MY_LOCATION_MARKER_URL,
+              imageSize: { width: 48, height: 48 },
+              imageOffset: { x: 24, y: 48 },
+            },
+          ]
+        : []),
+      ...filteredPlaces
         .filter((place) => Number.isFinite(place.latitude) && Number.isFinite(place.longitude))
         .map((place) => {
           const isSelected =
@@ -203,10 +216,11 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
             zIndex: isSelected ? 100 : 1,
             imageSrc,
             imageSize: isSelected ? { width: 100, height: 100 } : { width: 80, height: 80 },
-            imageOffset: isSelected ? { x: 23, y: 46 } : { x: 20, y: 40 },
+            imageOffset: isSelected ? { x: 50, y: 100 } : { x: 40, y: 80 },
           };
         }),
-    [filteredPlaces, selectedMarkerPlaceId],
+    ],
+    [categoryFilter.scope, filteredPlaces, location, selectedMarkerPlaceId],
   );
 
   const markerFilteredPlaces = useMemo(() => {
@@ -256,7 +270,7 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
       <CategoryOptionTabs value={categoryFilter} onChange={setCategoryFilter} />
 
       <div className="flex-1 min-h-0 pt-6">
-        {/* <KakaoMap
+        <KakaoMap
           lat={mapCenter.lat}
           lng={mapCenter.lng}
           level={3}
@@ -269,7 +283,7 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
           onMapClick={() => {
             setSelectedMarkerPlaceId(null);
           }}
-        /> */}
+        />
 
         <BottomSheet
           isOpen={open}

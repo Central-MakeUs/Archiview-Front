@@ -24,21 +24,22 @@ import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import { LocationPermissionModal } from '../../../../shared/ui/common/Modal/LocationPermissionModal';
 
 const CATEGORY_ID_TO_MARKER_URL: Record<number, string> = {
-  [CATEGORIES[0].id]: '/marker/koreanMarker.svg',
-  [CATEGORIES[1].id]: '/marker/westernMarker.svg',
-  [CATEGORIES[2].id]: '/marker/japaneseMarker.svg',
-  [CATEGORIES[3].id]: '/marker/cafeMarker.svg',
-  [CATEGORIES[4].id]: '/marker/dateMarker.svg',
-  [CATEGORIES[5].id]: '/marker/izakayaMarker.svg',
-  [CATEGORIES[6].id]: '/marker/etcMarker.svg',
+  [CATEGORIES[0].id]: '/marker/koreanMarker.png',
+  [CATEGORIES[1].id]: '/marker/westernMarker.png',
+  [CATEGORIES[2].id]: '/marker/japaneseMarker.png',
+  [CATEGORIES[3].id]: '/marker/cafeMarker.png',
+  [CATEGORIES[4].id]: '/marker/dateMarker.png',
+  [CATEGORIES[5].id]: '/marker/izakayaMarker.png',
+  [CATEGORIES[6].id]: '/marker/etcMarker.png',
 };
 
-const DEFAULT_MARKER_URL = '/marker/defaultMarker.svg';
-const DEFAULT_SELECTED_MARKER_URL = '/marker/defaultMarkerSelected.svg';
+const DEFAULT_MARKER_URL = '/marker/defaultMarker.png';
+const DEFAULT_SELECTED_MARKER_URL = '/marker/defaultMarkerSelected.png';
+const MY_LOCATION_MARKER_URL = '/marker/myMarker.png';
 
 const toSelectedMarkerUrl = (url: string): string => {
-  if (!url.endsWith('.svg')) return url;
-  return `${url.slice(0, -4)}Selected.svg`;
+  if (!url.endsWith('.png')) return url;
+  return `${url.slice(0, -4)}Selected.png`;
 };
 
 const getMarkerCategoryId = (pin: IPin): number | undefined => {
@@ -155,8 +156,20 @@ export const MyArchivePageInner = () => {
   }, [archivePins, categoryFilter.categoryIds]);
 
   const mapMarkers = useMemo(
-    () =>
-      categoryFilteredPins
+    () => [
+      ...(categoryFilter.scope === '내주변' && location
+        ? [
+            {
+              lat: location.coords.latitude,
+              lng: location.coords.longitude,
+              zIndex: 200,
+              imageSrc: MY_LOCATION_MARKER_URL,
+              imageSize: { width: 48, height: 48 },
+              imageOffset: { x: 24, y: 48 },
+            },
+          ]
+        : []),
+      ...categoryFilteredPins
         .filter((pin) => Number.isFinite(pin.latitude) && Number.isFinite(pin.longitude))
         .map((pin) => {
           const isSelected =
@@ -177,11 +190,12 @@ export const MyArchivePageInner = () => {
             lng: pin.longitude,
             zIndex: isSelected ? 100 : 1,
             imageSrc,
-            imageSize: isSelected ? { width: 100, height: 100 } : { width: 80, height: 80 },
-            imageOffset: isSelected ? { x: 23, y: 46 } : { x: 20, y: 40 },
+            imageSize: isSelected ? { width: 64, height: 91 } : { width: 50, height: 71 },
+            imageOffset: isSelected ? { x: 50, y: 100 } : { x: 40, y: 80 },
           };
         }),
-    [categoryFilteredPins, selectedMarkerPlaceId],
+    ],
+    [categoryFilter.scope, categoryFilteredPins, location, selectedMarkerPlaceId],
   );
 
   const places = data?.data?.postPlaces ?? [];

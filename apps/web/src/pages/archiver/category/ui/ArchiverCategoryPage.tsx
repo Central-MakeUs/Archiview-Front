@@ -23,6 +23,7 @@ const FALLBACK_LATITUDE = 37.5665;
 const FALLBACK_LONGITUDE = 126.978;
 // TODO : 폴백 이미지 제거..
 const FALLBACK_PLACE_IMAGE = '/images/TestImage.png';
+const MY_LOCATION_MARKER_URL = '/marker/myMarker.png';
 
 export const ArchiverCategoryPage = (): React.ReactElement => {
   const router = useRouter();
@@ -143,6 +144,20 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
             lat={coords?.latitude ?? FALLBACK_LATITUDE}
             lng={coords?.longitude ?? FALLBACK_LONGITUDE}
             level={3}
+            markers={
+              coords
+                ? [
+                    {
+                      lat: coords.latitude,
+                      lng: coords.longitude,
+                      zIndex: 200,
+                      imageSrc: MY_LOCATION_MARKER_URL,
+                      imageSize: { width: 48, height: 48 },
+                      imageOffset: { x: 24, y: 48 },
+                    },
+                  ]
+                : []
+            }
           />
 
           <BottomSheet
