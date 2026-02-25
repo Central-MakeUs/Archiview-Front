@@ -12,15 +12,22 @@ export const CategoryChipGroup = ({ selectedIds, onToggle }: ICategoryChipGroupP
 
   return (
     <div className="flex gap-2 flex-wrap">
-      {categories?.map((category: ICategories) => (
-        <Chip
-          key={category.id}
-          label={category.name}
-          selected={selectedIds.includes(category.id)}
-          onClick={() => onToggle(category.id)}
-          className="h-9 px-4 rounded-xl border-none bg-neutral-20 text-neutral-40"
-        />
-      ))}
+      {categories?.map((category: ICategories) => {
+        const isSelected = selectedIds.includes(category.id);
+        return (
+          <Chip
+            key={category.id}
+            label={category.name}
+            selected={isSelected}
+            onClick={() => onToggle(category.id)}
+            className={`h-9 px-4 rounded-xl border ${
+              isSelected
+                ? 'border-none text-neutral-10 bg-primary-40'
+                : 'border-none bg-neutral-20 text-neutral-40'
+            }`}
+          />
+        );
+      })}
     </div>
   );
 };
