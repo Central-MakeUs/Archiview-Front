@@ -1,5 +1,5 @@
-import { SyncLoader } from 'react-spinners';
 import { BlueFolderIcon } from '../../icon';
+import { LoadingAnimation } from './LoadingAnimation';
 
 interface ILoadingProps {
   text: string;
@@ -7,8 +7,7 @@ interface ILoadingProps {
 }
 
 export const Loading = ({ text, role }: ILoadingProps) => {
-  const roleLabel = role === 'EDITOR' ? '에디터' : '아카이버';
-
+  // role reserved for future role-specific loading message
   return (
     <div className="flex h-full w-full items-center justify-center p-20">
       <div className="flex w-full flex-col items-center gap-7 rounded-[20px] bg-neutral-10 px-5 py-9">
@@ -23,7 +22,7 @@ export const Loading = ({ text, role }: ILoadingProps) => {
             <p className="caption-12-semibold text-neutral-40">조금만 기다려주세요</p>
           </div>
 
-          <SyncLoader speedMultiplier={0.5} color="#359EFA" size={8} margin={6} />
+          <LoadingAnimation size={8} margin={6} />
         </div>
       </div>
     </div>

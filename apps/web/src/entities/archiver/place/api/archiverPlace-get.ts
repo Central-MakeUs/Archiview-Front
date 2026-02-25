@@ -96,4 +96,17 @@ export const archiverPlaceGet = {
 
     return response;
   },
+
+  getEditorPlace: async (params: {
+    userId: string;
+    placeId: number;
+    useMock?: boolean;
+  }): Promise<IPlaceDetailResponseDTO> => {
+    const response = await clientApi
+      .get(`${ARCHIVER_ENDPOINTS.archivers.editors.editorPlace(params.userId, params.placeId)}`, {
+        searchParams: { useMock: params?.useMock ?? false },
+      })
+      .json<IPlaceDetailResponseDTO>();
+    return response;
+  },
 };

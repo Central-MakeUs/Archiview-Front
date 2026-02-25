@@ -174,4 +174,46 @@ export const archiverKeys = createQueryKeyStore({
       params?.useMock ?? false,
     ],
   },
+
+  /**
+   * @param {{userId: string, placeId: number, useMock?: boolean}} params
+   * @description 특정 에디터가 업로드한 장소 상세 조회용 쿼리키
+   * @returns ['getEditorPlace', 'applyFilters', userId, placeId, useMock]
+   */
+  getEditorPlace: {
+    all: null,
+    applyFilters: (params: { userId: string; placeId: number; useMock?: boolean }) => [
+      params.userId,
+      params.placeId,
+      params?.useMock ?? false,
+    ],
+  },
+
+  /**
+   * @param {{search: string}} params
+   * @description 검색 결과 조회용 쿼리키
+   * @returns ['getSearch', 'applyFilters', search]
+   */
+  getSearch: {
+    all: null,
+    applyFilters: (params: { search: string }) => [params.search],
+  },
+
+  /**
+   * @param {{}} params
+   * @description 최근 검색 기록 조회용 쿼리키
+   * @returns ['getRecent', 'applyFilters']
+   */
+  getRecent: {
+    all: null,
+  },
+
+  /**
+   * @param {{}} params
+   * @description 추천 검색어 조회용 쿼리키
+   * @returns ['getRecommendations', 'applyFilters']
+   */
+  getRecommendations: {
+    all: null,
+  },
 });

@@ -90,7 +90,6 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
     editorId,
     useMock: false,
   });
-
   const { data: placeListData, isLoading: isPlaceListLoading } = useGetEditorPlaceList({
     userId: editorId,
     sort,
@@ -105,6 +104,8 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
     categoryId: categoryFilter.categoryIds[0],
     useMock: false,
   });
+
+  console.log(placeListData);
 
   useEffect(() => {
     if (categoryFilter.scope !== '내주변') {
@@ -352,7 +353,9 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
               description={p.description}
               savedCount={p.saveCount}
               viewCount={p.viewCount}
-              onClick={() => router.push(`/archiver/place-info/${p.postPlaceId}`)}
+              onClick={() =>
+                router.push(`/archiver/place-info/${p.postPlaceId}?editor=${editorId}`)
+              }
             />
           ))}
         </BottomSheet>
