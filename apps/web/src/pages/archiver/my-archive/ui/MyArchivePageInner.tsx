@@ -2,7 +2,11 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { requestNativeCurrentLocation } from '@/shared/lib/native-actions';
+import {
+  isAppWebView,
+  openNativeAppSettings,
+  requestNativeCurrentLocation,
+} from '@/shared/lib/native-actions';
 import type { GeoLocation } from '@archiview/webview-bridge-contract';
 import { CATEGORIES } from '@/shared/constants/category';
 import { KakaoMap } from '@/shared/ui/KakaoMap';
@@ -17,6 +21,7 @@ import { useGetMyArchives } from '@/entities/archiver/place/queries/useGetMyArch
 
 import { ArchiverPlaceItem } from './ArchiverPlaceItem';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
+import { LocationPermissionModal } from './LocationPermissionModal';
 
 const CATEGORY_ID_TO_MARKER_URL: Record<number, string> = {
   [CATEGORIES[0].id]: '/marker/koreanMarker.svg',
@@ -61,6 +66,7 @@ export const MyArchivePageInner = () => {
   const [mapCenter, setMapCenter] = useState({ lat: 37.5665, lng: 126.978 });
   const [bottomSheetHeight, setBottomSheetHeight] = useState(400);
   const [selectedMarkerPlaceId, setSelectedMarkerPlaceId] = useState<number | null>(null);
+  const [isLocationPermissionModalOpen, setIsLocationPermissionModalOpen] = useState(false);
   const shouldMoveToNearbyRef = useRef(false);
 
   const mapFilter = categoryFilter.scope === '내주변' ? 'NEARBY' : 'ALL';
@@ -80,6 +86,7 @@ export const MyArchivePageInner = () => {
     if (categoryFilter.scope !== '내주변') {
       shouldMoveToNearbyRef.current = false;
       setLocation(null);
+      setIsLocationPermissionModalOpen(false);
       return;
     }
 
@@ -90,12 +97,21 @@ export const MyArchivePageInner = () => {
     const run = async () => {
       const loc = await requestNativeCurrentLocation();
       if (cancelled) return;
+
+      if (!loc) {
+        setLocation(null);
+        setIsLocationPermissionModalOpen(true);
+        return;
+      }
+
       setLocation(loc);
+      setIsLocationPermissionModalOpen(false);
     };
 
     run().catch(() => {
       if (cancelled) return;
       setLocation(null);
+      setIsLocationPermissionModalOpen(true);
     });
 
     return () => {
@@ -218,6 +234,23 @@ export const MyArchivePageInner = () => {
 
   return (
     <div className="flex h-full flex-col min-h-0">
+      <LocationPermissionModal
+        isOpen={isLocationPermissionModalOpen}
+        isWebView={isAppWebView()}
+        onClose={() => {
+          setIsLocationPermissionModalOpen(false);
+        }}
+        onOpenSettings={async () => {
+          if (!isAppWebView()) return;
+
+          try {
+            await openNativeAppSettings();
+          } finally {
+            setIsLocationPermissionModalOpen(false);
+          }
+        }}
+      />
+
       <CategoryOptionTabs value={categoryFilter} onChange={setCategoryFilter} />
       <div className="flex-1 min-h-0 pt-6">
         <KakaoMap
