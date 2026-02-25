@@ -5,7 +5,11 @@ import { useRouter } from 'next/navigation';
 import type { GeoLocation } from '@archiview/webview-bridge-contract';
 
 import { CATEGORIES } from '@/shared/constants/category';
-import { requestNativeCurrentLocation } from '@/shared/lib/native-actions';
+import {
+  isAppWebView,
+  openNativeAppSettings,
+  requestNativeCurrentLocation,
+} from '@/shared/lib/native-actions';
 import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import {
@@ -18,6 +22,7 @@ import { useGetEditorPlacePins } from '@/entities/archiver/profile/queries/useGe
 import type { IPin } from '@/entities/archiver/profile/model/archiverProfile.type';
 
 import { ArchiverPlaceItem } from '../../my-archive/ui/ArchiverPlaceItem';
+import { LocationPermissionModal } from '../../../../shared/ui/common/Modal/LocationPermissionModal';
 import { EditorProfileCard } from './EditorProfileCard';
 import { SortDropdown } from './SortDropDown';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
@@ -72,6 +77,7 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   const [mapCenter, setMapCenter] = useState({ lat: 37.5665, lng: 126.978 });
   const [bottomSheetHeight, setBottomSheetHeight] = useState(400);
   const [selectedMarkerPlaceId, setSelectedMarkerPlaceId] = useState<number | null>(null);
+  const [isLocationPermissionModalOpen, setIsLocationPermissionModalOpen] = useState(false);
   const shouldMoveToNearbyRef = useRef(false);
 
   const mapFilter = categoryFilter.scope === '내주변' ? 'NEARBY' : 'ALL';
@@ -103,6 +109,7 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
     if (categoryFilter.scope !== '내주변') {
       shouldMoveToNearbyRef.current = false;
       setLocation(null);
+      setIsLocationPermissionModalOpen(false);
       return;
     }
 
@@ -113,12 +120,21 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
     const run = async () => {
       const loc = await requestNativeCurrentLocation();
       if (cancelled) return;
+
+      if (!loc) {
+        setLocation(null);
+        setIsLocationPermissionModalOpen(true);
+        return;
+      }
+
       setLocation(loc);
+      setIsLocationPermissionModalOpen(false);
     };
 
     run().catch(() => {
       if (cancelled) return;
       setLocation(null);
+      setIsLocationPermissionModalOpen(true);
     });
 
     return () => {
@@ -259,6 +275,23 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
 
   return (
     <div className="flex h-full flex-col min-h-0">
+      <LocationPermissionModal
+        isOpen={isLocationPermissionModalOpen}
+        isWebView={isAppWebView()}
+        onClose={() => {
+          setIsLocationPermissionModalOpen(false);
+        }}
+        onOpenSettings={async () => {
+          if (!isAppWebView()) return;
+
+          try {
+            await openNativeAppSettings();
+          } finally {
+            setIsLocationPermissionModalOpen(false);
+          }
+        }}
+      />
+
       <div className="px-5">
         <EditorProfileCard editorId={editorId} editorData={editorData?.data} />
       </div>

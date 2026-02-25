@@ -21,7 +21,7 @@ import { useGetMyArchives } from '@/entities/archiver/place/queries/useGetMyArch
 
 import { ArchiverPlaceItem } from './ArchiverPlaceItem';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
-import { LocationPermissionModal } from './LocationPermissionModal';
+import { LocationPermissionModal } from '../../../../shared/ui/common/Modal/LocationPermissionModal';
 
 const CATEGORY_ID_TO_MARKER_URL: Record<number, string> = {
   [CATEGORIES[0].id]: '/marker/koreanMarker.svg',
