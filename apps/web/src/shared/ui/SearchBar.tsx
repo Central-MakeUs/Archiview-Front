@@ -24,23 +24,23 @@ export const SearchBar = ({
         e.preventDefault();
         onSubmit();
       }}
-      className={cn('flex w-full items-center gap-4 rounded-full bg-white px-5 h-13.5', className)}
+      className={cn('flex w-full items-center gap-2.5 rounded-full bg-white px-5 h-13.5', className)}
     >
-      <BlueFolderIcon className="h-7.5 w-7.5" />
+      <BlueFolderIcon className="h-7.5 w-7.5 shrink-0" />
 
       <input
         type="search"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="flex-1 bg-transparent outline-none body-14-semibold"
+        className="min-w-0 flex-1 bg-transparent outline-none body-14-semibold placeholder:font-normal placeholder:text-neutral-50"
         enterKeyHint="search"
       />
 
       {value ? (
-        <RoundedXIcon type="button" onClick={() => onChange('')} className="h-6.5 w-6.5" />
+        <RoundedXIcon type="button" onClick={() => onChange('')} className="h-6.5 w-6.5 shrink-0" />
       ) : (
-        <SearchIcon className="h-6.5 w-6.5 text-gray-400" />
+        <SearchIcon className="h-4.5 w-4.5 shrink-0 text-neutral-40" />
       )}
     </form>
   );

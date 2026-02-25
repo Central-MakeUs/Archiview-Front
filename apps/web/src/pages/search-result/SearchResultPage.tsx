@@ -1,9 +1,13 @@
 'use client';
+import { useGetRecent } from '@/entities/archiver/search/queries/useGetRecent';
+import { useGetRecommendations } from '@/entities/archiver/search/queries/useGetRecommendations';
+import { useGetSearch } from '@/entities/archiver/search/queries/useGetSearch';
 import { Chip } from '@/shared/ui/Chip';
 import { XIcon } from '@/shared/ui/icon/XIcon';
 import { SearchBar } from '@/shared/ui/SearchBar';
 import { TabBar } from '@/shared/ui/TabBar';
 import { BackButtonHeader } from '@/widgets/header/BackButtonHeader';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 interface ITabItem {
@@ -27,12 +31,19 @@ const tabItems: ITabItem[] = [
 ];
 
 export const SearchResultPage = () => {
+  const searchParams = useSearchParams();
+  const search = searchParams?.get('search');
   const [tab, setTab] = useState(tabItems[0].value);
-  const [searchText, setSearchText] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchText, setSearchText] = useState(search ?? '');
+  const [searchTerm, setSearchTerm] = useState(search ?? '');
   const [selectedChip, setSelectedChip] = useState<number | null>(null);
+
+  const { data: searchData } = useGetSearch({ search: searchTerm });
+  const { data: recentData } = useGetRecent();
+  const { data: recommendationsData } = useGetRecommendations();
+
   return (
-    <div>
+    <div className="bg-[#F5F6Fa] min-h-screen">
       <BackButtonHeader title="" />
       <div className="mb-[18px]">
         <TabBar items={tabItems} value={tab} onChange={(value) => setTab(value)} />
@@ -51,23 +62,16 @@ export const SearchResultPage = () => {
         <div className="flex flex-col gap-[20px] px-[20px]">
           <div className="body-18-bold">최근 검색어</div>
           <div className="flex flex-wrap gap-[4px]">
-            {Array.from({ length: 8 }).map((value, index) => (
-              <Chip
-                key={index}
-                label="텍스트"
-                chipType="keyword"
-                endIcon={<XIcon className="w-[9px] h-[9px]" />}
-                selected={index === selectedChip}
-                onClick={() => setSelectedChip(index)}
-              />
+            {recentData?.data?.histories.map((value, index) => (
+              <Chip key={index} label={value.keyword} chipType="keyword" />
             ))}
           </div>
         </div>
         <div className="flex flex-col gap-[20px] px-[20px] ">
           <div className="body-18-bold">추천 키워드</div>
           <div className="flex flex-wrap gap-x-[4px] gap-y-[8px]">
-            {Array.from({ length: 8 }).map((value, index) => (
-              <Chip key={index} label="# 텍스트" chipType="keyword" />
+            {recommendationsData?.data?.keywords.map((keyword, index) => (
+              <Chip key={index} label={`# ${keyword.keyword}`} chipType="keyword" />
             ))}
           </div>
         </div>
