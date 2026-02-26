@@ -15,6 +15,7 @@ export const useEditorDeletePost = () => {
     onSuccess: async () => {
       toast.success('게시글이 성공적으로 삭제 되었습니다');
       await queryClient.invalidateQueries({ queryKey: editorKeys.getMyPlaceList._def });
+      await queryClient.invalidateQueries({ queryKey: editorKeys.getMyPlaceDetail._def });
       await queryClient.invalidateQueries({ queryKey: editorKeys.getInsightSummery._def });
       router.push('/editor/home');
     },
