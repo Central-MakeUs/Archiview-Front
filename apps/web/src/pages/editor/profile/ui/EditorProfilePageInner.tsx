@@ -255,7 +255,7 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
 
   return (
     <div className="flex h-full flex-col min-h-0">
-      <div className="pt-3 pb-6">
+      <div className="pt-1">
         <EditorProfileCard
           nickname={profile.nickname}
           instagramId={profile.instagramId}
@@ -269,7 +269,7 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
 
       <CategoryOptionTabs value={categoryFilter} onChange={setCategoryFilter} />
 
-      <div className="flex-1 min-h-0 pt-6">
+      <div className="flex-1 min-h-0 pt-4">
         <KakaoMap
           lat={mapCenter.lat}
           lng={mapCenter.lng}

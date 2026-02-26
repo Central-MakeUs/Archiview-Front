@@ -279,7 +279,7 @@ export const MyArchivePageInner = () => {
       />
 
       <CategoryOptionTabs value={categoryFilter} onChange={setCategoryFilter} />
-      <div className="flex-1 min-h-0 pt-6">
+      <div className="flex-1 min-h-0 pt-4">
         <KakaoMap
           lat={mapCenter.lat}
           lng={mapCenter.lng}

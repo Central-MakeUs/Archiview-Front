@@ -30,7 +30,7 @@ export const SortDropdown = ({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="h-6.5 w-20 inline-flex items-center justify-center gap-2 rounded-md border-2 border-primary-40 bg-white text-primary-40 caption-12-semibold"
+        className="h-6.5 w-20 inline-flex items-center justify-center gap-2 rounded-md border border-primary-40 bg-white text-primary-40 caption-12-semibold"
       >
         <span className="text-base">{currentLabel}</span>
         <span

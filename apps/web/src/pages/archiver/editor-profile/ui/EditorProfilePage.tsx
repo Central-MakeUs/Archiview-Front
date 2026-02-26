@@ -53,9 +53,9 @@ const toSelectedMarkerUrl = (url: string): string => {
 };
 
 const getMarkerScaleByLevel = (level: number): number => {
-  if (level >= 9) return 0.60;
-  if (level >= 7) return 0.60;
-  if (level >= 5) return 0.80;
+  if (level >= 9) return 0.6;
+  if (level >= 7) return 0.6;
+  if (level >= 5) return 0.8;
   return 1;
 };
 
@@ -325,8 +325,7 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
       </div>
       <CategoryOptionTabs value={categoryFilter} onChange={setCategoryFilter} />
 
-      <div className="flex-1 min-h-0 pt-6">
-        {/* <div className="h-100 pt-6"> */}
+      <div className="flex-1 min-h-0 pt-4">
         <KakaoMap
           lat={mapCenter.lat}
           lng={mapCenter.lng}
