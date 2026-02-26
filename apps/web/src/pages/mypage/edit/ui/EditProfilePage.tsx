@@ -27,10 +27,12 @@ import {
   openNativeAppSettings,
   requestNativeImage,
 } from '@/shared/lib/native-actions';
+import { useRouter } from 'next/navigation';
 
 export const EditProfilePage = () => {
   const queryClient = useQueryClient();
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const router = useRouter();
 
   const { data: profileData, isLoading } = useEditorGetMyProfile();
   const { mutate: editProfile } = useEditEditorProfile();
@@ -193,6 +195,7 @@ export const EditProfilePage = () => {
         await queryClient.invalidateQueries({
           queryKey: editorKeys.getEditorMeProfile.all.queryKey,
         });
+        router.push('/mypage');
       },
       onError: (error) => {
         const kyError = error as ExtendedKyHttpError;

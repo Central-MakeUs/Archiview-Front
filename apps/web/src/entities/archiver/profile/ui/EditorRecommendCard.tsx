@@ -14,6 +14,7 @@ interface IEditorRecommendCardProps {
 
 export const EditorRecommendCard = ({ editor }: IEditorRecommendCardProps) => {
   const stripHash = (tag?: string) => (tag ?? '').trim().replace(/^#/, '');
+
   const badgeContainerRef = useRef<HTMLDivElement>(null);
   const badgeMeasureRefs = useRef<Array<HTMLDivElement | null>>([]);
 
@@ -86,7 +87,6 @@ export const EditorRecommendCard = ({ editor }: IEditorRecommendCardProps) => {
   }, [calculateVisibleBadgeCount]);
 
   return (
-    // TODO : 라우팅 연결하기
     <Link href={`/archiver/editor-profile/${editor.editorId}`} className="block shrink-0">
       <Kard className="shrink-0 w-45 shadow-default overflow-hidden border-none">
         <div className="relative w-full shrink-0 overflow-hidden" style={{ height: '99px' }}>

@@ -7,6 +7,7 @@ import { CardSection } from './CardSection';
 import { useEditorGetPlaceInfo } from '@/entities/editor/place/mutations/useEditorGetPlaceInfo';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
+import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
 
 export const PlaceInfoPage = ({ placeId }: { placeId: number }) => {
   const { placeInfoData, isLoading, isError } = useEditorGetPlaceInfo(placeId);
@@ -18,7 +19,7 @@ export const PlaceInfoPage = ({ placeId }: { placeId: number }) => {
       </div>
     );
 
-  if (isError) return <div>에러네용 ㅠㅠ</div>;
+  if (isError) return <ErrorPage />;
 
   return (
     <div className="h-full flex flex-col">

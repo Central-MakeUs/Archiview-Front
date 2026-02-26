@@ -4,13 +4,16 @@ import { LoadingAnimation } from './LoadingAnimation';
 interface ILoadingProps {
   text: string;
   role: 'EDITOR' | 'ARCHIVER';
+  transparentBg?: boolean;
 }
 
-export const Loading = ({ text, role }: ILoadingProps) => {
+export const Loading = ({ text, role, transparentBg }: ILoadingProps) => {
   // role reserved for future role-specific loading message
   return (
     <div className="flex h-full w-full items-center justify-center p-20">
-      <div className="flex w-full flex-col items-center gap-7 rounded-[20px] bg-neutral-10 px-5 py-9">
+      <div
+        className={`flex w-full flex-col items-center gap-7 rounded-[20px] px-5 py-9 ${transparentBg ? 'bg-transparent' : 'bg-neutral-10'}`}
+      >
         <BlueFolderIcon className="h-11 w-11" />
         <div className="flex w-full flex-col items-center gap-7">
           <div className="flex w-full flex-col items-center gap-1">

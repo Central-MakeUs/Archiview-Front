@@ -41,7 +41,7 @@ export const CardSection = ({
     <section className="p-5 flex flex-col gap-4">
       {postPlaces?.map((post) => {
         const visibleHashTags = visibleHashTagsByPostId.get(post.postPlaceId) ?? [];
-
+        
         return (
           <div key={post.postPlaceId} className="flex h-31.75">
             <div className="rounded-l-default bg-neutral-40 w-20 relative overflow-hidden">

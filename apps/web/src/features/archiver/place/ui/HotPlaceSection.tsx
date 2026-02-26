@@ -9,7 +9,7 @@ export const HotPlaceSection = ({ hotPlaces }: IHotPlaceSectionProps): React.Rea
   if (hotPlaces.length === 0) {
     return (
       <section className="mb-5">
-        <div className="flex justify-between mb-4">
+        <div className="flex justify-between mb-4 pl-2">
           <span className="heading-20-bold">요즘 HOT한 장소</span>
         </div>
         <div>표시할 장소가 없습니다.</div>
@@ -19,7 +19,7 @@ export const HotPlaceSection = ({ hotPlaces }: IHotPlaceSectionProps): React.Rea
 
   return (
     <section className="mb-5">
-      <div className="flex justify-between mb-4">
+      <div className="flex justify-between mb-4 pl-2">
         <span className="heading-20-bold">요즘 HOT한 장소</span>
       </div>
       <div className="-mx-5 overflow-x-auto scroll-none momentum-scroll-x py-2 -my-2">
@@ -36,6 +36,7 @@ export const HotPlaceSection = ({ hotPlaces }: IHotPlaceSectionProps): React.Rea
             />
           ))}
         </div>
+
       </div>
     </section>
   );

@@ -14,7 +14,7 @@ export const EditorTrustedSection = ({
 
   return (
     <section className="mb-5">
-      <div className="flex justify-between mb-4">
+      <div className="flex justify-between mb-4 pl-2">
         <span className="heading-20-bold">믿고 먹는 에디터</span>
       </div>
       <div className="-mx-5 overflow-x-auto scroll-none momentum-scroll-x py-3 -my-3">

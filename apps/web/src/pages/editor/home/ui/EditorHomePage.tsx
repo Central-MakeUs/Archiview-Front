@@ -12,6 +12,7 @@ import { useEditorInsightSummaryQuery } from '@/entities/editor/place/queries/us
 import { useGetMyPlaceList } from '@/entities/editor/place/queries/useGetMyPlaceList';
 import type { InsightPeriod } from '@/entities/editor/place/model/editorPlace.type';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
+import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
 
 function parseInsightPeriod(value: string | undefined): InsightPeriod {
   if (value === 'WEEK' || value === 'MONTH' || value === 'ALL') return value;
@@ -45,8 +46,7 @@ export const EditorHomePage = () => {
   const showLoading = useMinLoading(isLoading, 1500);
   if (showLoading) return <LoadingPage text="에디터 홈페이지를 로딩 중입니다" role="EDITOR" />;
 
-  if (isError)
-    return <div className="flex h-screen items-center justify-center">에러가 발생했습니다</div>;
+  if (isError) return <ErrorPage />;
 
   const places = placeData?.data?.places ?? [];
 
