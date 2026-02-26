@@ -102,7 +102,7 @@ export const EditorSection = ({
             </div>
           ))}
         </div>
-        {showPreview && onMoreClick && editors.length >= 3 && (
+        {showPreview && onMoreClick && editors.length > 3 && (
           <div className="flex justify-end px-[20px]">
             <button
               type="button"

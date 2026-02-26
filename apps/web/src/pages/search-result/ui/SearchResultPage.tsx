@@ -15,6 +15,9 @@ import { RecentSearchSection } from './RecentSearchSection';
 import { RecommendationSection } from './RecommendationSection';
 import { InfoSection } from './InfoSection';
 import { EditorSection } from './EditorSection';
+import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
+import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
+import { useMinLoading } from '@/shared/hooks/useMinLoading';
 
 interface ITabItem {
   label: string;
@@ -35,10 +38,30 @@ export const SearchResultPage = () => {
   const [searchTerm, setSearchTerm] = useState(search ?? '');
 
   const queryClient = useQueryClient();
-  const { data: searchData } = useGetSearch({ search: searchTerm });
-  const { data: recentData } = useGetRecent();
-  const { data: recommendationsData } = useGetRecommendations();
+  const {
+    data: searchData,
+    isLoading: isSearchLoading,
+    isError: isSearchError,
+  } = useGetSearch({ search: searchTerm });
+  const { data: recentData, isLoading: isRecentLoading, isError: isRecentError } = useGetRecent();
+  const {
+    data: recommendationsData,
+    isLoading: isRecommendationsLoading,
+    isError: isRecommendationsError,
+  } = useGetRecommendations();
   const { mutate: deleteRecent } = useDeleteRecent();
+  const showLoading = useMinLoading(
+    isSearchLoading || isRecentLoading || isRecommendationsLoading,
+    1200,
+  );
+
+  if (isSearchError || isRecentError || isRecommendationsError) {
+    return <ErrorPage />;
+  }
+
+  if (showLoading) {
+    return <LoadingPage text="검색 결과를 불러오는 중입니다." />;
+  }
 
   return (
     <div className="bg-[#F5F6Fa] min-h-screen flex flex-col">
@@ -101,9 +124,12 @@ export const SearchResultPage = () => {
           <InfoSection places={searchData.data.places} />
         )}
 
-        {tab === 'editor' && searchTerm && searchData?.data && searchData.data.editors.length > 0 && (
-          <EditorSection editors={searchData.data.editors} searchTerm={searchTerm} />
-        )}
+        {tab === 'editor' &&
+          searchTerm &&
+          searchData?.data &&
+          searchData.data.editors.length > 0 && (
+            <EditorSection editors={searchData.data.editors} searchTerm={searchTerm} />
+          )}
       </div>
     </div>
   );
