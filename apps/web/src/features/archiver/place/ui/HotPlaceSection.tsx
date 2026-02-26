@@ -9,7 +9,7 @@ export const HotPlaceSection = ({ hotPlaces }: IHotPlaceSectionProps): React.Rea
   if (hotPlaces.length === 0) {
     return (
       <section className="mb-5">
-        <div className="flex justify-between mb-4">
+        <div className="flex justify-between mb-4 pl-2">
           <span className="heading-20-bold">요즘 HOT한 장소</span>
         </div>
         <div>표시할 장소가 없습니다.</div>
@@ -19,10 +19,10 @@ export const HotPlaceSection = ({ hotPlaces }: IHotPlaceSectionProps): React.Rea
 
   return (
     <section className="mb-5">
-      <div className="flex justify-between mb-4">
+      <div className="flex justify-between mb-4 pl-2">
         <span className="heading-20-bold">요즘 HOT한 장소</span>
       </div>
-      <div className="flex overflow-x-scroll gap-3 scroll-none">
+      <div className="flex overflow-x-scroll gap-3 scroll-none pb-3 pl-2">
         {hotPlaces.map((place: IHotPlace) => (
           <HotPlaceCard
             key={place.placeId}

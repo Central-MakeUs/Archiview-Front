@@ -14,10 +14,10 @@ export const EditorTrustedSection = ({
 
   return (
     <section className="mb-5">
-      <div className="flex justify-between mb-4">
+      <div className="flex justify-between mb-4 pl-2">
         <span className="heading-20-bold">믿고 먹는 에디터</span>
       </div>
-      <div className="flex overflow-x-scroll gap-3 scroll-none">
+      <div className="flex overflow-x-scroll gap-3 scroll-none pb-3 pl-2">
         {editors.map((editor: IEditor) => (
           <EditorRecommendCard key={editor.editorId} editor={editor} />
         ))}
