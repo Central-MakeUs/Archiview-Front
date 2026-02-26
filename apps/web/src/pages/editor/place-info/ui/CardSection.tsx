@@ -61,14 +61,13 @@ export const CardSection = ({
             </div>
             <div className="caption-12-regular text-neutral-50">{post.description}</div>
             <div className="flex gap-1">
-              <Chip
-                label={Array.isArray(post.postHashTags) ? (post.postHashTags[0] ?? '') : '#테스트'}
-                className="bg-primary-40 text-neutral-10 border-none"
-              />
-              <Chip
-                label={Array.isArray(post.postHashTags) ? (post.postHashTags[1] ?? '') : '#테스트'}
-                className="bg-primary-10 text-primary-40 border-none"
-              />
+              {post.postHashTags.map((tag, index) => (
+                <Chip
+                  key={tag}
+                  label={tag}
+                  className={`border-none ${index >= 1 ? 'bg-primary-10 text-primary-40' : 'bg-primary-40 text-neutral-10'}`}
+                />
+              ))}
             </div>
           </div>
         </div>

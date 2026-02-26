@@ -12,6 +12,7 @@ export const useEditorEditPosts = () => {
       editorPlacePost.editPosts(postId, body),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: editorKeys.getMyPlaceList._def });
+      await queryClient.invalidateQueries({ queryKey: editorKeys.getMyPlaceDetail._def });
       await queryClient.invalidateQueries({ queryKey: editorKeys.getInsightSummery._def });
       toast.success('게시물을 성공적으로 수정 하였습니다');
     },
