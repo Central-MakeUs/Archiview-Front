@@ -9,6 +9,8 @@ import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import { CATEGORIES } from '@/shared/constants/category';
 import { requestNativeCurrentLocation } from '@/shared/lib/native-actions';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
+import type { IPin } from '@/entities/editor/place/model/editorPlace.type';
+import { useGetMyPlacePin } from '@/entities/editor/place/queries/useGetMyPlacePin';
 import { useGetMyPlaceList } from '@/entities/editor/place/queries/useGetMyPlaceList';
 
 import { EditorPlaceItem } from '../../../../entities/editor/place/ui/EditorPlaceItem';
@@ -16,8 +18,6 @@ import { EditorPlaceItem } from '../../../../entities/editor/place/ui/EditorPlac
 import { CategoryOptionTabs, type ICategoryOptionValue } from '../CategoryOptionTabs';
 import { HamburgerIcon } from '@/shared/ui/icon/HamburgerIcon';
 import { EditorProfileCard } from './EditorProfileCard';
-
-import type { IEditorInsightPlace } from '@/entities/editor/place/model/editorPlace.type';
 
 const CATEGORY_ID_TO_MARKER_URL: Record<number, string> = {
   [CATEGORIES[0].id]: '/marker/koreanMarker.png',
@@ -38,6 +38,14 @@ const toSelectedMarkerUrl = (url: string): string => {
   return `${url.slice(0, -4)}Selected.png`;
 };
 
+const getMarkerCategoryId = (pin: IPin): number | undefined => {
+  if (Array.isArray(pin.categoryIds) && pin.categoryIds.length > 0) {
+    return pin.categoryIds[0];
+  }
+
+  return undefined;
+};
+
 interface IEditorProfile {
   nickname: string;
   instagramId?: string;
@@ -47,13 +55,6 @@ interface IEditorProfile {
 }
 
 export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile }) => {
-  type PlaceWithMap = IEditorInsightPlace & {
-    latitude?: number;
-    longitude?: number;
-    categoryIds?: number[];
-    categoryNames?: string[];
-  };
-
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<ICategoryOptionValue>({
@@ -83,20 +84,15 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
     useMock: false,
   });
 
-  const places = (placeListData?.data?.places ?? []) as PlaceWithMap[];
+  const { data: placePinData } = useGetMyPlacePin({
+    filter: mapFilter,
+    categoryId: categoryFilter.categoryIds[0],
+    latitude: nearbyLatitude,
+    longitude: nearbyLongitude,
+    useMock: false,
+  });
 
-  const selectedCategoryNames = useMemo(() => {
-    const names: string[] = [];
-
-    categoryFilter.categoryIds.forEach((id) => {
-      const category = CATEGORIES.find((item) => item.id === id);
-      if (category) {
-        names.push(category.name);
-      }
-    });
-
-    return names;
-  }, [categoryFilter.categoryIds]);
+  const places = placeListData?.data?.places ?? [];
 
   useEffect(() => {
     if (categoryFilter.scope !== '내주변') {
@@ -150,31 +146,8 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
     shouldMoveToNearbyRef.current = false;
   }, [categoryFilter.scope, location]);
 
-  const filteredPlaces = useMemo(() => {
-    if (categoryFilter.categoryIds.length === 0) {
-      return places;
-    }
-
-    return places.filter((place) => {
-      const placeWithCategories = place as { categoryIds?: number[]; categoryNames?: string[] };
-
-      if (
-        Array.isArray(placeWithCategories.categoryIds) &&
-        placeWithCategories.categoryIds.some((id) => categoryFilter.categoryIds.includes(id))
-      ) {
-        return true;
-      }
-
-      if (
-        Array.isArray(placeWithCategories.categoryNames) &&
-        selectedCategoryNames.some((name) => placeWithCategories.categoryNames?.includes(name))
-      ) {
-        return true;
-      }
-
-      return false;
-    });
-  }, [categoryFilter.categoryIds, places, selectedCategoryNames]);
+  const filteredPlaces = places;
+  const mapPins = placePinData?.data?.pins ?? [];
 
   const mapMarkers = useMemo(
     () => [
@@ -190,15 +163,13 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
             },
           ]
         : []),
-      ...filteredPlaces
-        .filter((place) => Number.isFinite(place.latitude) && Number.isFinite(place.longitude))
-        .map((place) => {
+      ...mapPins
+        .filter((pin) => Number.isFinite(pin.latitude) && Number.isFinite(pin.longitude))
+        .map((pin) => {
           const isSelected =
-            selectedMarkerPlaceId !== null && place.placeId === selectedMarkerPlaceId;
+            selectedMarkerPlaceId !== null && pin.placeId === selectedMarkerPlaceId;
 
-          const categoryId =
-            place.categoryIds?.[0] ??
-            CATEGORIES.find((category) => place.categoryNames?.includes(category.name))?.id;
+          const categoryId = getMarkerCategoryId(pin);
 
           const defaultImageSrc =
             (categoryId !== undefined ? CATEGORY_ID_TO_MARKER_URL[categoryId] : undefined) ??
@@ -210,32 +181,48 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
           const imageSrc = isSelected ? selectedImageSrc : defaultImageSrc;
 
           return {
-            id: place.placeId,
-            lat: place.latitude as number,
-            lng: place.longitude as number,
+            id: pin.placeId,
+            lat: pin.latitude,
+            lng: pin.longitude,
             zIndex: isSelected ? 100 : 1,
             imageSrc,
-            imageSize: isSelected ? { width: 100, height: 142 } : { width: 80, height: 114 },
-            imageOffset: isSelected ? { x: 50, y: 142 } : { x: 40, y: 114 },
+            imageSize: isSelected ? { width: 60, height: 85.2 } : { width: 45, height: 63.9 },
+            imageOffset: isSelected ? { x: 30, y: 85.2 } : { x: 22.5, y: 63.9 },
           };
         }),
     ],
-    [categoryFilter.scope, filteredPlaces, location, selectedMarkerPlaceId],
+    [categoryFilter.scope, location, mapPins, selectedMarkerPlaceId],
+  );
+
+  const selectedMarkerPin = useMemo(
+    () => mapPins.find((pin) => pin.placeId === selectedMarkerPlaceId) ?? null,
+    [mapPins, selectedMarkerPlaceId],
   );
 
   const markerFilteredPlaces = useMemo(() => {
     if (selectedMarkerPlaceId === null) return filteredPlaces;
-    return filteredPlaces.filter((place) => place.placeId === selectedMarkerPlaceId);
-  }, [filteredPlaces, selectedMarkerPlaceId]);
+
+    const selectedPinName = selectedMarkerPin?.name;
+
+    return filteredPlaces.filter((place) => {
+      if (place.placeId === selectedMarkerPlaceId) return true;
+
+      if (selectedPinName) {
+        return place.placeName === selectedPinName;
+      }
+
+      return false;
+    });
+  }, [filteredPlaces, selectedMarkerPin, selectedMarkerPlaceId]);
 
   useEffect(() => {
     if (selectedMarkerPlaceId === null) return;
 
-    const exists = filteredPlaces.some((place) => place.placeId === selectedMarkerPlaceId);
+    const exists = mapPins.some((pin) => pin.placeId === selectedMarkerPlaceId);
     if (!exists) {
       setSelectedMarkerPlaceId(null);
     }
-  }, [filteredPlaces, selectedMarkerPlaceId]);
+  }, [mapPins, selectedMarkerPlaceId]);
 
   const handleEditProfile = () => {
     router.push('/mypage/edit-profile');
@@ -270,7 +257,7 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
       <CategoryOptionTabs value={categoryFilter} onChange={setCategoryFilter} />
 
       <div className="flex-1 min-h-0 pt-6">
-        {/* <KakaoMap
+        <KakaoMap
           lat={mapCenter.lat}
           lng={mapCenter.lng}
           level={3}
@@ -283,7 +270,7 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
           onMapClick={() => {
             setSelectedMarkerPlaceId(null);
           }}
-        /> */}
+        />
 
         <BottomSheet
           isOpen={open}

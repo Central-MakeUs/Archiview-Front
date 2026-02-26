@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 
 import '@/shared/styles/globals.css';
 
@@ -15,6 +15,13 @@ export const metadata: Metadata = {
     },
   ],
   description: '너,나 우리의 정보 공유 플랫폼',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export function RootLayout({ children }: { children: React.ReactNode }): React.ReactNode {

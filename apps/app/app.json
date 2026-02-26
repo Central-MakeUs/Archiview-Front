@@ -2,7 +2,7 @@
   "expo": {
     "name": "아카이뷰",
     "slug": "archiview",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/archiviewLogo.png",
     "scheme": "app",
@@ -11,8 +11,9 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.archiview.app",
+      "buildNumber": "2",
       "infoPlist": {
-        "LSApplicationQueriesSchemes": ["instagram"],
+        "LSApplicationQueriesSchemes": ["instagram", "kakaomap"],
         "NSCameraUsageDescription": "프로필 사진을 촬영하기 위해 카메라 접근이 필요합니다.",
         "NSPhotoLibraryUsageDescription": "프로필 사진을 선택하기 위해 사진 보관함 접근이 필요합니다.",
         "NSPhotoLibraryAddUsageDescription": "촬영한 사진을 저장하기 위해 사진 보관함 접근이 필요합니다."

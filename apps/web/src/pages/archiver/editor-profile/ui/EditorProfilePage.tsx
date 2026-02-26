@@ -206,8 +206,8 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
             lng: pin.longitude,
             zIndex: isSelected ? 100 : 1,
             imageSrc,
-            imageSize: isSelected ? { width: 100, height: 142 } : { width: 80, height: 114 },
-            imageOffset: isSelected ? { x: 50, y: 142 } : { x: 40, y: 114 },
+            imageSize: isSelected ? { width: 60, height: 85.2 } : { width: 45, height: 63.9 },
+            imageOffset: isSelected ? { x: 30, y: 85.2 } : { x: 22.5, y: 63.9 },
           };
         }),
     ],
