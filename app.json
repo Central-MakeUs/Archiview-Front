@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "559ed858-ed88-4f6f-b919-7f6f3df8709a"
+      }
+    },
+    "android": {
+      "package": "com.minjoonpark.archiviewfront"
+    }
+  }
+}
