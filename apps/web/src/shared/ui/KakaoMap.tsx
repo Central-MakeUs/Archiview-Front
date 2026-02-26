@@ -104,7 +104,6 @@ export const KakaoMap = ({
         const center = new kakao.maps.LatLng(lat, lng);
 
         const map = new kakao.maps.Map(elRef.current, { center, level });
-        map.setZoomable(false);
         mapRef.current = map;
         setIsMapReady(true);
 
