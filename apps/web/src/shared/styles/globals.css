@@ -146,6 +146,7 @@
 }
 
 * {
+  -webkit-touch-callout: none;
   -webkit-user-drag: none; /* 이미지, 링크 드래그 방지 (Chrome, Safari) */
   -khtml-user-drag: none;
   -moz-user-drag: none;
@@ -158,6 +159,11 @@
   user-select: none;
 
   -webkit-tap-highlight-color: transparent; /* 모바일 탭 하이라이트 제거 */
+}
+
+a,
+img {
+  -webkit-touch-callout: none;
 }
 
 html,

@@ -41,17 +41,25 @@ export const editorKeys = createQueryKeyStore({
   },
 
   /**
-   * @param {{filter?: string, categoryIds?: number[], useMock?: boolean}} params
+   * @param {{filter?: 'ALL' | 'NEARBY', categoryId?: number, latitude?: number, longitude?: number, useMock?: boolean}} params
    * @description 내 장소 지도 핀 조회용 쿼리키를 입력 파라미터로 생성
-   * @returns ['getMyPlacePin', 'applyFilters', filter, categoryIds, useMock]
+   * @returns ['getMyPlacePin', 'applyFilters', filter, categoryId, latitude, longitude, useMock]
    */
   getMyPlacePin: {
     all: null,
-    applyFilters: (params?: { filter?: string; categoryIds?: number[]; useMock?: boolean }) => [
-      params?.filter ?? 'ALL',
-      params?.categoryIds ?? [],
-      params?.useMock ?? false,
-    ],
+    applyFilters: (params?: {
+      filter?: 'ALL' | 'NEARBY';
+      categoryId?: number;
+      latitude?: number;
+      longitude?: number;
+      useMock?: boolean;
+    }) => {
+      const filter = params?.filter ?? 'ALL';
+      const latitude = filter === 'NEARBY' ? (params?.latitude ?? 'none') : 'none';
+      const longitude = filter === 'NEARBY' ? (params?.longitude ?? 'none') : 'none';
+
+      return [filter, params?.categoryId ?? 'none', latitude, longitude, params?.useMock ?? false];
+    },
   },
 
   /**

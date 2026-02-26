@@ -5,7 +5,7 @@ import type {
   IEditorInsightPlaceListResponseDTO,
   IEditorInsightPlaceDetailResponseDTO,
   IEditorInsightResponseDTO,
-  IEditorMyPlaceMapResponseDTO,
+  IEditorMyPlacePinResponseDTO,
   IEditorMeUploadedPlaceListResponseDTO,
   InsightPeriod,
   EditorInsightPlaceSort,
@@ -58,25 +58,39 @@ export const editorPlaceGet = {
     return response;
   },
 
-  // 내 장소 지도 핀 조회 (이거 이제 안쓰나?)
+  // 내 장소 지도 핀 조회
   getMyPlacePin: async (params?: {
     filter?: MapFilter;
-    categoryIds?: number[];
+    categoryId?: number;
+    latitude?: number;
+    longitude?: number;
     useMock?: boolean;
-  }): Promise<IEditorMyPlaceMapResponseDTO> => {
-    const sp = new URLSearchParams();
+  }): Promise<IEditorMyPlacePinResponseDTO> => {
+    const filter = params?.filter ?? 'ALL';
+    const searchParams = new URLSearchParams();
 
-    sp.set('filter', params?.filter ?? 'ALL');
-    sp.set('useMock', String(params?.useMock ?? false));
+    searchParams.set('filter', filter);
+    searchParams.set('useMock', String(params?.useMock ?? false));
 
-    (params?.categoryIds ?? []).forEach((id) => {
-      sp.append('categoryIds', String(id));
-    });
+    if (Number.isFinite(params?.categoryId)) {
+      searchParams.set('categoryId', String(params?.categoryId));
+    }
+
+    if (filter === 'NEARBY') {
+      if (Number.isFinite(params?.latitude)) {
+        searchParams.set('latitude', String(params?.latitude));
+      }
+
+      if (Number.isFinite(params?.longitude)) {
+        searchParams.set('longitude', String(params?.longitude));
+      }
+    }
+
     const response = await clientApi
       .get(`${EDITOR_ENDPOINTS.me.map.places}`, {
-        searchParams: sp,
+        searchParams,
       })
-      .json<IEditorMyPlaceMapResponseDTO>();
+      .json<IEditorMyPlacePinResponseDTO>();
     return response;
   },
 

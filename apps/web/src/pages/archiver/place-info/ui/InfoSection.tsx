@@ -10,7 +10,35 @@ import {
 } from '@/shared/constants/url';
 import { Button } from '@/shared/ui/button';
 
-import { isAppWebView, openExternalLinkInWebViewOrBrowser } from '@/shared/lib/native-actions';
+import {
+  isAppWebView,
+  openExternalLinkInWebViewOrBrowser,
+  requestNativeCurrentLocation,
+  tryOpenExternalUrlViaNative,
+} from '@/shared/lib/native-actions';
+
+const createKakaoMapAppSearchUrl = (query: string) => {
+  return `kakaomap://search?q=${encodeURIComponent(normalizeKakaoMapSearchQuery(query))}`;
+};
+
+const createKakaoMapAppLookUrl = (latitude: number, longitude: number) => {
+  return `kakaomap://look?p=${latitude},${longitude}`;
+};
+
+const createKakaoMapAppRouteUrl = (params: {
+  toLatitude: number;
+  toLongitude: number;
+  fromLatitude?: number;
+  fromLongitude?: number;
+}) => {
+  const { toLatitude, toLongitude, fromLatitude, fromLongitude } = params;
+
+  if (Number.isFinite(fromLatitude) && Number.isFinite(fromLongitude)) {
+    return `kakaomap://route?sp=${fromLatitude},${fromLongitude}&ep=${toLatitude},${toLongitude}&by=FOOT`;
+  }
+
+  return `kakaomap://route?ep=${toLatitude},${toLongitude}&by=FOOT`;
+};
 
 interface IPlaceDetail {
   placeId: number;
@@ -36,16 +64,31 @@ export const InfoSection = ({
   recordNumber?: number;
 }) => {
   console.log(place);
-  const handleClickOpenKakaoMap = () => {
+  const handleClickOpenKakaoMap = async () => {
     const address = (place?.roadAddressName || place?.addressName)?.trim();
     if (!address) return;
 
-    const url = createKakaoMapSearchUrl(address);
+    const latitude = place?.latitude;
+    const longitude = place?.longitude;
 
-    openExternalLinkInWebViewOrBrowser(url);
+    const webUrl = createKakaoMapSearchUrl(address);
+    const appUrl =
+      typeof latitude === 'number' && typeof longitude === 'number'
+        ? createKakaoMapAppLookUrl(latitude, longitude)
+        : createKakaoMapAppSearchUrl(address);
+
+    if (isAppWebView()) {
+      const openedByApp = await tryOpenExternalUrlViaNative(appUrl);
+      if (!openedByApp) {
+        openExternalLinkInWebViewOrBrowser(webUrl);
+      }
+      return;
+    }
+
+    openExternalLinkInWebViewOrBrowser(webUrl);
   };
 
-  const handleClickOpenKakaoMapDirections = () => {
+  const handleClickOpenKakaoMapDirections = async () => {
     const rawToName = (place?.roadAddressName || place?.addressName)?.trim();
     const toName = rawToName ? normalizeKakaoMapSearchQuery(rawToName) : '';
     const toLatitude = place?.latitude;
@@ -56,9 +99,39 @@ export const InfoSection = ({
     if (!Number.isFinite(toLatitude) || !Number.isFinite(toLongitude)) return;
 
     if (isAppWebView()) {
-      // TODO: WebView/RN 환경에서는 브릿지로 현재 위치를 가져와서
-      // `openExternalUrl`/`openInAppBrowser`로 길찾기 URL을 열어야 함.
-      // (참고: web 브라우저는 `navigator.geolocation`을 사용)
+      const currentLocation = await requestNativeCurrentLocation();
+
+      const fromLatitude = currentLocation?.coords.latitude;
+      const fromLongitude = currentLocation?.coords.longitude;
+
+      const appUrl = createKakaoMapAppRouteUrl({
+        toLatitude,
+        toLongitude,
+        fromLatitude,
+        fromLongitude,
+      });
+
+      const hasFromCoords =
+        typeof fromLatitude === 'number' &&
+        typeof fromLongitude === 'number' &&
+        Number.isFinite(fromLatitude) &&
+        Number.isFinite(fromLongitude);
+
+      const webUrl = hasFromCoords
+        ? createKakaoMapRouteFromToUrl({
+            fromName: '현재위치',
+            fromLatitude,
+            fromLongitude,
+            toName,
+            toLatitude,
+            toLongitude,
+          })
+        : createKakaoMapToUrl(toName, toLatitude, toLongitude);
+
+      const openedByApp = await tryOpenExternalUrlViaNative(appUrl);
+      if (!openedByApp) {
+        openExternalLinkInWebViewOrBrowser(webUrl);
+      }
       return;
     }
 
@@ -163,7 +236,9 @@ export const InfoSection = ({
             <button
               type="button"
               className="text-primary-40 underline cursor-pointer bg-transparent border-0 p-0"
-              onClick={handleClickOpenKakaoMap}
+              onClick={() => {
+                handleClickOpenKakaoMap().catch(() => undefined);
+              }}
             >
               지도보기
             </button>
@@ -176,7 +251,12 @@ export const InfoSection = ({
       </section>
 
       <div className="pt-6 px-5">
-        <Button className="w-full" onClick={handleClickOpenKakaoMapDirections}>
+        <Button
+          className="w-full"
+          onClick={() => {
+            handleClickOpenKakaoMapDirections().catch(() => undefined);
+          }}
+        >
           지도에서 길 찾기
         </Button>
       </div>

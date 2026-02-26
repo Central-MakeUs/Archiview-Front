@@ -21,6 +21,9 @@ const DEFAULT_CATEGORY_ID = NEAR_CATEGORY_ID;
 
 const FALLBACK_LATITUDE = 37.5665;
 const FALLBACK_LONGITUDE = 126.978;
+// TODO : 폴백 이미지 제거..
+const FALLBACK_PLACE_IMAGE = '/images/TestImage.png';
+const MY_LOCATION_MARKER_URL = '/marker/myMarker.png';
 
 export const ArchiverCategoryPage = (): React.ReactElement => {
   const router = useRouter();
@@ -141,6 +144,20 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
             lat={coords?.latitude ?? FALLBACK_LATITUDE}
             lng={coords?.longitude ?? FALLBACK_LONGITUDE}
             level={3}
+            markers={
+              coords
+                ? [
+                    {
+                      lat: coords.latitude,
+                      lng: coords.longitude,
+                      zIndex: 200,
+                      imageSrc: MY_LOCATION_MARKER_URL,
+                      imageSize: { width: 48, height: 68 },
+                      imageOffset: { x: 24, y: 68 },
+                    },
+                  ]
+                : []
+            }
           />
 
           <BottomSheet
@@ -177,7 +194,13 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
                     key={p.placeId}
                     thumbnail={
                       <div className="relative h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30">
-                        <Image src={p.imageUrl} alt={p.placeName} fill className="object-cover" />
+                        <Image
+                          src={p.imageUrl || FALLBACK_PLACE_IMAGE}
+                          alt={p.placeName}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
                       </div>
                     }
                     onClick={() => router.push(`/archiver/place-info/${p.placeId}`)}
@@ -235,7 +258,12 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
                     key={p.placeId}
                     thumbnail={
                       <div className="relative h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30">
-                        <Image src={p.imageUrl} alt={p.placeName} fill className="object-cover" />
+                        <Image
+                          src={p.imageUrl || FALLBACK_PLACE_IMAGE}
+                          alt={p.placeName}
+                          fill
+                          className="object-cover"
+                        />
                       </div>
                     }
                     onClick={() => router.push(`/archiver/place-info/${p.placeId}`)}

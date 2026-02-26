@@ -129,11 +129,18 @@ export interface IEditorInsight {
   viewCount: number;
 }
 
-export interface IEditorMyPlaceMapResponse {
-  postId: number;
-  url: string;
-  hashTag: string;
-  placeInfoResponseList: IPlaceInfo[];
+export interface IPin {
+  placeId: number;
+  name: string;
+  placeUrl: string;
+  phoneNumber: string;
+  latitude: number;
+  longitude: number;
+  categoryIds: number[];
+}
+
+export interface IEditorMyPlacePinResponse {
+  pins: IPin[];
 }
 
 export interface IEditorMeUploadedPlaceList {
@@ -181,7 +188,7 @@ export type IEditorInsightPlaceDetailResponseDTO = ApiResponse<IEditorInsightPla
 export type IEditorInsightResponseDTO = ApiResponse<IEditorInsight>;
 
 // 에디터 내 장소 핀 조회
-export type IEditorMyPlaceMapResponseDTO = ApiResponse<IEditorMyPlaceMapResponse>;
+export type IEditorMyPlacePinResponseDTO = ApiResponse<IEditorMyPlacePinResponse>;
 
 // 에디터 내가 업로드한 장소 목록 조회
 export type IEditorMeUploadedPlaceListResponseDTO = ApiResponse<IEditorMeUploadedPlaceList>;

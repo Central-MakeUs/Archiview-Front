@@ -5,7 +5,11 @@ import { useRouter } from 'next/navigation';
 import type { GeoLocation } from '@archiview/webview-bridge-contract';
 
 import { CATEGORIES } from '@/shared/constants/category';
-import { requestNativeCurrentLocation } from '@/shared/lib/native-actions';
+import {
+  isAppWebView,
+  openNativeAppSettings,
+  requestNativeCurrentLocation,
+} from '@/shared/lib/native-actions';
 import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import {
@@ -18,6 +22,7 @@ import { useGetEditorPlacePins } from '@/entities/archiver/profile/queries/useGe
 import type { IPin } from '@/entities/archiver/profile/model/archiverProfile.type';
 
 import { ArchiverPlaceItem } from '../../my-archive/ui/ArchiverPlaceItem';
+import { LocationPermissionModal } from '../../../../shared/ui/common/Modal/LocationPermissionModal';
 import { EditorProfileCard } from './EditorProfileCard';
 import { SortDropdown } from './SortDropDown';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
@@ -26,24 +31,25 @@ import { useMinLoading } from '@/shared/hooks/useMinLoading';
 type SortKey = 'LATEST' | 'OLDEST';
 
 const CATEGORY_ID_TO_MARKER_URL: Record<number, string> = {
-  [CATEGORIES[0].id]: '/marker/koreanMarker.svg',
-  [CATEGORIES[1].id]: '/marker/westernMarker.svg',
-  [CATEGORIES[2].id]: '/marker/japaneseMarker.svg',
-  [CATEGORIES[3].id]: '/marker/cafeMarker.svg',
-  [CATEGORIES[4].id]: '/marker/dateMarker.svg',
-  [CATEGORIES[5].id]: '/marker/izakayaMarker.svg',
-  [CATEGORIES[6].id]: '/marker/etcMarker.svg',
+  [CATEGORIES[0].id]: '/marker/koreanMarker.png',
+  [CATEGORIES[1].id]: '/marker/westernMarker.png',
+  [CATEGORIES[2].id]: '/marker/japaneseMarker.png',
+  [CATEGORIES[3].id]: '/marker/cafeMarker.png',
+  [CATEGORIES[4].id]: '/marker/dateMarker.png',
+  [CATEGORIES[5].id]: '/marker/izakayaMarker.png',
+  [CATEGORIES[6].id]: '/marker/etcMarker.png',
 };
 
-const DEFAULT_MARKER_URL = '/marker/defaultMarker.svg';
-const DEFAULT_SELECTED_MARKER_URL = '/marker/defaultMarkerSelected.svg';
+const DEFAULT_MARKER_URL = '/marker/defaultMarker.png';
+const DEFAULT_SELECTED_MARKER_URL = '/marker/defaultMarkerSelected.png';
+const MY_LOCATION_MARKER_URL = '/marker/myMarker.png';
 const CATEGORY_NAME_BY_ID: Record<number, string> = Object.fromEntries(
   CATEGORIES.map((category) => [category.id, category.name]),
 );
 
 const toSelectedMarkerUrl = (url: string): string => {
-  if (!url.endsWith('.svg')) return url;
-  return `${url.slice(0, -4)}Selected.svg`;
+  if (!url.endsWith('.png')) return url;
+  return `${url.slice(0, -4)}Selected.png`;
 };
 
 const getMarkerCategoryId = (pin: IPin): number | undefined => {
@@ -72,6 +78,7 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   const [mapCenter, setMapCenter] = useState({ lat: 37.5665, lng: 126.978 });
   const [bottomSheetHeight, setBottomSheetHeight] = useState(400);
   const [selectedMarkerPlaceId, setSelectedMarkerPlaceId] = useState<number | null>(null);
+  const [isLocationPermissionModalOpen, setIsLocationPermissionModalOpen] = useState(false);
   const shouldMoveToNearbyRef = useRef(false);
 
   const mapFilter = categoryFilter.scope === '내주변' ? 'NEARBY' : 'ALL';
@@ -104,6 +111,7 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
     if (categoryFilter.scope !== '내주변') {
       shouldMoveToNearbyRef.current = false;
       setLocation(null);
+      setIsLocationPermissionModalOpen(false);
       return;
     }
 
@@ -114,12 +122,21 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
     const run = async () => {
       const loc = await requestNativeCurrentLocation();
       if (cancelled) return;
+
+      if (!loc) {
+        setLocation(null);
+        setIsLocationPermissionModalOpen(true);
+        return;
+      }
+
       setLocation(loc);
+      setIsLocationPermissionModalOpen(false);
     };
 
     run().catch(() => {
       if (cancelled) return;
       setLocation(null);
+      setIsLocationPermissionModalOpen(true);
     });
 
     return () => {
@@ -155,8 +172,20 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   const mapPins = placePinsData?.data?.pins ?? [];
 
   const mapMarkers = useMemo(
-    () =>
-      mapPins
+    () => [
+      ...(categoryFilter.scope === '내주변' && location
+        ? [
+            {
+              lat: location.coords.latitude,
+              lng: location.coords.longitude,
+              zIndex: 200,
+              imageSrc: MY_LOCATION_MARKER_URL,
+              imageSize: { width: 48, height: 68 },
+              imageOffset: { x: 24, y: 68 },
+            },
+          ]
+        : []),
+      ...mapPins
         .filter((pin) => Number.isFinite(pin.latitude) && Number.isFinite(pin.longitude))
         .map((pin) => {
           const isSelected =
@@ -177,11 +206,12 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
             lng: pin.longitude,
             zIndex: isSelected ? 100 : 1,
             imageSrc,
-            imageSize: isSelected ? { width: 100, height: 100 } : { width: 80, height: 80 },
-            imageOffset: isSelected ? { x: 23, y: 46 } : { x: 20, y: 40 },
+            imageSize: isSelected ? { width: 60, height: 85.2 } : { width: 45, height: 63.9 },
+            imageOffset: isSelected ? { x: 30, y: 85.2 } : { x: 22.5, y: 63.9 },
           };
         }),
-    [mapPins, selectedMarkerPlaceId],
+    ],
+    [categoryFilter.scope, location, mapPins, selectedMarkerPlaceId],
   );
 
   const places = placeListData?.data?.postPlaces ?? [];
@@ -260,6 +290,23 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
 
   return (
     <div className="flex h-full flex-col min-h-0">
+      <LocationPermissionModal
+        isOpen={isLocationPermissionModalOpen}
+        isWebView={isAppWebView()}
+        onClose={() => {
+          setIsLocationPermissionModalOpen(false);
+        }}
+        onOpenSettings={async () => {
+          if (!isAppWebView()) return;
+
+          try {
+            await openNativeAppSettings();
+          } finally {
+            setIsLocationPermissionModalOpen(false);
+          }
+        }}
+      />
+
       <div className="px-5">
         <EditorProfileCard editorId={editorId} editorData={editorData?.data} />
       </div>
