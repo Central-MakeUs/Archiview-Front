@@ -22,18 +22,21 @@ export const HotPlaceSection = ({ hotPlaces }: IHotPlaceSectionProps): React.Rea
       <div className="flex justify-between mb-4 pl-2">
         <span className="heading-20-bold">요즘 HOT한 장소</span>
       </div>
-      <div className="flex overflow-x-scroll gap-3 scroll-none pb-3 pl-2">
-        {hotPlaces.map((place: IHotPlace) => (
-          <HotPlaceCard
-            key={place.placeId}
-            placeId={place.placeId}
-            imageUrl={place.imageUrl}
-            name={place.name}
-            address={place.address}
-            categoryNames={place.categoryNames ?? []}
-            hashTags={place.hashTags ?? []}
-          />
-        ))}
+      <div className="-mx-5 overflow-x-auto scroll-none momentum-scroll-x py-2 -my-2">
+        <div className="flex gap-3 pl-5 pr-5">
+          {hotPlaces.map((place: IHotPlace) => (
+            <HotPlaceCard
+              key={place.placeId}
+              placeId={place.placeId}
+              imageUrl={place.imageUrl}
+              name={place.name}
+              address={place.address}
+              categoryNames={place.categoryNames ?? []}
+              hashTags={place.hashTags ?? []}
+            />
+          ))}
+        </div>
+
       </div>
     </section>
   );

@@ -41,9 +41,14 @@ export const Button = ({
     justify-center
     font-semibold
     rounded-xl
+    transition-all
+    duration-200
+    ease-out
+    active:scale-95
     focus:outline-none
     disabled:opacity-50
     disabled:cursor-not-allowed
+    disabled:active:scale-100
   `;
 
   // variant별 스타일 정의

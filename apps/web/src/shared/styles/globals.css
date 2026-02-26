@@ -143,6 +143,12 @@
   .scroll-none::-webkit-scrollbar {
     display: none;
   }
+
+  .momentum-scroll-x {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: auto;
+    touch-action: pan-x;
+  }
 }
 
 * {

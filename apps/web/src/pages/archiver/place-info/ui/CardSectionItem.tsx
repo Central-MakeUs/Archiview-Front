@@ -1,9 +1,19 @@
 import Image from 'next/image';
+import { useMemo } from 'react';
 
 import { Chip } from '@/shared/ui/Chip';
 import { FolderIcon } from '@/shared/ui/icon';
 import { openInstagramUrlDeepLinkOrPopup } from '@/shared/lib/external/openInstagramUrl.client';
 import { usePostInstagramFlow } from '@/entities/archiver/place/mutation/usePostInstagramFlow';
+
+const getVisibleHashTags = (hashTags: string[]) => {
+  if (hashTags.length <= 2) {
+    return hashTags;
+  }
+
+  const hiddenIndex = Math.floor(Math.random() * 3);
+  return hashTags.filter((_, index) => index !== hiddenIndex);
+};
 
 export interface IPostPlace {
   postPlaceId: number;
@@ -28,6 +38,7 @@ export const CardSectionItem = ({
   onClickReport: (postPlaceId: number) => void;
 }) => {
   const { mutate: postInstagramFlow } = usePostInstagramFlow();
+  const visibleHashTags = useMemo(() => getVisibleHashTags(post.hashTags), [post.hashTags]);
 
   return (
     <div className="flex h-full">
@@ -74,8 +85,16 @@ export const CardSectionItem = ({
         </div>
         <div className="caption-12-regular text-neutral-50">{post.description}</div>
         <div className="flex gap-1">
-          {post.hashTags.map((tag) => (
-            <Chip key={tag} label={tag} className="bg-primary-40 text-neutral-10 border-none" />
+          {visibleHashTags.map((tag, index) => (
+            <Chip
+              key={`${post.postPlaceId}-${tag}-${index}`}
+              label={tag}
+              className={
+                index === 0
+                  ? 'bg-primary-40 text-neutral-10 border-none caption-12-medium'
+                  : 'bg-primary-10 text-primary-40 border-none caption-12-medium'
+              }
+            />
           ))}
           <button
             type="button"

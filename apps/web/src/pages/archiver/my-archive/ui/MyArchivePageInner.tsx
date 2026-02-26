@@ -42,6 +42,13 @@ const toSelectedMarkerUrl = (url: string): string => {
   return `${url.slice(0, -4)}Selected.png`;
 };
 
+const getMarkerScaleByLevel = (level: number): number => {
+  if (level >= 9) return 0.60;
+  if (level >= 7) return 0.60;
+  if (level >= 5) return 0.80;
+  return 1;
+};
+
 const getMarkerCategoryId = (pin: IPin): number | undefined => {
   if (Array.isArray(pin.categoryIds) && pin.categoryIds.length > 0) {
     return pin.categoryIds[0];
@@ -65,6 +72,7 @@ export const MyArchivePageInner = () => {
   });
   const [location, setLocation] = useState<GeoLocation | null>(null);
   const [mapCenter, setMapCenter] = useState({ lat: 37.5665, lng: 126.978 });
+  const [mapLevel, setMapLevel] = useState(3);
   const [bottomSheetHeight, setBottomSheetHeight] = useState(400);
   const [selectedMarkerPlaceId, setSelectedMarkerPlaceId] = useState<number | null>(null);
   const [isLocationPermissionModalOpen, setIsLocationPermissionModalOpen] = useState(false);
@@ -155,8 +163,10 @@ export const MyArchivePageInner = () => {
     );
   }, [archivePins, categoryFilter.categoryIds]);
 
-  const mapMarkers = useMemo(
-    () => [
+  const mapMarkers = useMemo(() => {
+    const markerScale = getMarkerScaleByLevel(mapLevel);
+
+    return [
       ...(categoryFilter.scope === '내주변' && location
         ? [
             {
@@ -164,8 +174,8 @@ export const MyArchivePageInner = () => {
               lng: location.coords.longitude,
               zIndex: 200,
               imageSrc: MY_LOCATION_MARKER_URL,
-              imageSize: { width: 48, height: 68 },
-              imageOffset: { x: 24, y: 68 },
+              imageSize: { width: 48 * markerScale, height: 68 * markerScale },
+              imageOffset: { x: 24 * markerScale, y: 68 * markerScale },
             },
           ]
         : []),
@@ -190,13 +200,16 @@ export const MyArchivePageInner = () => {
             lng: pin.longitude,
             zIndex: isSelected ? 100 : 1,
             imageSrc,
-            imageSize: isSelected ? { width: 60, height: 85.2 } : { width: 45, height: 63.9 },
-            imageOffset: isSelected ? { x: 30, y: 85.2 } : { x: 22.5, y: 63.9 },
+            imageSize: isSelected
+              ? { width: 60 * markerScale, height: 85.2 * markerScale }
+              : { width: 45 * markerScale, height: 63.9 * markerScale },
+            imageOffset: isSelected
+              ? { x: 30 * markerScale, y: 85.2 * markerScale }
+              : { x: 22.5 * markerScale, y: 63.9 * markerScale },
           };
         }),
-    ],
-    [categoryFilter.scope, categoryFilteredPins, location, selectedMarkerPlaceId],
-  );
+    ];
+  }, [categoryFilter.scope, categoryFilteredPins, location, mapLevel, selectedMarkerPlaceId]);
 
   const places = data?.data?.postPlaces ?? [];
 
@@ -266,12 +279,18 @@ export const MyArchivePageInner = () => {
       />
 
       <CategoryOptionTabs value={categoryFilter} onChange={setCategoryFilter} />
-      <div className="flex-1 min-h-0 pt-6">
+      <div className="flex-1 min-h-0 pt-4">
         <KakaoMap
           lat={mapCenter.lat}
           lng={mapCenter.lng}
           level={3}
           markers={mapMarkers}
+          onReady={({ kakao, map }) => {
+            setMapLevel(map.getLevel());
+            kakao.maps.event.addListener(map, 'zoom_changed', () => {
+              setMapLevel(map.getLevel());
+            });
+          }}
           onMarkerClick={({ id }) => {
             if (typeof id !== 'number') return;
             setSelectedMarkerPlaceId(id);
