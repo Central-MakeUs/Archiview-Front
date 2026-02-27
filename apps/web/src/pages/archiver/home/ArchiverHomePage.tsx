@@ -69,17 +69,19 @@ export const ArchiverHomePage = (): React.ReactElement => {
             className="absolute top-8 right-9.75"
           />
           <div className="absolute left-5 right-5 bottom-0 translate-y-1/2">
-            <SearchBar
-              placeholder="게시물 URL 또는 키워드를 검색해보세요."
-              value={searchValue}
-              onChange={(value) => {
-                setSearchValue(value);
-              }}
-              onSubmit={() => {
-                router.push(`/archiver/search-result?search=${searchValue}`);
-              }}
-              className="shadow-default"
-            />
+            <span onClick={() => router.push('/archiver/search-result')}>
+              <SearchBar
+                placeholder="게시물 URL 또는 키워드를 검색해보세요."
+                value={searchValue}
+                // onChange={(value) => {
+                //   setSearchValue(value);
+                // }}
+                // onSubmit={() => {
+                //   router.push(`/archiver/search-result?search=${searchValue}`);
+                // }}
+                className="shadow-default"
+              />
+            </span>
           </div>
         </div>
         <div className="p-5 pt-12">

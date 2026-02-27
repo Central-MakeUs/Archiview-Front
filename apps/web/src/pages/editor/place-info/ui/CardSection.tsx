@@ -27,8 +27,8 @@ export const CardSection = ({
           <div className="rounded-l-default bg-neutral-40 w-20 relative overflow-hidden">
             <img alt="썸네일" src={post.imageUrl} className="w-full h-full object-cover" />
           </div>
-          <div className="rounded-r-default bg-[#F7F7F8] w-full flex flex-col gap-1 py-3 pl-3 pr-5">
-            <div className="flex justify-between pb-3 border-b border-neutral-30">
+          <div className="rounded-r-default bg-[#F7F7F8] w-full flex flex-col min-h-0 py-3 pl-3 pr-5">
+            <div className="flex justify-between pb-3 border-b border-neutral-30 shrink-0">
               <div className="body-14-pretendard">
                 {post.editorName}
                 <p className="caption-12-semibold text-neutral-50">@ {post.editorInstagramId}</p>
@@ -59,8 +59,10 @@ export const CardSection = ({
                 </button>
               </div>
             </div>
-            <div className="caption-12-regular text-neutral-50">{post.description}</div>
-            <div className="flex gap-1">
+            <div className="flex-1 min-h-0 caption-12-regular text-neutral-50 overflow-hidden">
+              {post.description}
+            </div>
+            <div className="flex gap-1 mt-auto pt-2 shrink-0">
               {post.postHashTags.map((tag, index) => (
                 <Chip
                   key={tag}
