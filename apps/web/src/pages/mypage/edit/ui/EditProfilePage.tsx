@@ -195,7 +195,7 @@ export const EditProfilePage = () => {
         await queryClient.invalidateQueries({
           queryKey: editorKeys.getEditorMeProfile.all.queryKey,
         });
-        router.push('/mypage');
+        router.push('/editor/profile');
       },
       onError: (error) => {
         const kyError = error as ExtendedKyHttpError;

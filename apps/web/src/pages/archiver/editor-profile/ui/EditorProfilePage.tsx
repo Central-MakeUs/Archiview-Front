@@ -371,9 +371,7 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
               description={p.description}
               savedCount={p.saveCount}
               viewCount={p.viewCount}
-              onClick={() =>
-                router.push(`/archiver/place-info/${p.postPlaceId}?editor=${editorId}`)
-              }
+              onClick={() => router.push(`/archiver/place-info/${p.placeId}?editor=${editorId}`)}
             />
           ))}
         </BottomSheet>
