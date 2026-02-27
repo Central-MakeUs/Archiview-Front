@@ -52,7 +52,7 @@ export const CardSection = ({
               </div>
               <div className="caption-12-regular text-neutral-50">{post.description}</div>
               <div className="flex gap-1">
-                {visibleHashTags.map((hashTag, index) => (
+                {(visibleHashTagsByPostId.get(post.postPlaceId) ?? []).map((hashTag, index) => (
                   <Chip
                     key={`${post.postPlaceId}-${hashTag}-${index}`}
                     label={hashTag}
@@ -78,8 +78,8 @@ export const CardSection = ({
               ))}
             </div>
           </div>
-        );
-      })}
+        </div>
+      ))}
     </section>
   );
 };
