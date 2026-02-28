@@ -9,6 +9,7 @@ interface ISearchBarProps {
   onSubmit: () => void;
   placeholder?: string;
   className?: string;
+  readOnly?: boolean;
 }
 
 export const SearchBar = ({
@@ -17,12 +18,13 @@ export const SearchBar = ({
   onSubmit,
   placeholder = '게시물 URL 또는 키워드를 검색해보세요.',
   className,
+  readOnly = false,
 }: ISearchBarProps): React.ReactElement => {
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        onSubmit();
+        if (!readOnly) onSubmit();
       }}
       className={cn('flex w-full items-center gap-2.5 rounded-full bg-white px-5 h-13.5', className)}
     >
@@ -33,8 +35,13 @@ export const SearchBar = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="min-w-0 flex-1 bg-transparent outline-none body-14-semibold placeholder:font-normal placeholder:text-neutral-50"
+        className={cn(
+          'min-w-0 flex-1 bg-transparent outline-none body-14-semibold placeholder:font-normal placeholder:text-neutral-50',
+          readOnly && 'pointer-events-none',
+        )}
         enterKeyHint="search"
+        readOnly={readOnly}
+        tabIndex={readOnly ? -1 : undefined}
       />
 
       {value ? (

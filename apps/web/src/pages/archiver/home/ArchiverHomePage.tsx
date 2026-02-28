@@ -73,6 +73,7 @@ export const ArchiverHomePage = (): React.ReactElement => {
             onClick={() => router.push('/archiver/search-result')}
           >
             <SearchBar
+              readOnly
               placeholder="게시물 URL 또는 키워드를 검색해보세요."
               value={searchValue}
               onChange={(value) => setSearchValue(value)}
