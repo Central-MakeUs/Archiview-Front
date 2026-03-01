@@ -15,6 +15,7 @@ import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { SearchBar } from '@/shared/ui/SearchBar';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
 
 export const ArchiverHomePage = (): React.ReactElement => {
   useAuth();
@@ -43,7 +44,7 @@ export const ArchiverHomePage = (): React.ReactElement => {
 
   if (showLoading) return <LoadingPage text="아카이버 홈 화면으로 이동중입니다." role="ARCHIVER" />;
 
-  if (isError) return <div className="mb-5">에러</div>;
+  if (isError) return <ErrorPage />;
 
   const hotPlaces = hotPlaceData?.data?.places ?? [];
   const editorTrusted = editorTrustedData?.data?.editors ?? [];

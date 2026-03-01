@@ -3,6 +3,7 @@
 import { useGetMyFollows } from '@/entities/archiver/profile/queries/useGetMyFollows';
 import { EditorProfileItem } from '@/features/archiver/profile/ui/EditorProfileItem';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
+import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 
 export interface IEditor {
@@ -23,7 +24,7 @@ export const FollowListPage = () => {
   if (!data || showLoading)
     return <LoadingPage text="팔로잉 목록을 불러오는 중입니다." role="ARCHIVER" />;
 
-  if (isError) return <div className="mb-5">에러</div>;
+  if (isError) return <ErrorPage />;
 
   return (
     <div>

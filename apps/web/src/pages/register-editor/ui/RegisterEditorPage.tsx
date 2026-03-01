@@ -24,6 +24,7 @@ import {
 } from '@/shared/lib/native-actions';
 
 import { RegisterFinishModal } from './RegisterFinishModal';
+import { toast } from 'sonner';
 
 export const RegisterEditorPage = () => {
   const router = useRouter();
@@ -226,7 +227,7 @@ export const RegisterEditorPage = () => {
         setIsFinishModalOpen(true);
       },
       onError: (err) => {
-        // TODO: 에러 처리(토스트 등)
+        toast.error((err as Error).message);
       },
     });
   };

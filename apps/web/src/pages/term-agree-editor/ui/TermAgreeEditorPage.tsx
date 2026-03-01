@@ -7,6 +7,7 @@ import { Button } from '@/shared/ui/button';
 import { useAuth } from '@/entities/auth/hooks/useAuth';
 import { CheckItem } from '@/pages/term-agree/ui/CheckItem';
 import { useRegisterOnboarding } from '@/entities/auth/mutations/useRegisterOnboarding';
+import { toast } from 'sonner';
 
 export const TermAgreeEditorPage = () => {
   const router = useRouter();
@@ -31,8 +32,7 @@ export const TermAgreeEditorPage = () => {
 
       router.push(`/register-finish?role=EDITOR`);
     } catch (e) {
-      // TODO: 토스트/에러 처리
-      console.error(e);
+      toast.error((e as Error).message);
     }
   };
 
