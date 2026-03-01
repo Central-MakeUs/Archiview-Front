@@ -4,6 +4,7 @@ import { useGetBlockedEditors } from '@/entities/archiver/follow/queries/useGetB
 
 import { BlockedEditorProfileItem } from './BlockedEditorProfileItem';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
+import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
 
 export interface IBlockedEditor {
   editorId: string;
@@ -27,7 +28,7 @@ export const BlockedEditorPage = () => {
   const blockedEditors = data?.data?.editors ?? [];
 
   if (isLoading) return <LoadingPage text="차단된 에디터를 불러오는 중입니다." role="ARCHIVER" />;
-  if (isError) return <div>에러: {(error as Error)?.message ?? '알 수 없는 오류'}</div>;
+  if (isError) return <ErrorPage />;
 
   console.log(data?.data?.editors);
   return (

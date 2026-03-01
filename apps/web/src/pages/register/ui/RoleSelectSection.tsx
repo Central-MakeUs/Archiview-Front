@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { Kard } from '@/shared/ui/common/Kard';
 import { Button } from '@/shared/ui/button';
 import { useRegisterOnboarding } from '@/entities/auth/mutations/useRegisterOnboarding';
+import { toast } from 'sonner';
 
 type Role = 'EDITOR' | 'ARCHIVER';
 
@@ -33,8 +34,7 @@ export const RoleSelectSection = () => {
 
           router.push(`/register-finish?role=${role}`);
         } catch (e) {
-          // TODO: 토스트/에러 처리
-          console.error(e);
+          toast.error((e as Error).message);
         }
         break;
       }
