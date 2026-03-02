@@ -10,7 +10,7 @@ export default function HomeLayout({
 }): React.ReactElement {
   return (
     <div
-      className="flex h-full flex-col"
+      className="flex h-dvh flex-col"
       style={{ '--navigation-footer-height': '72px' } as React.CSSProperties}
     >
       <LogoHeader />

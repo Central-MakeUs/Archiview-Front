@@ -24,6 +24,7 @@ interface IEditorMyPageProps {
   onReportBug: () => void;
   onTermsClick: (key: string) => void;
   onSwitchRole: () => void;
+  isSwitchingRole: boolean;
 }
 
 export const EditorMyPage = ({
@@ -33,6 +34,7 @@ export const EditorMyPage = ({
   onReportBug,
   onTermsClick,
   onSwitchRole,
+  isSwitchingRole,
 }: IEditorMyPageProps): React.ReactElement => {
   const router = useRouter();
   const { data: editorUserData } = useEditorGetMyProfile();
@@ -71,6 +73,7 @@ export const EditorMyPage = ({
           variant="contained"
           fullwidth
           onClick={onSwitchRole}
+          disabled={isSwitchingRole}
           className="rounded-[999px] w-[228px] h-[67px]"
         >
           <EllipseArrowIcons className="mr-1" />

@@ -19,7 +19,6 @@ import { toast } from 'sonner';
 import { ExtendedKyHttpError } from '@/shared/lib/api/common';
 import { useQueryClient } from '@tanstack/react-query';
 import { editorKeys } from '@/shared/lib/query-keys';
-import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import { CameraPermissionModal } from '@/shared/ui/permission/CameraPermissionModal';
 import { ImageSourceBottomSheetModal } from '@/shared/ui/permission/ImageSourceBottomSheetModal';
 import {
@@ -34,7 +33,7 @@ export const EditProfilePage = () => {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
 
-  const { data: profileData, isLoading } = useEditorGetMyProfile();
+  const { data: profileData } = useEditorGetMyProfile();
   const { mutate: editProfile } = useEditEditorProfile();
 
   const [profileImagePreViewUrl, setProfileImagePreViewUrl] = useState<string>('');
@@ -203,10 +202,6 @@ export const EditProfilePage = () => {
       },
     });
   };
-
-  if (isLoading) {
-    return <LoadingPage text="프로필 정보를 불러오는 중입니다." role="EDITOR" />;
-  }
 
   return (
     <div className="px-5 flex flex-col h-full overflow-y-auto">

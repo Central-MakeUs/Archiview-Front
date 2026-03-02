@@ -13,7 +13,6 @@ import { EditorMyPage } from './editor/EditorMyPage';
 import { ArchiverMyPage } from './archiver/ArchiverMyPage';
 import { useGetMyProfile } from '@/entities/archiver/profile/queries/useGetMyProfile';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
-import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { WithDrawModal } from './WithDrawModal';
 import { LogoutModal } from './LogoutModal';
 
@@ -34,12 +33,13 @@ export const MyPage = (): React.ReactElement => {
   const { switchRole } = useAuth();
   const { logout } = useLogout();
   const { withdraw } = useWithdraw();
-  const { data: myData, isLoading: isMyDataLoading } = useGetMyProfile({ useMock: false });
+  const { data: myData } = useGetMyProfile({ useMock: false });
 
   const [role, setRole] = useState<StoredUserRole | null>(null);
   const [openChangeRoleModal, setOpenChangeRoleModal] = useState(false);
   const [openWithDrawModal, setOpenWithDrawModal] = useState(false);
   const [openLogoutModal, setOpenLogoutModal] = useState(false);
+  const [isSwitchingRole, setIsSwitchingRole] = useState(false);
 
   useEffect(() => {
     try {
@@ -52,6 +52,8 @@ export const MyPage = (): React.ReactElement => {
 
   // --- 공통 핸들러 ---
   const handleSwitchRole = useCallback(async () => {
+    setIsSwitchingRole(true);
+
     try {
       const nextRole = await switchRole();
       // setRole 호출 시 리렌더로 새 역할의 MyPage가 잠깐 보였다가 리다이렉트되는 깜빡임 발생
@@ -60,9 +62,11 @@ export const MyPage = (): React.ReactElement => {
     } catch (e) {
       if (e instanceof SwitchRoleError && e.code === 'USER_013') {
         setOpenChangeRoleModal(true);
+        setIsSwitchingRole(false);
         return;
       }
       console.error('Failed to switch role', e);
+      setIsSwitchingRole(false);
     }
   }, [router, switchRole]);
 
@@ -136,12 +140,11 @@ export const MyPage = (): React.ReactElement => {
     ],
   );
 
-  const showLoading = useMinLoading(isMyDataLoading, 1500);
-  if (showLoading)
+  if (isSwitchingRole)
     return (
       <LoadingPage
-        text="내 정보를 불러오는 중입니다."
-        role={role === 'EDITOR' ? 'EDITOR' : 'ARCHIVER'}
+        text={role === 'EDITOR' ? '아카이버 모드로 전환 중입니다.' : '에디터 모드로 전환 중입니다.'}
+        role={role === 'EDITOR' ? 'ARCHIVER' : 'EDITOR'}
       />
     );
 
@@ -157,9 +160,13 @@ export const MyPage = (): React.ReactElement => {
   return (
     <>
       {role === 'EDITOR' ? (
-        <EditorMyPage {...commonHandlers} />
+        <EditorMyPage {...commonHandlers} isSwitchingRole={isSwitchingRole} />
       ) : (
-        <ArchiverMyPage myData={myData?.data ?? null} {...commonHandlers} />
+        <ArchiverMyPage
+          myData={myData?.data ?? null}
+          {...commonHandlers}
+          isSwitchingRole={isSwitchingRole}
+        />
       )}
 
       <ChangeRoleModal

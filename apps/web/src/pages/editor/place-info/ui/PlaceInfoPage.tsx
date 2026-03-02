@@ -5,19 +5,10 @@ import { RoundedHeaderSection } from './RoundedHeader';
 import { InfoSection } from './InfoSection';
 import { CardSection } from './CardSection';
 import { useEditorGetPlaceInfo } from '@/entities/editor/place/mutations/useEditorGetPlaceInfo';
-import { useMinLoading } from '@/shared/hooks/useMinLoading';
-import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
 
 export const PlaceInfoPage = ({ placeId }: { placeId: number }) => {
-  const { placeInfoData, isLoading, isError } = useEditorGetPlaceInfo(placeId);
-  const showLoading = useMinLoading(isLoading, 1500);
-  if (showLoading)
-    return (
-      <div>
-        <LoadingPage text="장소 정보를 불러오는 중입니다." role="EDITOR" />
-      </div>
-    );
+  const { placeInfoData, isError } = useEditorGetPlaceInfo(placeId);
 
   if (isError) return <ErrorPage />;
 

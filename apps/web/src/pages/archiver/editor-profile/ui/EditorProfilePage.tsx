@@ -25,8 +25,6 @@ import { ArchiverPlaceItem } from '../../my-archive/ui/ArchiverPlaceItem';
 import { LocationPermissionModal } from '../../../../shared/ui/common/Modal/LocationPermissionModal';
 import { EditorProfileCard } from './EditorProfileCard';
 import { SortDropdown } from './SortDropDown';
-import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
-import { useMinLoading } from '@/shared/hooks/useMinLoading';
 
 type SortKey = 'LATEST' | 'OLDEST';
 
@@ -94,11 +92,11 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   const nearbyLongitude =
     categoryFilter.scope === '내주변' ? location?.coords.longitude : undefined;
 
-  const { data: editorData, isLoading: isEditorDataLoading } = useGetEditorProfile({
+  const { data: editorData } = useGetEditorProfile({
     editorId,
     useMock: false,
   });
-  const { data: placeListData, isLoading: isPlaceListLoading } = useGetEditorPlaceList({
+  const { data: placeListData } = useGetEditorPlaceList({
     userId: editorId,
     sort,
     useMock: false,
@@ -295,11 +293,7 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
 
   const editor = editorData?.data;
 
-  const showLoading = useMinLoading(isEditorDataLoading || isPlaceListLoading, 1500);
-  if (!editor)
-    return showLoading ? (
-      <LoadingPage text="에디터 프로필을 불러오는 중입니다." role="ARCHIVER" />
-    ) : null;
+  if (!editor) return null;
 
   return (
     <div className="flex h-full flex-col min-h-0">
