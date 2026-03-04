@@ -9,5 +9,9 @@ interface IPageTransitionProps {
 }
 
 export function PageTransition({ id, children }: IPageTransitionProps): ReactNode {
-  return <SsgoiTransition id={id}>{children}</SsgoiTransition>;
+  return (
+    <SsgoiTransition id={id} className="h-full">
+      {children}
+    </SsgoiTransition>
+  );
 }
