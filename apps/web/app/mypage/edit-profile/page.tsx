@@ -1,5 +1,10 @@
+import { PageTransition } from '@/app/providers/PageTransition';
 import { EditProfilePage } from '@/pages/mypage/edit';
 
 export default function Page(): React.ReactNode {
-  return <EditProfilePage />;
+  return (
+    <PageTransition id="/mypage/edit-profile">
+      <EditProfilePage />
+    </PageTransition>
+  );
 }
