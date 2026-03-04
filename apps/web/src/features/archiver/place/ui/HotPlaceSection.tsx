@@ -36,7 +36,6 @@ export const HotPlaceSection = ({ hotPlaces }: IHotPlaceSectionProps): React.Rea
             />
           ))}
         </div>
-
       </div>
     </section>
   );
