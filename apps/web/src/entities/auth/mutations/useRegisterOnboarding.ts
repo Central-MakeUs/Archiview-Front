@@ -4,7 +4,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { authGet } from '@/entities/auth/api/auth-get';
 import { authPost } from '@/entities/auth/api/auth-post';
-import { LOCAL_STORAGE_KEYS } from '@/shared/constants/localStorageKeys';
+import Cookies from 'js-cookie';
+
+import { COOKIE_KEYS, getDefaultCookieOptions } from '@/shared/constants/cookies';
 import { authKeys } from '@/shared/lib/query-keys';
 
 import type { IRegisterRequestDTO } from '../model/auth.type';
@@ -20,9 +22,9 @@ export const useRegisterOnboarding = () => {
     mutationFn: async (payload: IRegisterRequestDTO): Promise<Result> => {
       const persistRole = (role: IRegisterRequestDTO['role']) => {
         try {
-          localStorage.setItem(LOCAL_STORAGE_KEYS.role, role);
+          Cookies.set(COOKIE_KEYS.role, role, getDefaultCookieOptions());
         } catch (e) {
-          console.error('Failed to write role to localStorage', e);
+          console.error('Failed to write role to cookie', e);
         }
       };
 

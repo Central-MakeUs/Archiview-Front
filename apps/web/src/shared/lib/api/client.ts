@@ -2,6 +2,10 @@ import 'client-only';
 
 import ky from 'ky';
 
+import Cookies from 'js-cookie';
+
+import { COOKIE_KEYS } from '@/shared/constants/cookies';
+
 import type { KyHttpError, ExtendedKyHttpError, ApiErrorResponse } from './common';
 
 export const errorInterceptor = async (error: KyHttpError) => {
@@ -38,7 +42,7 @@ export const clientApi = ky.create({
     ],
     beforeRequest: [
       (request) => {
-        const token = localStorage.getItem('accessToken')
+        const token = Cookies.get(COOKIE_KEYS.accessToken);
         if (token) {
           request.headers.set('Authorization', `Bearer ${token}`);
         }

@@ -4,9 +4,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+import Cookies from 'js-cookie';
+
+import { getDefaultCookieOptions } from '@/shared/constants/cookies';
+
 interface IOptions {
   /**
-   * localStorage에 저장할 키 이름
+   * 쿠키에 저장할 키 이름
    * default: 'accessToken'
    */
   storageKey?: string;
@@ -30,7 +34,7 @@ interface IOptions {
   queryKey?: string;
 
   /**
-   * 이미 로컬스토리지에 토큰이 있으면 덮어쓸지
+   * 이미 쿠키에 토큰이 있으면 덮어쓸지
    * default: true
    */
   overwrite?: boolean;
@@ -58,13 +62,13 @@ export const useAccessToken = (options: IOptions = {}) => {
     if (!token) return;
 
     try {
-      const existing = localStorage.getItem(storageKey);
+      const existing = Cookies.get(storageKey);
       const shouldWrite = overwrite || !existing;
 
-      if (shouldWrite) localStorage.setItem(storageKey, token);
+      if (shouldWrite) Cookies.set(storageKey, token, getDefaultCookieOptions());
       setIsPersisted(true);
     } catch (e) {
-      console.error('Failed to write accessToken to localStorage', e);
+      console.error('Failed to write accessToken to cookie', e);
       return;
     }
 

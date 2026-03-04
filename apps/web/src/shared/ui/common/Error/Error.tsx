@@ -3,7 +3,9 @@
 import Image from 'next/image';
 import { Button } from '../../button';
 import { useRouter } from 'next/navigation';
-import { LOCAL_STORAGE_KEYS } from '@/shared/constants/localStorageKeys';
+import Cookies from 'js-cookie';
+
+import { COOKIE_KEYS } from '@/shared/constants/cookies';
 
 export interface IErrorProps {
   title?: string;
@@ -15,7 +17,7 @@ export const Error = ({
   description = '아카이뷰 팀은 문제를 해결하기\u00A0위해\n열심히 노력하고 있어요.',
 }: IErrorProps) => {
   const router = useRouter();
-  const role = localStorage.getItem(LOCAL_STORAGE_KEYS.role);
+  const role = Cookies.get(COOKIE_KEYS.role);
   return (
     <div className="flex h-full w-full flex-col items-center justify-center px-5">
       <div className="flex w-full max-w-[400px] flex-col items-center gap-14 rounded-[20px] bg-neutral-10 px-6 py-9">

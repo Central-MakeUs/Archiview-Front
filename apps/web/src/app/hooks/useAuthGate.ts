@@ -5,7 +5,13 @@ import { useRouter } from 'next/navigation';
 
 import { authGet } from '@/entities/auth/api/auth-get';
 
-import { LOCAL_STORAGE_KEYS, type StoredUserRole } from '@/shared/constants/localStorageKeys';
+import Cookies from 'js-cookie';
+
+import {
+  COOKIE_KEYS,
+  getDefaultCookieOptions,
+  type StoredUserRole,
+} from '@/shared/constants/cookies';
 
 type Options = {
   loginPath?: string;
@@ -42,9 +48,9 @@ export const useAuthGate = (options: Options = {}) => {
       let role: StoredUserRole | null = null;
 
       try {
-        token = localStorage.getItem(LOCAL_STORAGE_KEYS.accessToken);
+        token = Cookies.get(COOKIE_KEYS.accessToken) ?? null;
       } catch (e) {
-        console.error('Failed to read accessToken from localStorage', e);
+        console.error('Failed to read accessToken from cookie', e);
       }
 
       if (!token) {
@@ -53,10 +59,10 @@ export const useAuthGate = (options: Options = {}) => {
       }
 
       try {
-        const storedRole = localStorage.getItem(LOCAL_STORAGE_KEYS.role);
+        const storedRole = Cookies.get(COOKIE_KEYS.role) ?? null;
         role = isStoredUserRole(storedRole) ? storedRole : null;
       } catch (e) {
-        console.error('Failed to read role from localStorage', e);
+        console.error('Failed to read role from cookie', e);
       }
 
       if (role) {
@@ -75,9 +81,9 @@ export const useAuthGate = (options: Options = {}) => {
 
         if (nextRole && isStoredUserRole(nextRole)) {
           try {
-            localStorage.setItem(LOCAL_STORAGE_KEYS.role, nextRole);
+            Cookies.set(COOKIE_KEYS.role, nextRole, getDefaultCookieOptions());
           } catch (e) {
-            console.error('Failed to write role to localStorage', e);
+            console.error('Failed to write role to cookie', e);
           }
 
           router.replace(
