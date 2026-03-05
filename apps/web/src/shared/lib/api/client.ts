@@ -19,13 +19,18 @@ export const errorInterceptor = async (error: KyHttpError) => {
   return error;
 };
 
+const apiPrefixUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/v1`;
+const defaultHeaders = {
+  'Content-Type': 'application/json',
+  Accept: 'application/json',
+};
+
 export const clientApi = ky.create({
-  prefixUrl: process.env.NEXT_PUBLIC_API_URL + '/api/v1',
+  prefixUrl: apiPrefixUrl,
   timeout: 10000,
   credentials: 'include',
   headers: {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
+    ...defaultHeaders,
     //TODO: 토큰으로 변경
     Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
   },
@@ -42,12 +47,26 @@ export const clientApi = ky.create({
     ],
     beforeRequest: [
       (request) => {
+
+        // const token = localStorage.getItem('accessToken');
+
         const token = Cookies.get(COOKIE_KEYS.accessToken);
+
         if (token) {
           request.headers.set('Authorization', `Bearer ${token}`);
         }
       },
     ],
+    beforeError: [errorInterceptor],
+  },
+});
+
+export const unauthClientApi = ky.create({
+  prefixUrl: apiPrefixUrl,
+  timeout: 10000,
+  credentials: 'include',
+  headers: defaultHeaders,
+  hooks: {
     beforeError: [errorInterceptor],
   },
 });

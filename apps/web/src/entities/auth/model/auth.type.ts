@@ -5,6 +5,15 @@ export interface IRegisterRequestDTO {
   role: Role;
 }
 
+export interface IAppleMobileLoginRequestDTO {
+  idToken: string;
+  authorizationCode: string;
+}
+
+export interface IKakaoMobileLoginRequestDTO {
+  accessToken: string;
+}
+
 export interface IUserType {
   role: Role;
   provider: string;
@@ -52,3 +61,9 @@ export type IEditorProfileRegisterResponseDTO = ApiResponse<IEditorProfileRegist
 
 // 탈퇴
 export type IWithDrawResponseDTO = ApiResponse<Record<string, never>>;
+
+// 모바일 애플 로그인
+export type IAppleMobileLoginResponseDTO = ApiResponse<unknown>;
+
+// 모바일 카카오 로그인
+export type IKakaoMobileLoginResponseDTO = ApiResponse<unknown>;

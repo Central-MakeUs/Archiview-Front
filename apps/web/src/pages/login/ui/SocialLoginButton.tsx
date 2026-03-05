@@ -65,14 +65,6 @@ export const KakaoButton = () => {
   );
 };
 
-export const AppleButton = () => {
-  return (
-    <Button variant="login" startIcon={<AppleIcon />} className="bg-[#000000] w-full" type="button">
-      <span className="text-neutral-10">Apple 로 로그인</span>
-    </Button>
-  );
-};
-
 export const GoogleButton = () => {
   return (
     <Button

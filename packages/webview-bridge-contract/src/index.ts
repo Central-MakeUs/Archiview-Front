@@ -2,6 +2,57 @@ import type { Bridge, BridgeStore } from '@webview-bridge/types';
 
 export type NativeToken = string | null;
 
+export type AppleNativeFullName = {
+  givenName?: string | null;
+  familyName?: string | null;
+  middleName?: string | null;
+  nickname?: string | null;
+  namePrefix?: string | null;
+  nameSuffix?: string | null;
+};
+
+export type AppleNativeCredential = {
+  idToken: string | null;
+  authorizationCode: string | null;
+  user?: string | null;
+  email?: string | null;
+  fullName?: AppleNativeFullName | null;
+};
+
+export type AppleSignInResult =
+  | {
+      status: 'success';
+      credential: AppleNativeCredential;
+    }
+  | {
+      status: 'cancelled';
+    }
+  | {
+      status: 'error';
+      reason: string;
+      message?: string;
+    };
+
+export type KakaoNativeCredential = {
+  accessToken: string;
+  refreshToken?: string | null;
+  idToken?: string | null;
+};
+
+export type KakaoSignInResult =
+  | {
+      status: 'success';
+      credential: KakaoNativeCredential;
+    }
+  | {
+      status: 'cancelled';
+    }
+  | {
+      status: 'error';
+      reason: string;
+      message?: string;
+    };
+
 export type GeoCoordinates = {
   latitude: number;
   longitude: number;
@@ -56,6 +107,9 @@ export interface AppBridgeState extends Bridge {
   pickImage(options: PickImageOptions): Promise<PickImageResult>;
 
   getCurrentLocation(): Promise<GeoLocation | null>;
+
+  signInWithApple(): Promise<AppleSignInResult>;
+  signInWithKakao(): Promise<KakaoSignInResult>;
 
   setToken(token: NativeToken): Promise<void>;
   getToken(): Promise<NativeToken>;

@@ -10,6 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": false,
+      "usesAppleSignIn": true,
       "bundleIdentifier": "com.archiview.app",
       "buildNumber": "3",
       "infoPlist": {
@@ -37,6 +38,21 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "@react-native-seoul/kakao-login",
+        {
+          "kakaoAppKey": "da1d6064b32ed92f55aa747f2898a4b6",
+          "kotlinVersion": "2.0.21"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "extraMavenRepos": ["https://devrepo.kakao.com/nexus/content/groups/public/"]
+          }
+        }
+      ],
       [
         "expo-location",
         {

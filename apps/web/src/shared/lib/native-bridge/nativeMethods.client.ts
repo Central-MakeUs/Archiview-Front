@@ -1,13 +1,15 @@
 'use client';
 
 import type {
+  AppleSignInResult,
   GeoLocation,
+  KakaoSignInResult,
   NativeToken,
   PickImageOptions,
   PickImageResult,
 } from '@archiview/webview-bridge-contract';
 
-import { nativeBridge } from './bridge.client';
+import { nativeBridge, nativeLongTaskBridge } from './bridge.client';
 
 export const isWebViewBridgeAvailable = () => nativeBridge.isWebViewBridgeAvailable;
 
@@ -57,6 +59,22 @@ export const getCurrentLocation = async (): Promise<GeoLocation | null> => {
     return null;
   }
   return nativeBridge.getCurrentLocation();
+};
+
+export const signInWithApple = async (): Promise<AppleSignInResult | null> => {
+  if (!nativeLongTaskBridge.isNativeMethodAvailable('signInWithApple')) {
+    return null;
+  }
+
+  return nativeLongTaskBridge.signInWithApple();
+};
+
+export const signInWithKakao = async (): Promise<KakaoSignInResult | null> => {
+  if (!nativeLongTaskBridge.isNativeMethodAvailable('signInWithKakao')) {
+    return null;
+  }
+
+  return nativeLongTaskBridge.signInWithKakao();
 };
 
 export const setToken = async (token: NativeToken): Promise<boolean> => {
