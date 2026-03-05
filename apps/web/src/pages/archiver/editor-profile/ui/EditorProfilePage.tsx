@@ -346,6 +346,7 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
           onOpenChange={setOpen}
           height={bottomSheetHeight}
           peekHeight={72}
+          bottomOffset={0}
           header={
             <div className="flex flex-row justify-between pb-4 pt-2.5 px-5">
               <p className="heading-20-bold">
