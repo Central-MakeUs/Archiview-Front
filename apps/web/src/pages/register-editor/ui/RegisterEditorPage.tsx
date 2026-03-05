@@ -363,17 +363,17 @@ export const RegisterEditorPage = () => {
       </div>
 
       <div className="pb-5 pt-3">
-        <div className="mb-3 rounded-2xl bg-neutral-10 px-4 py-3">
-          <div className="flex items-center justify-between">
+        {/* <div className="mb-3 rounded-2xl bg-neutral-10 px-4 py-3"> */}
+        {/* <div className="flex items-center justify-between">
             <p className="body-14-semibold text-neutral-50">
               필수 항목 {requiredStatus.doneCount}/{requiredStatus.totalCount}
             </p>
             <p className="caption-12-medium text-neutral-40">
               {isSubmitEnabled ? '완료' : `${requiredStatus.remainingCount}개 남았어요`}
             </p>
-          </div>
+          </div> */}
 
-          {!isSubmitEnabled ? (
+        {/* {!isSubmitEnabled ? (
             <div className="mt-2 flex flex-wrap gap-2">
               {requiredStatus.items
                 .filter((it) => !it.done)
@@ -386,8 +386,8 @@ export const RegisterEditorPage = () => {
                   </span>
                 ))}
             </div>
-          ) : null}
-        </div>
+          ) : null} */}
+        {/* </div> */}
 
         <Button disabled={!isSubmitEnabled} onClick={handleSubmit} className="w-full">
           등록완료

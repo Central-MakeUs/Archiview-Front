@@ -6,12 +6,9 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/shared/ui/button';
 import { useAuth } from '@/entities/auth/hooks/useAuth';
 import { CheckItem } from '@/pages/term-agree/ui/CheckItem';
-import { useRegisterOnboarding } from '@/entities/auth/mutations/useRegisterOnboarding';
-import { toast } from 'sonner';
 
 export const TermAgreeEditorPage = () => {
   const router = useRouter();
-  const registerMutation = useRegisterOnboarding();
 
   const [copyWrite, setCopyWrite] = useState(false);
   const [guideLine, setGuideLine] = useState(false);
@@ -24,17 +21,6 @@ export const TermAgreeEditorPage = () => {
   };
 
   useAuth();
-
-  // TODO : 추후 분리
-  const handleClick = async () => {
-    try {
-      await registerMutation.mutateAsync({ role: 'EDITOR' });
-
-      router.push(`/register-finish?role=EDITOR`);
-    } catch (e) {
-      toast.error((e as Error).message);
-    }
-  };
 
   return (
     <div className="flex h-full justify-between flex-col gap-2 pb-5 px-5">
@@ -51,10 +37,20 @@ export const TermAgreeEditorPage = () => {
         >
           전체 약관에 동의합니다
         </CheckItem>
-        <CheckItem checked={copyWrite} onCheckedChange={setCopyWrite} endArrowIcon={true}>
+        <CheckItem
+          checked={copyWrite}
+          onCheckedChange={setCopyWrite}
+          endArrowIcon={true}
+          redirectUrl={process.env.NEXT_PUBLIC_EDITOR_POLICY_URL ?? ''}
+        >
           <span className="text-neutral-40 mr-1">(필수)</span> 에디터 운영정책 및 저작권 안내
         </CheckItem>
-        <CheckItem checked={guideLine} onCheckedChange={setGuideLine} endArrowIcon={true}>
+        <CheckItem
+          checked={guideLine}
+          onCheckedChange={setGuideLine}
+          endArrowIcon={true}
+          redirectUrl={process.env.NEXT_PUBLIC_EDITOR_AGREEMENT_URL ?? ''}
+        >
           <span className="text-neutral-40 mr-1">(필수)</span> 커뮤니티 가이드라인 준수 서약
         </CheckItem>
       </div>
