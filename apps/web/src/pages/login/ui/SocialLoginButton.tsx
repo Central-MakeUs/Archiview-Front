@@ -38,10 +38,6 @@ const withDevQuery = (target: string): string => {
 
 export const KakaoButton = () => {
   const handleClick = () => {
-    // if (isReactNativeWebView()) {
-    //   postMessageToReactNativeWebView({ type: 'AUTH_LOGIN', provider: ' ' });
-    //   return;
-    // }
 
     const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
     const kakaoUrl = process.env.NEXT_PUBLIC_KAKAO_URL;
