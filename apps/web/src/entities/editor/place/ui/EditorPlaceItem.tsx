@@ -35,6 +35,7 @@ export const EditorPlaceItem = ({
   return (
     <Item
       thumbnail={thumbnail}
+      disableActive
       onClick={() => {
         router.push(`/editor/place-info/${placeId}`);
       }}

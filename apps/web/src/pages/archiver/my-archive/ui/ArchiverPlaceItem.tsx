@@ -23,6 +23,7 @@ export const ArchiverPlaceItem = ({
 }: IArchiverPlaceItemProps): React.ReactElement => {
   return (
     <Item
+      disableActive
       thumbnail={
         <div className="relative h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30">
           <Image src={thumbnail} alt={name} fill sizes="72px" className="object-cover" />

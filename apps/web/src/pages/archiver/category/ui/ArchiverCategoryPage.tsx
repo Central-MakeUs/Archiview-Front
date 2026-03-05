@@ -276,6 +276,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
               ) : (
                 places.map((p) => (
                   <Item
+                    disableActive
                     key={p.placeId}
                     thumbnail={
                       <div className="relative h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30">
