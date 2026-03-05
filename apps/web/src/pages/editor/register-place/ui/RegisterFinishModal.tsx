@@ -33,11 +33,11 @@ export const RegisterFinishModal = ({ isOpen, onClose, onConfirm }: IRegisterFin
               'flex-1 h-9 body-14-medium px-0 bg-white border border-neutral-30 text-neutral-30',
             )}
           >
-            취소
+            수정하기
           </Button>
 
           <Button onClick={onConfirm} className={cn('flex-1 h-9 body-14-medium px-0')}>
-            확인
+            이동하기
           </Button>
         </div>
       </div>
