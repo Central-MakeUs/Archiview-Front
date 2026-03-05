@@ -184,6 +184,7 @@ export const LoginPage = () => {
             {/* 나중에 슬라이드 바꾸기 */}
             <div className="flex h-full items-center justify-center">
               <Image
+                preload
                 src="/images/WebOnboardingImage1.png"
                 alt="온보딩 이미지 1"
                 width={148}
@@ -193,6 +194,7 @@ export const LoginPage = () => {
 
             <div className="flex h-full items-center justify-center">
               <Image
+                preload
                 src="/images/WebOnboardingImage2.png"
                 alt="온보딩 이미지 2"
                 width={148}
@@ -202,6 +204,7 @@ export const LoginPage = () => {
 
             <div className="flex h-full items-center justify-center">
               <Image
+                preload
                 src="/images/WebOnboardingImage3.png"
                 alt="온보딩 이미지 3"
                 width={148}
