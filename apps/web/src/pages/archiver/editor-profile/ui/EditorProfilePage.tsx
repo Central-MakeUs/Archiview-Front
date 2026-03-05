@@ -20,13 +20,12 @@ import { useGetEditorProfile } from '@/entities/archiver/profile/queries/useGetE
 import { useGetEditorPlaceList } from '@/entities/archiver/profile/queries/useGetEditorPlaceList';
 import { useGetEditorPlacePins } from '@/entities/archiver/profile/queries/useGetEditorPlacePins';
 import type { IPin } from '@/entities/archiver/profile/model/archiverProfile.type';
+import { useMinLoading } from '@/shared/hooks/useMinLoading';
 
 import { ArchiverPlaceItem } from '../../my-archive/ui/ArchiverPlaceItem';
 import { LocationPermissionModal } from '../../../../shared/ui/common/Modal/LocationPermissionModal';
 import { EditorProfileCard } from './EditorProfileCard';
 import { SortDropdown } from './SortDropDown';
-import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
-import { useMinLoading } from '@/shared/hooks/useMinLoading';
 
 type SortKey = 'LATEST' | 'OLDEST';
 
@@ -72,6 +71,44 @@ const getMarkerCategoryId = (pin: IPin): number | undefined => {
   return undefined;
 };
 
+const PLACE_SKELETON_ITEMS = [0, 1, 2, 3, 4];
+
+const MapSkeleton = () => <div className="h-full w-full animate-pulse bg-neutral-20" />;
+
+const EditorProfileCardSkeleton = () => (
+  <div className="overflow-hidden rounded-default bg-white shadow-default">
+    <div className="flex gap-4 bg-primary-20 p-5">
+      <div className="h-17.5 w-17.5 shrink-0 animate-pulse rounded-full bg-neutral-10" />
+      <div className="flex flex-1 flex-col gap-2">
+        <div className="h-6 w-2/5 animate-pulse rounded bg-neutral-10" />
+        <div className="h-4 w-1/3 animate-pulse rounded bg-neutral-10" />
+        <div className="mt-2 flex gap-1">
+          <div className="h-5 w-14 animate-pulse rounded-xl bg-neutral-10" />
+          <div className="h-5 w-12 animate-pulse rounded-xl bg-neutral-10" />
+        </div>
+      </div>
+    </div>
+    <div className="bg-white px-5 pb-5 pt-4">
+      <div className="h-4 w-4/5 animate-pulse rounded bg-neutral-20" />
+    </div>
+  </div>
+);
+
+const PlaceListSkeleton = () => (
+  <div className="px-5 pt-4">
+    {PLACE_SKELETON_ITEMS.map((index) => (
+      <div key={`editor-place-skeleton-${index}`} className="flex gap-3 py-3">
+        <div className="h-18 w-18 shrink-0 animate-pulse rounded-2xl bg-neutral-20" />
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
+          <div className="h-5 w-2/3 animate-pulse rounded bg-neutral-20" />
+          <div className="h-4 w-full animate-pulse rounded bg-neutral-20" />
+          <div className="h-4 w-1/2 animate-pulse rounded bg-neutral-20" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
 export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   const router = useRouter();
 
@@ -87,6 +124,7 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   const [bottomSheetHeight, setBottomSheetHeight] = useState(400);
   const [selectedMarkerPlaceId, setSelectedMarkerPlaceId] = useState<number | null>(null);
   const [isLocationPermissionModalOpen, setIsLocationPermissionModalOpen] = useState(false);
+  const [isLocationLoading, setIsLocationLoading] = useState(false);
   const shouldMoveToNearbyRef = useRef(false);
 
   const mapFilter = categoryFilter.scope === '내주변' ? 'NEARBY' : 'ALL';
@@ -94,17 +132,17 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   const nearbyLongitude =
     categoryFilter.scope === '내주변' ? location?.coords.longitude : undefined;
 
-  const { data: editorData, isLoading: isEditorDataLoading } = useGetEditorProfile({
+  const { data: editorData, isLoading: isEditorRawLoading } = useGetEditorProfile({
     editorId,
     useMock: false,
   });
-  const { data: placeListData, isLoading: isPlaceListLoading } = useGetEditorPlaceList({
+  const { data: placeListData, isLoading: isPlaceListRawLoading } = useGetEditorPlaceList({
     userId: editorId,
     sort,
     useMock: false,
   });
 
-  const { data: placePinsData } = useGetEditorPlacePins({
+  const { data: placePinsData, isLoading: isPlacePinsRawLoading } = useGetEditorPlacePins({
     editorId,
     filter: mapFilter,
     latitude: nearbyLatitude,
@@ -113,17 +151,21 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
     useMock: false,
   });
 
-  console.log(placeListData);
+  const isEditorLoading = useMinLoading(isEditorRawLoading);
+  const isPlaceListLoading = useMinLoading(isPlaceListRawLoading);
+  const isPlacePinsLoading = useMinLoading(isPlacePinsRawLoading);
 
   useEffect(() => {
     if (categoryFilter.scope !== '내주변') {
       shouldMoveToNearbyRef.current = false;
       setLocation(null);
+      setIsLocationLoading(false);
       setIsLocationPermissionModalOpen(false);
       return;
     }
 
     shouldMoveToNearbyRef.current = true;
+    setIsLocationLoading(true);
 
     let cancelled = false;
 
@@ -133,17 +175,20 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
 
       if (!loc) {
         setLocation(null);
+        setIsLocationLoading(false);
         setIsLocationPermissionModalOpen(true);
         return;
       }
 
       setLocation(loc);
+      setIsLocationLoading(false);
       setIsLocationPermissionModalOpen(false);
     };
 
     run().catch(() => {
       if (cancelled) return;
       setLocation(null);
+      setIsLocationLoading(false);
       setIsLocationPermissionModalOpen(true);
     });
 
@@ -294,12 +339,9 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   }, [mapPins, selectedMarkerPlaceId]);
 
   const editor = editorData?.data;
-
-  const showLoading = useMinLoading(isEditorDataLoading || isPlaceListLoading, 1500);
-  if (!editor)
-    return showLoading ? (
-      <LoadingPage text="에디터 프로필을 불러오는 중입니다." role="ARCHIVER" />
-    ) : null;
+  const isNearByScope = categoryFilter.scope === '내주변';
+  const isMapLoading = isPlacePinsLoading || (isNearByScope && isLocationLoading);
+  const isBottomSheetLoading = isPlaceListLoading;
 
   return (
     <div className="flex h-full flex-col min-h-0">
@@ -321,37 +363,47 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
       />
 
       <div className="px-5">
-        <EditorProfileCard editorId={editorId} editorData={editorData?.data} />
+        {editor && !isEditorLoading ? (
+          <EditorProfileCard editorId={editorId} editorData={editor} />
+        ) : (
+          <EditorProfileCardSkeleton />
+        )}
       </div>
       <CategoryOptionTabs value={categoryFilter} onChange={setCategoryFilter} />
 
       <div className="flex-1 min-h-0 pt-4">
-        <KakaoMap
-          lat={mapCenter.lat}
-          lng={mapCenter.lng}
-          level={9}
-          markers={mapMarkers}
-          onReady={({ kakao, map }) => {
-            setMapLevel(map.getLevel());
-            kakao.maps.event.addListener(map, 'zoom_changed', () => {
+        {isMapLoading ? (
+          <MapSkeleton />
+        ) : (
+          <KakaoMap
+            lat={mapCenter.lat}
+            lng={mapCenter.lng}
+            level={9}
+            markers={mapMarkers}
+            onReady={({ kakao, map }) => {
               setMapLevel(map.getLevel());
-            });
-          }}
-          onMarkerClick={({ id }) => {
-            if (typeof id !== 'number') return;
-            setSelectedMarkerPlaceId(id);
-            setOpen(true);
-          }}
-          onMapClick={() => {
-            setSelectedMarkerPlaceId(null);
-          }}
-        />
+              kakao.maps.event.addListener(map, 'zoom_changed', () => {
+                setMapLevel(map.getLevel());
+              });
+            }}
+            onMarkerClick={({ id }) => {
+              if (typeof id !== 'number') return;
+              setSelectedMarkerPlaceId(id);
+              setOpen(true);
+            }}
+            onMapClick={() => {
+              setSelectedMarkerPlaceId(null);
+            }}
+          />
+        )}
 
         <BottomSheet
           isOpen={open}
           onOpenChange={setOpen}
           height={bottomSheetHeight}
           peekHeight={72}
+          bottomOffset={72}
+          renderInPortal
           header={
             <div className="flex flex-row justify-between pb-4 pt-2.5 px-5">
               <p className="heading-20-bold">
@@ -363,17 +415,21 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
           }
           contentClassName="overflow-y-auto px-5 pb-6"
         >
-          {markerFilteredPlaces.map((p) => (
-            <ArchiverPlaceItem
-              key={p.postPlaceId}
-              name={p.placeName}
-              thumbnail={p.imageUrl}
-              description={p.description}
-              savedCount={p.saveCount}
-              viewCount={p.viewCount}
-              onClick={() => router.push(`/archiver/place-info/${p.placeId}?editor=${editorId}`)}
-            />
-          ))}
+          {isBottomSheetLoading ? (
+            <PlaceListSkeleton />
+          ) : (
+            markerFilteredPlaces.map((p) => (
+              <ArchiverPlaceItem
+                key={p.postPlaceId}
+                name={p.placeName}
+                thumbnail={p.imageUrl}
+                description={p.description}
+                savedCount={p.saveCount}
+                viewCount={p.viewCount}
+                onClick={() => router.push(`/archiver/place-info/${p.placeId}?editor=${editorId}`)}
+              />
+            ))
+          )}
         </BottomSheet>
       </div>
     </div>

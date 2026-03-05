@@ -1,5 +1,6 @@
 import { cn } from '@/shared/lib/cn';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface IBottomSheetProps {
   isOpen?: boolean;
@@ -11,6 +12,7 @@ interface IBottomSheetProps {
   peekHeight: number;
 
   bottomOffset?: number | string;
+  renderInPortal?: boolean;
 
   header?: React.ReactNode;
   headerClassName?: string;
@@ -37,6 +39,7 @@ export const BottomSheet = ({
   height,
   peekHeight,
   bottomOffset = 'var(--navigation-footer-height, 0px)',
+  renderInPortal = false,
   header,
   headerClassName,
   contentClassName,
@@ -47,6 +50,16 @@ export const BottomSheet = ({
   const startYRef = useRef<number | null>(null);
   const isDraggingRef = useRef(false);
   const [dragOffset, setDragOffset] = useState(0);
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!renderInPortal) {
+      setPortalTarget(null);
+      return;
+    }
+
+    setPortalTarget(document.body);
+  }, [renderInPortal]);
 
   const closedOffset = height - peekHeight;
 
@@ -103,7 +116,7 @@ export const BottomSheet = ({
 
   const baseTranslateY = isOpen ? 0 : closedOffset;
 
-  return (
+  const sheet = (
     <div
       ref={sheetRef}
       className={cn(
@@ -134,4 +147,11 @@ export const BottomSheet = ({
       <div className={cn('flex-1 min-h-0', contentClassName)}>{children}</div>
     </div>
   );
+
+  if (renderInPortal) {
+    if (!portalTarget) return null;
+    return createPortal(sheet, portalTarget);
+  }
+
+  return sheet;
 };

@@ -8,7 +8,6 @@ import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import { CATEGORIES } from '@/shared/constants/category';
 import { requestNativeCurrentLocation } from '@/shared/lib/native-actions';
-import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import type { IPin } from '@/entities/editor/place/model/editorPlace.type';
 import { useGetMyPlacePin } from '@/entities/editor/place/queries/useGetMyPlacePin';
 import { useGetMyPlaceList } from '@/entities/editor/place/queries/useGetMyPlaceList';
@@ -39,9 +38,9 @@ const toSelectedMarkerUrl = (url: string): string => {
 };
 
 const getMarkerScaleByLevel = (level: number): number => {
-  if (level >= 9) return 0.60;
-  if (level >= 7) return 0.60;
-  if (level >= 5) return 0.80;
+  if (level >= 9) return 0.6;
+  if (level >= 7) return 0.6;
+  if (level >= 5) return 0.8;
   return 1;
 };
 
@@ -52,6 +51,23 @@ const getMarkerCategoryId = (pin: IPin): number | undefined => {
 
   return undefined;
 };
+
+const PLACE_SKELETON_ITEMS = [0, 1, 2, 3];
+
+const PlaceListSkeleton = () => (
+  <div className="px-5 pt-4">
+    {PLACE_SKELETON_ITEMS.map((index) => (
+      <div key={`editor-my-place-skeleton-${index}`} className="flex gap-3 py-3">
+        <div className="h-18 w-18 shrink-0 animate-pulse rounded-2xl bg-neutral-20" />
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
+          <div className="h-5 w-2/3 animate-pulse rounded bg-neutral-20" />
+          <div className="h-4 w-full animate-pulse rounded bg-neutral-20" />
+          <div className="h-4 w-1/2 animate-pulse rounded bg-neutral-20" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
 
 interface IEditorProfile {
   nickname: string;
@@ -246,7 +262,31 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
   };
 
   if (isPlaceListLoading && !placeListData) {
-    return <LoadingPage text="내 장소를 불러오는 중입니다." role="EDITOR" />;
+    return (
+      <div className="flex h-full flex-col min-h-0">
+        <div className="pt-1">
+          <EditorProfileCard
+            nickname={profile.nickname}
+            instagramId={profile.instagramId}
+            introduction={profile.introduction}
+            hashtags={profile.hashtags}
+            profileImageUrl={profile.profileImageUrl}
+            onEdit={handleEditProfile}
+            onShareInfo={handleShareInfo}
+          />
+        </div>
+        <CategoryOptionTabs value={categoryFilter} onChange={setCategoryFilter} />
+        <div className="relative flex-1 min-h-0 pt-4">
+          <div className="h-full w-full animate-pulse bg-neutral-20" />
+          <div className="absolute left-1/4 top-1/3 h-4 w-4 animate-pulse rounded-full bg-neutral-10" />
+          <div className="absolute right-1/3 top-1/2 h-3 w-3 animate-pulse rounded-full bg-neutral-10" />
+          <div className="absolute bottom-0 left-0 right-0 rounded-t-3xl bg-neutral-10/95 px-5 pb-6 pt-4 shadow-default">
+            <div className="mb-2 h-6 w-32 animate-pulse rounded bg-neutral-20" />
+            <PlaceListSkeleton />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (isPlaceListError && !placeListData) {
@@ -296,6 +336,8 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
           onOpenChange={setOpen}
           height={bottomSheetHeight}
           peekHeight={72}
+          bottomOffset={72}
+          renderInPortal
           header={
             <div className="flex flex-row justify-between pb-4 pt-2.5 px-5">
               <p className="heading-20-bold">

@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 
+import { PageTransition } from '@/app/providers/PageTransition';
 import { ArchiverHomePage, metadata } from '@/pages/archiver/home';
 import { archiverKeys } from '@/shared/lib/query-keys';
 import { CATEGORIES } from '@/shared/constants/category';
@@ -28,8 +29,12 @@ export default async function Page(): Promise<React.ReactElement> {
     }),
     ...CATEGORIES.map((c) =>
       queryClient.prefetchQuery({
-        queryKey: archiverKeys.getCategoryPlaceList.applyFilters({ categoryId: c.id, useMock: false }).queryKey,
-        queryFn: () => archiverCategoryServerGet.getCategoryPlaceList({ categoryId: c.id, useMock: false }),
+        queryKey: archiverKeys.getCategoryPlaceList.applyFilters({
+          categoryId: c.id,
+          useMock: false,
+        }).queryKey,
+        queryFn: () =>
+          archiverCategoryServerGet.getCategoryPlaceList({ categoryId: c.id, useMock: false }),
       }),
     ),
   ]);

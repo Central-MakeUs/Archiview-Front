@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 
+import { PageTransition } from '@/app/providers/PageTransition';
 import { MyPage, metadata } from '@/pages/mypage';
 import { archiverKeys, editorKeys } from '@/shared/lib/query-keys';
 import { archiverProfileServerGet } from '@/entities/archiver/profile/api/archiverProfile-server-get';

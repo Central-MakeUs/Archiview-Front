@@ -10,44 +10,53 @@ import { useGetMyProfile } from '@/entities/archiver/profile/queries/useGetMyPro
 import { useGetHotPlace } from '@/entities/archiver/place/queries/useGetHotPlace';
 import { useGetEditorTrusted } from '@/entities/archiver/profile/queries/useGetEditorTrusted';
 import { useAuth } from '@/entities/auth/hooks/useAuth';
+import { consumeRoleSwitchLoadingFlag } from '@/shared/constants/roleSwitchLoading';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { SearchBar } from '@/shared/ui/SearchBar';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
+import type { IHotPlace } from '@/entities/archiver/place/model/archiverPlace.type';
+import type { IEditor } from '@/entities/archiver/profile/model/archiverProfile.type';
+
+const EMPTY_HOT_PLACES: IHotPlace[] = [];
+const EMPTY_EDITORS: IEditor[] = [];
 
 export const ArchiverHomePage = (): React.ReactElement => {
   useAuth();
   const router = useRouter();
   const [searchValue, setSearchValue] = useState('');
+  const [showRoleSwitchLoading] = useState(() => consumeRoleSwitchLoadingFlag());
 
   const {
     data: myData,
     isLoading: isMyProfileLoading,
     isError: isMyProfileError,
-  } = useGetMyProfile({ useMock: false });
+  } = useGetMyProfile({ useMock: false, optimizeForNavigation: true });
   const {
     data: hotPlaceData,
     isLoading: isHotPlaceLoading,
     isError: isHotPlaceError,
-  } = useGetHotPlace({ useMock: false });
+  } = useGetHotPlace({ useMock: false, optimizeForNavigation: true });
   const {
     data: editorTrustedData,
     isLoading: isEditorTrustedLoading,
     isError: isEditorTrustedError,
-  } = useGetEditorTrusted({ useMock: false });
+  } = useGetEditorTrusted({ useMock: false, optimizeForNavigation: true });
 
   const isLoading = isMyProfileLoading || isHotPlaceLoading || isEditorTrustedLoading;
   const isError = isMyProfileError || isHotPlaceError || isEditorTrustedError;
   const showLoading = useMinLoading(isLoading);
 
-  if (showLoading) return <LoadingPage text="아카이버 홈 화면으로 이동중입니다." role="ARCHIVER" />;
+  if (showRoleSwitchLoading && showLoading) {
+    return <LoadingPage text="아카이버 홈 화면으로 이동중입니다." role="ARCHIVER" />;
+  }
 
   if (isError) return <ErrorPage />;
 
-  const hotPlaces = hotPlaceData?.data?.places ?? [];
-  const editorTrusted = editorTrustedData?.data?.editors ?? [];
+  const hotPlaces = hotPlaceData?.data?.places ?? EMPTY_HOT_PLACES;
+  const editorTrusted = editorTrustedData?.data?.editors ?? EMPTY_EDITORS;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -86,8 +95,8 @@ export const ArchiverHomePage = (): React.ReactElement => {
         </div>
         <div className="p-5 pt-12">
           <CategorySection />
-          <HotPlaceSection hotPlaces={hotPlaces} />
-          <EditorTrustedSection editors={editorTrusted} />
+          <HotPlaceSection hotPlaces={hotPlaces} isLoading={isHotPlaceLoading} />
+          <EditorTrustedSection editors={editorTrusted} isLoading={isEditorTrustedLoading} />
         </div>
       </div>
     </div>

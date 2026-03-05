@@ -30,7 +30,7 @@ export const RoundedHeaderSection = ({
   return (
     <section className="relative mb-[86px]">
       <div className="h-[196px] overflow-hidden">
-        <Image src={thumbnail} alt="" fill className="object-cover" unoptimized />
+        <Image src={thumbnail} alt="" fill className="object-cover" />
       </div>
       <div className="h-31.25 absolute left-0 right-0 -bottom-21.5 pt-8 px-5 pb-5 flex flex-col gap-6.5 rounded-t-4xl bg-neutral-10 border-b border-b-[#DBDCDF]">
         <div className="heading-20-semibold">{place?.name}</div>

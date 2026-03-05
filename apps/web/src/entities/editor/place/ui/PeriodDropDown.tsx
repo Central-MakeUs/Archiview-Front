@@ -33,7 +33,7 @@ export const PeriodDropdown = ({ value }: { value: InsightPeriod }) => {
     <div className="relative">
       <Button
         onClick={() => setOpen((v) => !v)}
-        className="h-6.5 w-22 flex flex-row rounded-md border caption-12-semibold bg-white hover:bg-white border-primary-40 text-primary-40 justify-between items-center px-1"
+        className="h-6.5 w-24 flex flex-row rounded-md border caption-12-semibold bg-white hover:bg-white border-primary-40 text-primary-40 justify-between items-center px-1"
       >
         {currentLabel}
         <span

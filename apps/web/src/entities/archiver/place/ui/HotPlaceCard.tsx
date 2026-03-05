@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { memo, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -16,7 +16,11 @@ interface IHotPlaceCardProps {
   hashTags: string[];
 }
 
-export const HotPlaceCard = ({
+const MAX_VISIBLE_BADGES = 3;
+
+const stripHash = (tag?: string) => (tag ?? '').trim().replace(/^#/, '');
+
+const HotPlaceCardComponent = ({
   placeId,
   imageUrl,
   name,
@@ -24,12 +28,9 @@ export const HotPlaceCard = ({
   hashTags,
   address,
 }: IHotPlaceCardProps) => {
-  const stripHash = (tag?: string) => (tag ?? '').trim().replace(/^#/, '');
-  const safeImageUrl = imageUrl?.trimEnd();
-  const badgeContainerRef = useRef<HTMLDivElement>(null);
-  const badgeMeasureRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const safeImageUrl = imageUrl?.trim() || '/images/ExampleImage.png';
 
-  const allBadges = useMemo(
+  const badges = useMemo(
     () => [
       ...categoryNames.map((category, index) => ({
         key: `category-${category}-${index}`,
@@ -44,61 +45,7 @@ export const HotPlaceCard = ({
     ],
     [categoryNames, hashTags],
   );
-
-  const [visibleBadgeCount, setVisibleBadgeCount] = useState(allBadges.length);
-
-  const calculateVisibleBadgeCount = useCallback(() => {
-    const containerWidth = badgeContainerRef.current?.clientWidth ?? 0;
-
-    if (!containerWidth) {
-      return;
-    }
-
-    const gap = 4;
-    let occupiedWidth = 0;
-    let nextVisibleCount = 0;
-
-    for (let index = 0; index < allBadges.length; index += 1) {
-      const badgeWidth = badgeMeasureRefs.current[index]?.offsetWidth ?? 0;
-
-      if (!badgeWidth) {
-        continue;
-      }
-
-      const requiredWidth = nextVisibleCount === 0 ? badgeWidth : occupiedWidth + gap + badgeWidth;
-
-      if (requiredWidth > containerWidth) {
-        break;
-      }
-
-      occupiedWidth = requiredWidth;
-      nextVisibleCount += 1;
-    }
-
-    setVisibleBadgeCount(allBadges.length > 0 ? Math.max(nextVisibleCount, 1) : 0);
-  }, [allBadges]);
-
-  useLayoutEffect(() => {
-    calculateVisibleBadgeCount();
-
-    const resizeObserver = new ResizeObserver(() => {
-      calculateVisibleBadgeCount();
-    });
-
-    if (badgeContainerRef.current) {
-      resizeObserver.observe(badgeContainerRef.current);
-    }
-
-    badgeMeasureRefs.current.forEach((badgeElement) => {
-      if (badgeElement) {
-        resizeObserver.observe(badgeElement);
-      }
-    });
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [calculateVisibleBadgeCount]);
+  const visibleBadges = badges.slice(0, MAX_VISIBLE_BADGES);
 
   return (
     <Link href={`place-info/${placeId}`} className="block shrink-0">
@@ -110,8 +57,8 @@ export const HotPlaceCard = ({
             alt={name}
             fill
             className="object-cover"
+            sizes="180px"
             priority={false}
-            unoptimized
           />
         </div>
         <div className="p-3 flex flex-col gap-2">
@@ -119,37 +66,20 @@ export const HotPlaceCard = ({
           <span className="caption-12-regular text-neutral-50 block w-full truncate">
             {address}
           </span>
-          <div className="relative">
-            <div
-              ref={badgeContainerRef}
-              className="flex flex-nowrap items-center gap-1 overflow-hidden"
-            >
-              {allBadges.slice(0, visibleBadgeCount).map((badge) => (
-                <Badge key={badge.key} variant="contained" className={badge.className}>
+          <div className="flex flex-nowrap items-center gap-1 overflow-hidden">
+            {visibleBadges.map((badge) => (
+              <Badge key={badge.key} variant="contained" className={badge.className}>
+                <span className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
                   {badge.label}
-                </Badge>
-              ))}
-            </div>
-            <div className="absolute left-0 top-0 invisible pointer-events-none whitespace-nowrap">
-              <div className="flex items-center gap-1">
-                {allBadges.map((badge, index) => (
-                  <div
-                    key={`measure-${badge.key}`}
-                    ref={(element) => {
-                      badgeMeasureRefs.current[index] = element;
-                    }}
-                    className="inline-flex"
-                  >
-                    <Badge variant="contained" className={badge.className}>
-                      {badge.label}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </div>
+                </span>
+              </Badge>
+            ))}
           </div>
         </div>
       </Kard>
     </Link>
   );
 };
+
+export const HotPlaceCard = memo(HotPlaceCardComponent);
+HotPlaceCard.displayName = 'HotPlaceCard';
