@@ -54,7 +54,6 @@ export const MyPage = (): React.ReactElement => {
   const handleSwitchRole = useCallback(async () => {
     try {
       const nextRole = await switchRole();
-      setRoleSwitchLoadingFlag();
       // setRole 호출 시 리렌더로 새 역할의 MyPage가 잠깐 보였다가 리다이렉트되는 깜빡임 발생
       // 곧바로 홈으로 이동하므로 state 업데이트 생략
       router.replace(nextRole === 'ARCHIVER' ? '/archiver/home' : '/editor/home');
