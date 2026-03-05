@@ -2,7 +2,9 @@ import 'server-only';
 
 import { headers } from 'next/headers';
 
-import type { ApiErrorResponse, ApiSuccessResponse } from './common';
+import type { ApiErrorResponse } from './common';
+
+export const API_PREFIX = 'api/v1';
 
 export type NextFetchOptions = {
   revalidate?: number | false;
@@ -13,6 +15,7 @@ export type ServerApiRequestInit = Omit<RequestInit, 'body'> & {
   body?: BodyInit | null;
   json?: unknown;
   next?: NextFetchOptions;
+  searchParams?: Record<string, string | number | boolean | undefined>;
 };
 
 function getApiBaseUrl(): string {
@@ -37,7 +40,16 @@ function isApiErrorResponse(value: unknown): value is ApiErrorResponse {
 }
 
 async function request<T>(path: string, init: ServerApiRequestInit): Promise<T> {
-  const url = new URL(path, getApiBaseUrl());
+  const fullPath = path.startsWith('api/') ? path : `${API_PREFIX}/${path}`;
+  const url = new URL(fullPath, getApiBaseUrl());
+
+  if (init.searchParams) {
+    for (const [key, value] of Object.entries(init.searchParams)) {
+      if (value !== undefined) {
+        url.searchParams.set(key, String(value));
+      }
+    }
+  }
 
   const headerList = await headers();
   const cookie = headerList.get('cookie');
@@ -57,17 +69,18 @@ async function request<T>(path: string, init: ServerApiRequestInit): Promise<T> 
     mergedHeaders.set('accept', 'application/json');
   }
 
-  const { json, body, ...requestInit } = init;
+  const { json, body, next } = init;
 
   if (json !== undefined && !mergedHeaders.has('content-type')) {
     mergedHeaders.set('content-type', 'application/json');
   }
 
   const response = await fetch(url, {
-    ...requestInit,
+    method: init.method,
     headers: mergedHeaders,
     body: json !== undefined ? JSON.stringify(json) : body,
-  });
+    next,
+  } as RequestInit);
 
   const contentType = response.headers.get('content-type') ?? '';
   const isJson = contentType.includes('application/json');
@@ -88,14 +101,6 @@ async function request<T>(path: string, init: ServerApiRequestInit): Promise<T> 
       status: response.status,
       errorData: parsed,
     });
-  }
-
-  if (
-    typeof parsed === 'object' &&
-    parsed !== null &&
-    (parsed as { success?: unknown }).success === true
-  ) {
-    return (parsed as ApiSuccessResponse<T>).data;
   }
 
   if (!response.ok) {

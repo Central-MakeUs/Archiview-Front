@@ -4,7 +4,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
-import { LOCAL_STORAGE_KEYS } from '@/shared/constants/localStorageKeys';
+import Cookies from 'js-cookie';
+
+import { COOKIE_KEYS } from '@/shared/constants/cookies';
 import { ExtendedKyHttpError } from '@/shared/lib/api/common';
 
 import { authDelete } from '../api/auth-delete';
@@ -15,8 +17,8 @@ export const useWithdraw = () => {
   const { mutate: withdraw } = useMutation({
     mutationFn: authDelete.withDraw,
     onSuccess: () => {
-      localStorage.removeItem(LOCAL_STORAGE_KEYS.accessToken);
-      localStorage.removeItem(LOCAL_STORAGE_KEYS.role);
+      Cookies.remove(COOKIE_KEYS.accessToken, { path: '/' });
+      Cookies.remove(COOKIE_KEYS.role, { path: '/' });
       toast.success('회원탈퇴가 완료되었습니다.');
       router.push('/login');
     },

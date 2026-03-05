@@ -2,9 +2,10 @@
 
 import type { HTTPError } from 'ky';
 import { useMemo } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { LOCAL_STORAGE_KEYS } from '@/shared/constants/localStorageKeys';
+import Cookies from 'js-cookie';
+
+import { COOKIE_KEYS, getDefaultCookieOptions } from '@/shared/constants/cookies';
 import { authKeys } from '@/shared/lib/query-keys';
 
 import { useAccessToken } from './useAccessToken';
@@ -31,11 +32,10 @@ const getNextRole = (role: string | null): SwitchableRole | null => {
 };
 
 export const useAuth = () => {
-  const searchParams = useSearchParams();
   const queryClient = useQueryClient();
 
   const { token: accessTokenFromQuery, isPersisted: isAccessTokenPersisted } = useAccessToken({
-    storageKey: LOCAL_STORAGE_KEYS.accessToken,
+    storageKey: COOKIE_KEYS.accessToken,
     queryKey: 'accessToken',
   });
 
@@ -43,8 +43,8 @@ export const useAuth = () => {
     if (accessTokenFromQuery) return isAccessTokenPersisted;
 
     try {
-      const storedToken = localStorage.getItem(LOCAL_STORAGE_KEYS.accessToken);
-      const storedRole = localStorage.getItem(LOCAL_STORAGE_KEYS.role);
+      const storedToken = Cookies.get(COOKIE_KEYS.accessToken);
+      const storedRole = Cookies.get(COOKIE_KEYS.role);
       return !!storedToken && (!storedRole || storedRole === 'GUEST');
     } catch {
       return false;
@@ -62,8 +62,9 @@ export const useAuth = () => {
       const nextRole = response.data?.role;
       const nextAccessToken = response.data?.accessToken;
 
-      if (nextRole) localStorage.setItem(LOCAL_STORAGE_KEYS.role, nextRole);
-      if (nextAccessToken) localStorage.setItem(LOCAL_STORAGE_KEYS.accessToken, nextAccessToken);
+      if (nextRole) Cookies.set(COOKIE_KEYS.role, nextRole, getDefaultCookieOptions());
+      if (nextAccessToken)
+        Cookies.set(COOKIE_KEYS.accessToken, nextAccessToken, getDefaultCookieOptions());
 
       queryClient
         .invalidateQueries({ queryKey: authKeys.getMyInfo.all.queryKey })
@@ -72,7 +73,7 @@ export const useAuth = () => {
   });
 
   const switchRole = async (): Promise<SwitchableRole> => {
-    const currentRole = localStorage.getItem(LOCAL_STORAGE_KEYS.role);
+    const currentRole = Cookies.get(COOKIE_KEYS.role) ?? null;
     const nextRole = getNextRole(currentRole);
 
     if (!nextRole)

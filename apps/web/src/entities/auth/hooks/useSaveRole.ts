@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import { LOCAL_STORAGE_KEYS } from '@/shared/constants/localStorageKeys';
+import Cookies from 'js-cookie';
+
+import { COOKIE_KEYS, getDefaultCookieOptions } from '@/shared/constants/cookies';
 
 import { useGetAuth } from '../queries/useGetAuth';
 
@@ -23,14 +25,14 @@ export const useSaveRole = (options: IOptions = {}) => {
     if (!role) return;
 
     try {
-      const existing = localStorage.getItem(LOCAL_STORAGE_KEYS.role);
+      const existing = Cookies.get(COOKIE_KEYS.role);
       const shouldWrite = overwrite || !existing;
 
       if (shouldWrite) {
-        localStorage.setItem(LOCAL_STORAGE_KEYS.role, role);
+        Cookies.set(COOKIE_KEYS.role, role, getDefaultCookieOptions());
       }
     } catch (e) {
-      console.error('Failed to write role to localStorage', e);
+      console.error('Failed to write role to cookie', e);
     }
   }, [enabled, overwrite, query.isSuccess, query.data]);
 

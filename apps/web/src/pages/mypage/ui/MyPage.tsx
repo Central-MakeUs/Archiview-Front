@@ -4,8 +4,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useAuth, SwitchRoleError } from '@/entities/auth/hooks/useAuth';
-import { LOCAL_STORAGE_KEYS, type StoredUserRole } from '@/shared/constants/localStorageKeys';
-import { setRoleSwitchLoadingFlag } from '@/shared/constants/roleSwitchLoading';
+import Cookies from 'js-cookie';
+
+import { COOKIE_KEYS, type StoredUserRole } from '@/shared/constants/cookies';
 import { ChangeRoleModal } from '@/entities/auth/ui/ChangeRoleModal';
 import { useLogout } from '@/entities/auth/hooks/useLogout';
 import { useWithdraw } from '@/entities/auth/hooks/useWithdraw';
@@ -42,10 +43,10 @@ export const MyPage = (): React.ReactElement => {
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(LOCAL_STORAGE_KEYS.role);
+      const stored = Cookies.get(COOKIE_KEYS.role) ?? null;
       setRole(isStoredUserRole(stored) ? stored : null);
     } catch (e) {
-      console.error('Failed to read role from localStorage', e);
+      console.error('Failed to read role from cookie', e);
     }
   }, []);
 

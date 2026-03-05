@@ -7,8 +7,7 @@ export default function Index() {
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['top', 'bottom']}>
       <WebView
         style={{ flex: 1 }}
-        // source={{ uri: 'https://archiview.space/' }}
-        source={{ uri: 'http://localhost:3000' }}
+        source={{ uri: 'https://archiview.space/' }}
         javaScriptEnabled
         domStorageEnabled
         mixedContentMode="always"

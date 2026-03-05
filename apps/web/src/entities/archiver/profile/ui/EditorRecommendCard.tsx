@@ -10,6 +10,8 @@ import type { IEditor } from '@/entities/archiver/profile/model/archiverProfile.
 
 interface IEditorRecommendCardProps {
   editor: IEditor;
+  /** 화면에 처음 보이는 카드일 경우 true - 이미지 즉시 로드 */
+  priority?: boolean;
 }
 
 const MAX_VISIBLE_BADGES = 2;
