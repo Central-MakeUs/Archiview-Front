@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm, useFieldArray } from 'react-hook-form';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import z from 'zod';
 
 import { InstagramUrlInput } from './ui/InstagramUrlInput';
 import { HashTagInput } from './ui/HashTagInput';
 import { RegisterPlaceCard } from './ui/RegisterPlaceCard';
+import { RegisterFinishModal } from './ui/RegisterFinishModal';
 import { createPlaceDefault } from './model/place.default';
 import { registerPlaceSchema } from './model/place.schema';
 
@@ -19,12 +20,14 @@ import { useEditorGetPlaceByPostPlaceId } from '@/entities/editor/place/mutation
 const createDefaultPlace = () => createPlaceDefault();
 
 export const RegisterPlacePage = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const postPlaceIdParam = searchParams?.get('postPlaceId') ?? '';
   const postPlaceId = postPlaceIdParam ? Number(postPlaceIdParam) : undefined;
 
   const [createdPostId, setCreatedPostId] = useState<number | undefined>(undefined);
+  const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
   const isEdit = !!postPlaceIdParam || !!createdPostId;
 
   const methods = useForm<z.infer<typeof registerPlaceSchema>>({
@@ -75,6 +78,7 @@ export const RegisterPlacePage = () => {
       if (!postId) return;
 
       setCreatedPostId(postId);
+      setIsFinishModalOpen(true);
     },
   });
 
@@ -185,6 +189,15 @@ export const RegisterPlacePage = () => {
           </div>
         </div>
       </form>
+
+      <RegisterFinishModal
+        isOpen={isFinishModalOpen}
+        onClose={() => setIsFinishModalOpen(false)}
+        onConfirm={() => {
+          setIsFinishModalOpen(false);
+          router.replace('/editor/profile');
+        }}
+      />
     </FormProvider>
   );
 };
