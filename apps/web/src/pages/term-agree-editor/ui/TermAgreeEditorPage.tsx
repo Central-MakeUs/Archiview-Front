@@ -59,7 +59,7 @@ export const TermAgreeEditorPage = () => {
         </CheckItem>
       </div>
       <Button
-        onClick={() => router.push('/register-editor')}
+        onClick={() => router.push('register-editor')}
         className={allChecked ? 'w-full' : 'w-full bg-neutral-20 text-neutral-40 border-none'}
       >
         동의

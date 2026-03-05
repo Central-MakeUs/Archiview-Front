@@ -4,7 +4,6 @@ import '@/shared/styles/globals.css';
 
 import { QueryProvider } from '../providers/QueryProvider';
 import { NativeBridgeProvider } from '../providers/NativeBridgeProvider';
-import { SsgoiProvider } from '../providers/SsgoiProvider';
 import { KakaoMapScript } from '@/shared/lib/map/KakaoMapScript';
 import { Toaster } from 'sonner';
 
@@ -31,9 +30,7 @@ export function RootLayout({ children }: { children: React.ReactNode }): React.R
       <body>
         <KakaoMapScript />
         <NativeBridgeProvider>
-          <QueryProvider>
-            <SsgoiProvider>{children}</SsgoiProvider>
-          </QueryProvider>
+          <QueryProvider>{children}</QueryProvider>
         </NativeBridgeProvider>
         <Toaster position="top-center" richColors className="toaster-within-content" />
       </body>

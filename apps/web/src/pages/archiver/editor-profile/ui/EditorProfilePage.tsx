@@ -25,6 +25,8 @@ import { ArchiverPlaceItem } from '../../my-archive/ui/ArchiverPlaceItem';
 import { LocationPermissionModal } from '../../../../shared/ui/common/Modal/LocationPermissionModal';
 import { EditorProfileCard } from './EditorProfileCard';
 import { SortDropdown } from './SortDropDown';
+import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
+import { useMinLoading } from '@/shared/hooks/useMinLoading';
 
 type SortKey = 'LATEST' | 'OLDEST';
 
@@ -92,11 +94,11 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
   const nearbyLongitude =
     categoryFilter.scope === '내주변' ? location?.coords.longitude : undefined;
 
-  const { data: editorData } = useGetEditorProfile({
+  const { data: editorData, isLoading: isEditorDataLoading } = useGetEditorProfile({
     editorId,
     useMock: false,
   });
-  const { data: placeListData } = useGetEditorPlaceList({
+  const { data: placeListData, isLoading: isPlaceListLoading } = useGetEditorPlaceList({
     userId: editorId,
     sort,
     useMock: false,
@@ -110,6 +112,8 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
     categoryId: categoryFilter.categoryIds[0],
     useMock: false,
   });
+
+  console.log(placeListData);
 
   useEffect(() => {
     if (categoryFilter.scope !== '내주변') {
@@ -291,7 +295,11 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
 
   const editor = editorData?.data;
 
-  if (!editor) return null;
+  const showLoading = useMinLoading(isEditorDataLoading || isPlaceListLoading, 1500);
+  if (!editor)
+    return showLoading ? (
+      <LoadingPage text="에디터 프로필을 불러오는 중입니다." role="ARCHIVER" />
+    ) : null;
 
   return (
     <div className="flex h-full flex-col min-h-0">

@@ -14,12 +14,15 @@ import { Item } from '@/shared/ui/common/Item';
 import { EyeIcon, FolderOutlineIcon, RightArrowIcon } from '@/shared/ui/icon';
 import Image from 'next/image';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
+import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 
 const NEAR_CATEGORY_ID = 0;
 const DEFAULT_CATEGORY_ID = NEAR_CATEGORY_ID;
 
 const FALLBACK_LATITUDE = 37.5665;
 const FALLBACK_LONGITUDE = 126.978;
+// TODO : 폴백 이미지 제거..
+const FALLBACK_PLACE_IMAGE = '/images/TestImage.png';
 const MY_LOCATION_MARKER_URL = '/marker/myMarker.png';
 
 export const ArchiverCategoryPage = (): React.ReactElement => {
@@ -172,6 +175,9 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
             contentClassName="overflow-y-auto px-0 pb-6"
           >
             {!coords ? <div className="px-5 pt-6">위치 불러오는 중입니다.</div> : null}
+            {coords && isLoading ? (
+              <LoadingPage text="장소를 불러오는 중입니다." role="ARCHIVER" />
+            ) : null}
             {coords && isError ? <div className="px-5 pt-6">불러오기 실패</div> : null}
             {coords && apiErrorMessage ? <div className="px-5 pt-6">{apiErrorMessage}</div> : null}
 
@@ -188,11 +194,13 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
                     key={p.placeId}
                     thumbnail={
                       <div className="relative h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30">
-                        {p.imageUrl?.trim() ? (
-                          <Image src={p.imageUrl} alt={p.placeName} fill className="object-cover" />
-                        ) : (
-                          <div className="h-full w-full bg-neutral-30" />
-                        )}
+                        <Image
+                          src={p.imageUrl || FALLBACK_PLACE_IMAGE}
+                          alt={p.placeName}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
                       </div>
                     }
                     onClick={() => router.push(`/archiver/place-info/${p.placeId}`)}
@@ -232,6 +240,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
             </p>
           </div>
 
+          {isLoading ? <LoadingPage text="장소를 불러오는 중입니다." role="ARCHIVER" /> : null}
           {isError ? <div className="px-5 pt-6">불러오기 실패</div> : null}
           {apiErrorMessage ? <div className="px-5 pt-6">{apiErrorMessage}</div> : null}
 
@@ -249,11 +258,12 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
                     key={p.placeId}
                     thumbnail={
                       <div className="relative h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30">
-                        {p.imageUrl?.trim() ? (
-                          <Image src={p.imageUrl} alt={p.placeName} fill className="object-cover" />
-                        ) : (
-                          <div className="h-full w-full bg-neutral-30" />
-                        )}
+                        <Image
+                          src={p.imageUrl || FALLBACK_PLACE_IMAGE}
+                          alt={p.placeName}
+                          fill
+                          className="object-cover"
+                        />
                       </div>
                     }
                     onClick={() => router.push(`/archiver/place-info/${p.placeId}`)}

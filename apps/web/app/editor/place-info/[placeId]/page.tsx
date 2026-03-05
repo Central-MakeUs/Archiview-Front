@@ -1,5 +1,5 @@
 import { PlaceInfoPage, metadata } from '@/pages/editor/place-info';
-import { SsgoiTransition } from '@ssgoi/react';
+import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import React, { Suspense } from 'react';
 
 export { metadata };
@@ -13,10 +13,8 @@ export default function Page({
   const id = Number(placeId);
 
   return (
-    <SsgoiTransition id={`/editor/place-info/${placeId}`}>
-      <Suspense fallback={null}>
-        <PlaceInfoPage placeId={id} />
-      </Suspense>
-    </SsgoiTransition>
+    <Suspense fallback={<LoadingPage text="장소 정보를 불러오는 중입니다." role="EDITOR" />}>
+      <PlaceInfoPage placeId={id} />
+    </Suspense>
   );
 }

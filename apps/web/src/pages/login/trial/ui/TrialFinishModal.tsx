@@ -35,7 +35,7 @@ export const TrialFinishModal = ({ open, setOpen }: ITrialFinishModalProps) => {
             </Button>
             <p className="text-center caption-12-semibold text-neutral-50 mt-2">
               이미 가입했나요?{' '}
-              <button onClick={() => router.back()} className="underline underline-offset-2">
+              <button onClick={() => router.back} className="underline underline-offset-2">
                 로그인
               </button>
             </p>

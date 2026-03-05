@@ -6,7 +6,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { BoxInput } from '@/shared/ui/common/Input/BoxInput';
 import { usePostCode } from '@/shared/hooks/usePostCode';
 import { SearchPostCodeModal } from '@/shared/ui/common/Modal/SearchPostCodeModal';
-import { CaretUpCircleIcon, XIcon } from '@/shared/ui/icon';
+import { CaretUpCircleIcon, PictureIcon, XIcon } from '@/shared/ui/icon';
 import { useEditorGetPresignedUrl } from '@/entities/editor/place/mutations/useEditorGetPresignedUrl';
 import { usePutImage } from '@/entities/editor/place/mutations/usePutImage';
 import { CategoryChipGroup } from './CategoryChipGroup';
@@ -129,14 +129,14 @@ export const RegisterPlaceCard = ({ placeIndex, canDelete, onRemove }: IRegister
             onClick={() => fileInputRef.current?.click()}
             className="h-40 w-full bg-neutral-30 rounded-xl flex items-center justify-center overflow-hidden"
           >
-            {(thumbnailPreviewUrl ?? value?.imageUrl)?.trim() ? (
+            {thumbnailPreviewUrl || value?.imageUrl ? (
               <img
                 src={thumbnailPreviewUrl ?? value?.imageUrl}
                 alt="thumbnail"
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="h-full w-full bg-neutral-30" />
+              <PictureIcon className="w-8 h-8 text-neutral-60" />
             )}
           </button>
 

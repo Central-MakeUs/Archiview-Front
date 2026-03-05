@@ -43,18 +43,15 @@ export const CardSectionItem = ({
   return (
     <div className="flex h-full">
       <div className="rounded-l-default bg-neutral-40 w-20 relative overflow-hidden">
-        {post.imageUrl?.trim() ? (
-          <Image
-            alt="썸네일"
-            src={post.imageUrl}
-            fill
-            className="object-cover"
-            sizes="80px"
-            priority={false}
-          />
-        ) : (
-          <div className="h-full w-full bg-neutral-30" />
-        )}
+        <Image
+          alt="썸네일"
+          src={post.imageUrl}
+          fill
+          className="object-cover"
+          sizes="80px"
+          priority={false}
+          unoptimized
+        />
       </div>
       <div className="rounded-r-default bg-[#F7F7F8] w-full flex flex-col gap-1 py-3 pl-3 pr-5">
         <div className="flex justify-between pb-3 border-b border-neutral-30">

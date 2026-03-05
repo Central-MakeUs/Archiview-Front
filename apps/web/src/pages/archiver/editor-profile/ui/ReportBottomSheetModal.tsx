@@ -33,6 +33,7 @@ export const ReportBottomSheetModal = ({
           <div className="flex flex-col">
             <button
               onClick={() => {
+                console.log('Dfdfdf');
                 setReportModalOpen(true);
                 setOpen(false);
               }}

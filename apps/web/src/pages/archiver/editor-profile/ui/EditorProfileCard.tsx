@@ -153,7 +153,6 @@ export const EditorProfileCard = ({ editorId, editorData }: IEditorProfileCardPr
   const { blockEditor } = useBlockEditor();
 
   const stripHash = (tag?: string) => (tag ?? '').trim().replace(/^#/, '');
-  const profileImageUrl = editorData.profileImageUrl?.trim();
 
   return (
     <>
@@ -164,11 +163,7 @@ export const EditorProfileCard = ({ editorId, editorData }: IEditorProfileCardPr
           {/* 프로필 이미지 */}
           <div className="shrink-0">
             <div className="relative overflow-hidden h-17.5 w-17.5 rounded-full bg-neutral-30">
-              {profileImageUrl ? (
-                <Image src={profileImageUrl} alt="" fill className="object-cover" />
-              ) : (
-                <div className="h-full w-full bg-neutral-30" />
-              )}
+              <Image src={editorData.profileImageUrl} alt="" fill unoptimized />
             </div>
           </div>
 

@@ -63,6 +63,7 @@ export const InfoSection = ({
   place?: IPlaceDetail;
   recordNumber?: number;
 }) => {
+  console.log(place);
   const handleClickOpenKakaoMap = async () => {
     const address = (place?.roadAddressName || place?.addressName)?.trim();
     if (!address) return;

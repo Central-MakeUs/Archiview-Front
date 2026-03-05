@@ -10,6 +10,8 @@ import { useGetMyProfile } from '@/entities/archiver/profile/queries/useGetMyPro
 import { useGetHotPlace } from '@/entities/archiver/place/queries/useGetHotPlace';
 import { useGetEditorTrusted } from '@/entities/archiver/profile/queries/useGetEditorTrusted';
 import { useAuth } from '@/entities/auth/hooks/useAuth';
+import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
+import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { SearchBar } from '@/shared/ui/SearchBar';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -20,13 +22,27 @@ export const ArchiverHomePage = (): React.ReactElement => {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState('');
 
-  const { data: myData, isError: isMyProfileError } = useGetMyProfile({ useMock: false });
-  const { data: hotPlaceData, isError: isHotPlaceError } = useGetHotPlace({ useMock: false });
-  const { data: editorTrustedData, isError: isEditorTrustedError } = useGetEditorTrusted({
-    useMock: false,
-  });
+  const {
+    data: myData,
+    isLoading: isMyProfileLoading,
+    isError: isMyProfileError,
+  } = useGetMyProfile({ useMock: false });
+  const {
+    data: hotPlaceData,
+    isLoading: isHotPlaceLoading,
+    isError: isHotPlaceError,
+  } = useGetHotPlace({ useMock: false });
+  const {
+    data: editorTrustedData,
+    isLoading: isEditorTrustedLoading,
+    isError: isEditorTrustedError,
+  } = useGetEditorTrusted({ useMock: false });
 
+  const isLoading = isMyProfileLoading || isHotPlaceLoading || isEditorTrustedLoading;
   const isError = isMyProfileError || isHotPlaceError || isEditorTrustedError;
+  const showLoading = useMinLoading(isLoading);
+
+  if (showLoading) return <LoadingPage text="아카이버 홈 화면으로 이동중입니다." role="ARCHIVER" />;
 
   if (isError) return <ErrorPage />;
 

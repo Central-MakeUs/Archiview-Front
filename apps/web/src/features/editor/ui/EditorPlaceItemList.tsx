@@ -22,8 +22,18 @@ const EmptyPlaceState = () => {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <path d="M12 5V19" stroke="white" strokeWidth="2" strokeLinecap="round" />
-          <path d="M5 12H19" stroke="white" strokeWidth="2" strokeLinecap="round" />
+          <path
+            d="M12 5V19"
+            stroke="white"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <path
+            d="M5 12H19"
+            stroke="white"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
         </svg>
       </Link>
       <p className="body-16-semibold text-center text-neutral-40">
@@ -87,17 +97,13 @@ export const EditorPlaceItemList = ({ places }: IEditorPlaceItemListProps) => {
             shareCount={place.stats.directionCount}
             instagramCount={place.stats.instagramInflowCount}
             thumbnail={
-              place.placeImageUrl?.trim() ? (
-                <img
-                  src={place.placeImageUrl}
-                  alt={place.placeName}
-                  width={18}
-                  height={18}
-                  className="h-18 w-18 rounded-2xl object-cover"
-                />
-              ) : (
-                <div className="h-18 w-18 rounded-2xl bg-neutral-30" />
-              )
+              <img
+                src={place.placeImageUrl}
+                alt={place.placeName}
+                width={18}
+                height={18}
+                className="h-18 w-18 rounded-2xl"
+              />
             }
           />
         </Link>

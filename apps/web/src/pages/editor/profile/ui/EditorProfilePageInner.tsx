@@ -8,6 +8,7 @@ import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import { CATEGORIES } from '@/shared/constants/category';
 import { requestNativeCurrentLocation } from '@/shared/lib/native-actions';
+import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import type { IPin } from '@/entities/editor/place/model/editorPlace.type';
 import { useGetMyPlacePin } from '@/entities/editor/place/queries/useGetMyPlacePin';
 import { useGetMyPlaceList } from '@/entities/editor/place/queries/useGetMyPlaceList';
@@ -38,9 +39,9 @@ const toSelectedMarkerUrl = (url: string): string => {
 };
 
 const getMarkerScaleByLevel = (level: number): number => {
-  if (level >= 9) return 0.6;
-  if (level >= 7) return 0.6;
-  if (level >= 5) return 0.8;
+  if (level >= 9) return 0.60;
+  if (level >= 7) return 0.60;
+  if (level >= 5) return 0.80;
   return 1;
 };
 
@@ -79,7 +80,11 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
   const nearbyLongitude =
     categoryFilter.scope === '내주변' ? location?.coords.longitude : undefined;
 
-  const { data: placeListData, isError: isPlaceListError } = useGetMyPlaceList({
+  const {
+    data: placeListData,
+    isLoading: isPlaceListLoading,
+    isError: isPlaceListError,
+  } = useGetMyPlaceList({
     filter: mapFilter,
     categoryId: categoryFilter.categoryIds[0],
     latitude: nearbyLatitude,
@@ -240,6 +245,10 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
     router.push('/editor/register-place');
   };
 
+  if (isPlaceListLoading && !placeListData) {
+    return <LoadingPage text="내 장소를 불러오는 중입니다." role="EDITOR" />;
+  }
+
   if (isPlaceListError && !placeListData) {
     return <div className="px-5 pt-6">불러오기 실패</div>;
   }
@@ -309,7 +318,7 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
               shareCount={place.stats.directionCount}
               instagramCount={place.stats.instagramInflowCount}
               thumbnail={
-                place.placeImageUrl?.trim() ? (
+                place.placeImageUrl ? (
                   <img
                     src={place.placeImageUrl}
                     alt={place.placeName}

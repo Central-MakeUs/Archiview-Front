@@ -25,11 +25,7 @@ export const CardSection = ({
       {postPlaces?.map((post) => (
         <div key={post.postPlaceId} className="flex min-h-31.75">
           <div className="rounded-l-default bg-neutral-40 w-20 relative overflow-hidden">
-            {post.imageUrl?.trim() ? (
-              <img alt="썸네일" src={post.imageUrl} className="w-full h-full object-cover" />
-            ) : (
-              <div className="h-full w-full bg-neutral-30" />
-            )}
+            <img alt="썸네일" src={post.imageUrl} className="w-full h-full object-cover" />
           </div>
           <div className="rounded-r-default bg-[#F7F7F8] w-full flex flex-col min-h-0 py-3 pl-3 pr-5">
             <div className="flex justify-between pb-3 shrink-0">

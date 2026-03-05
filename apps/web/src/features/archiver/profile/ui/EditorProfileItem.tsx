@@ -23,7 +23,6 @@ export const EditorProfileItem = ({
   profileImageUrl,
 }: IEditorProfileItemProps): React.ReactElement => {
   const router = useRouter();
-  const imageSrc = profileImageUrl?.trim();
 
   const [modalOpen, setModalOpen] = useState(false);
   const { unfollowEditor } = useUnfollowEditor();
@@ -34,11 +33,7 @@ export const EditorProfileItem = ({
         onClick={() => router.replace(`/archiver/editor-profile/${editorId}`)}
         thumbnail={
           <div className="relative h-18 w-18 rounded-2xl overflow-hidden bg-neutral-30">
-            {imageSrc ? (
-              <Image src={imageSrc} alt={`${nickname} 프로필`} fill className="object-cover" />
-            ) : (
-              <div className="h-full w-full bg-neutral-30" />
-            )}
+            <Image src={profileImageUrl} alt={`${nickname} 프로필`} fill className="object-cover" />
           </div>
         }
         className="group gap-5"
@@ -50,7 +45,10 @@ export const EditorProfileItem = ({
               <span className="group-active:text-primary-40">{nickname}</span>
               <div className="flex flex-row gap-1">
                 <div className="p-1.5">
-                  <RightArrowIcon className="group-active:text-primary-40" />
+                  <RightArrowIcon
+                    onClick={() => console.log('클릭')}
+                    className="group-active:text-primary-40"
+                  />
                 </div>
                 <div className="p-1">
                   {/* TODO : ProfileDeleteIcon 눌렀을 땐 다른 active css 동작 안시키고 싶은데 어떻게? */}

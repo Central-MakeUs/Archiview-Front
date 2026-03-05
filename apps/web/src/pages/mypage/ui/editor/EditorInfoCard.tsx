@@ -19,22 +19,24 @@ export const EditorInfoCard = ({
   tags = [],
   onEdit,
 }: IEditorInfoCardProps): React.ReactElement => {
-  const imageSrc = profileImageUrl?.trim();
-
   return (
     <div className="flex items-center gap-4 rounded-default bg-primary-30 px-5 py-4">
       {/* 프로필 이미지 */}
       <div className="relative h-[60px] w-[60px] shrink-0 overflow-hidden rounded-full bg-neutral-20">
-        {imageSrc ? (
+        {profileImageUrl ? (
           <Image
             preload={true}
-            src={imageSrc}
+            src={profileImageUrl}
             alt={`${nickname} 프로필`}
             fill
             className="object-cover"
           />
         ) : (
-          <div className="h-full w-full bg-neutral-30" />
+          <div className="flex h-full w-full items-center justify-center text-neutral-40">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg>
+          </div>
         )}
       </div>
 

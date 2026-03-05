@@ -46,7 +46,7 @@ export const TermAgreePage = () => {
         </CheckItem>
       </div>
       <Button
-        onClick={() => router.push('/register')}
+        onClick={() => router.push('register')}
         className={allChecked ? 'w-full' : 'w-full bg-neutral-20 text-neutral-40 border-none'}
       >
         동의

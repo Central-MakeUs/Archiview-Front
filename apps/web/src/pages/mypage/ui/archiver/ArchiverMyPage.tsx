@@ -24,7 +24,6 @@ interface IArchiverMyPageProps {
   onReportBug: () => void;
   onTermsClick: (key: string) => void;
   onSwitchRole: () => void;
-  isSwitchingRole: boolean;
 }
 
 export const ArchiverMyPage = ({
@@ -35,12 +34,11 @@ export const ArchiverMyPage = ({
   onReportBug,
   onTermsClick,
   onSwitchRole,
-  isSwitchingRole,
 }: IArchiverMyPageProps): React.ReactElement => {
   const router = useRouter();
 
   const handleManageBlockedEditors = () => {
-    router.push('/blocked-editor');
+    router.push('blocked-editor');
   };
 
   return (
@@ -74,7 +72,6 @@ export const ArchiverMyPage = ({
           variant="contained"
           fullwidth
           onClick={onSwitchRole}
-          disabled={isSwitchingRole}
           className="h-[67px] w-[228px] rounded-[999px]"
         >
           <EllipseArrowIcons className="mr-1" />

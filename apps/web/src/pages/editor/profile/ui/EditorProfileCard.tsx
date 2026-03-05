@@ -22,8 +22,6 @@ export const EditorProfileCard = ({
   onEdit,
   onShareInfo,
 }: IEditorProfileCardProps): React.ReactElement => {
-  const imageSrc = profileImageUrl?.trim();
-
   return (
     <div className="mx-5 flex flex-col overflow-hidden rounded-default shadow-[0px_0px_11px_0px_rgba(144,144,144,0.4)]">
       {/* 상단 파란색 영역 */}
@@ -34,14 +32,18 @@ export const EditorProfileCard = ({
             <div className="flex items-center gap-4">
               {/* 프로필 이미지 */}
               <div className="size-[70px] shrink-0 overflow-hidden rounded-full bg-neutral-20">
-                {imageSrc ? (
+                {profileImageUrl ? (
                   <img
-                    src={imageSrc}
+                    src={profileImageUrl}
                     alt={`${nickname} 프로필`}
                     className="size-full object-cover"
                   />
                 ) : (
-                  <div className="h-full w-full bg-neutral-30" />
+                  <div className="flex size-full items-center justify-center text-neutral-40">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                  </div>
                 )}
               </div>
 
@@ -60,19 +62,16 @@ export const EditorProfileCard = ({
                     className="shrink-0 p-0.5"
                     aria-label="프로필 편집"
                   >
-                    <PencilIcon
-                      width={24}
-                      height={24}
-                      stroke="currentColor"
-                      className="text-primary-50"
-                    />
+                    <PencilIcon width={24} height={24} stroke="currentColor" className="text-primary-50" />
                   </button>
                 </div>
               </div>
             </div>
 
             {/* 자기소개 */}
-            {introduction && <p className="body-14-medium text-neutral-10">{introduction}</p>}
+            {introduction && (
+              <p className="body-14-medium text-neutral-10">{introduction}</p>
+            )}
           </div>
 
           {/* 해시태그 */}

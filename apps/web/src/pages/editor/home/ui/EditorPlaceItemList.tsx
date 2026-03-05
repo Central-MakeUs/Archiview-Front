@@ -20,17 +20,13 @@ export const EditorPlaceItemList = ({
             shareCount={place.stats.directionCount}
             instagramCount={place.stats.instagramInflowCount}
             thumbnail={
-              place.placeImageUrl?.trim() ? (
-                <img
-                  src={place.placeImageUrl}
-                  alt={place.placeName}
-                  width={100}
-                  height={100}
-                  className="h-18 w-18 rounded-2xl object-cover"
-                />
-              ) : (
-                <div className="h-18 w-18 rounded-2xl bg-neutral-30" />
-              )
+              <img
+                src={place.placeImageUrl}
+                alt={place.placeName}
+                width={100}
+                height={100}
+                className="h-18 w-18 rounded-2xl bg-neutral-30"
+              />
             }
           />
         </Link>

@@ -7,9 +7,11 @@ import { PopularPlaceSection } from '@/widgets/editor/PopularPlaceSection';
 import { EditorTopBanner } from '@/widgets/editor/EditorTopBanner';
 import { EditorInsight } from '@/features/editor/ui/EditorInsight';
 import { useAuth } from '@/entities/auth/hooks/useAuth';
+import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import { useEditorInsightSummaryQuery } from '@/entities/editor/place/queries/useGetInsightSummery';
 import { useGetMyPlaceList } from '@/entities/editor/place/queries/useGetMyPlaceList';
 import type { InsightPeriod } from '@/entities/editor/place/model/editorPlace.type';
+import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
 
 function parseInsightPeriod(value: string | undefined): InsightPeriod {
@@ -26,14 +28,23 @@ export const EditorHomePage = () => {
     [sp],
   );
 
-  const { data: insightData, isError: isInsightError } = useEditorInsightSummaryQuery({
-    period,
-    useMock: false,
-  });
+  const {
+    data: insightData,
+    isLoading: isInsightLoading,
+    isError: isInsightError,
+  } = useEditorInsightSummaryQuery({ period, useMock: false });
 
-  const { data: placeData, isError: isPlaceError } = useGetMyPlaceList({ useMock: false });
+  const {
+    data: placeData,
+    isLoading: isPlaceLoading,
+    isError: isPlaceError,
+  } = useGetMyPlaceList({ useMock: false });
 
+  const isLoading = isInsightLoading || isPlaceLoading;
   const isError = isInsightError || isPlaceError;
+
+  const showLoading = useMinLoading(isLoading, 1500);
+  if (showLoading) return <LoadingPage text="에디터 홈페이지를 로딩 중입니다" role="EDITOR" />;
 
   if (isError) return <ErrorPage />;
 

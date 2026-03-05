@@ -27,16 +27,10 @@ export const RoundedHeaderSection = ({
   place?: IPlaceDetail;
   thumbnail: string;
 }) => {
-  const imageSrc = thumbnail.trim();
-
   return (
     <section className="relative mb-[86px]">
       <div className="h-[196px] overflow-hidden">
-        {imageSrc ? (
-          <Image src={imageSrc} alt="" fill className="object-cover" unoptimized />
-        ) : (
-          <div className="h-full w-full bg-neutral-30" />
-        )}
+        <Image src={thumbnail} alt="" fill className="object-cover" unoptimized />
       </div>
       <div className="h-31.25 absolute left-0 right-0 -bottom-21.5 pt-8 px-5 pb-5 flex flex-col gap-6.5 rounded-t-4xl bg-neutral-10 border-b border-b-[#DBDCDF]">
         <div className="heading-20-semibold">{place?.name}</div>

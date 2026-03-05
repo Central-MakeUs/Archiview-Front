@@ -21,17 +21,18 @@ export const ArchiverPlaceItem = ({
   onClick,
   thumbnail,
 }: IArchiverPlaceItemProps): React.ReactElement => {
-  const imageSrc = thumbnail.trim();
-
   return (
     <Item
       thumbnail={
         <div className="relative h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30">
-          {imageSrc ? (
-            <Image src={imageSrc} alt={name} fill sizes="72px" className="object-cover" />
-          ) : (
-            <div className="h-full w-full bg-neutral-30" />
-          )}
+          <Image
+            src={thumbnail ?? "null"}
+            alt={name}
+            fill
+            sizes="72px"
+            unoptimized
+            className="object-cover"
+          />
         </div>
       }
       onClick={onClick}
