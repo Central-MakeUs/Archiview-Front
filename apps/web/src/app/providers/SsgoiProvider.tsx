@@ -32,11 +32,7 @@ const ssgoiConfig: SsgoiConfig = {
       from: '/archiver/home',
       to: '/archiver/editor-profile/*',
       transition: swap(),
-    },
-    {
-      from: '/archiver/editor-profile/*',
-      to: '/archiver/home',
-      transition: swap(),
+      symmetric: true,
     },
     // 아카이버 홈 <-> 카테고리
     {
@@ -64,6 +60,18 @@ const ssgoiConfig: SsgoiConfig = {
     },
     {
       from: '/archiver/home',
+      to: '/mypage',
+      transition: swap(),
+      symmetric: true,
+    },
+    {
+      from: '/archiver/editor-profile/*',
+      to: '/archiver/my-archive',
+      transition: swap(),
+      symmetric: true,
+    },
+    {
+      from: '/archiver/editor-profile/*',
       to: '/mypage',
       transition: swap(),
       symmetric: true,
