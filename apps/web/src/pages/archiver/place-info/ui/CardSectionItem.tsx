@@ -50,7 +50,6 @@ export const CardSectionItem = ({
           className="object-cover"
           sizes="80px"
           priority={false}
-          unoptimized
         />
       </div>
       <div className="rounded-r-default bg-[#F7F7F8] w-full flex flex-col gap-1 py-3 pl-3 pr-5">

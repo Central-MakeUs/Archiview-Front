@@ -163,7 +163,7 @@ export const EditorProfileCard = ({ editorId, editorData }: IEditorProfileCardPr
           {/* 프로필 이미지 */}
           <div className="shrink-0">
             <div className="relative overflow-hidden h-17.5 w-17.5 rounded-full bg-neutral-30">
-              <Image src={editorData.profileImageUrl} alt="" fill unoptimized />
+              <Image src={editorData.profileImageUrl} alt="" fill />
             </div>
           </div>
 

@@ -198,7 +198,6 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
                           alt={p.placeName}
                           fill
                           className="object-cover"
-                          unoptimized
                         />
                       </div>
                     }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { memo, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -12,12 +12,11 @@ interface IEditorRecommendCardProps {
   editor: IEditor;
 }
 
-export const EditorRecommendCard = ({ editor }: IEditorRecommendCardProps) => {
-  const stripHash = (tag?: string) => (tag ?? '').trim().replace(/^#/, '');
+const MAX_VISIBLE_BADGES = 2;
 
-  const badgeContainerRef = useRef<HTMLDivElement>(null);
-  const badgeMeasureRefs = useRef<Array<HTMLDivElement | null>>([]);
+const stripHash = (tag?: string) => (tag ?? '').trim().replace(/^#/, '');
 
+const EditorRecommendCardComponent = ({ editor }: IEditorRecommendCardProps) => {
   const badges = useMemo(
     () =>
       (editor.hashtags ?? []).map((tag, index) => ({
@@ -30,61 +29,7 @@ export const EditorRecommendCard = ({ editor }: IEditorRecommendCardProps) => {
       })),
     [editor.hashtags],
   );
-
-  const [visibleBadgeCount, setVisibleBadgeCount] = useState(badges.length);
-
-  const calculateVisibleBadgeCount = useCallback(() => {
-    const containerWidth = badgeContainerRef.current?.clientWidth ?? 0;
-
-    if (!containerWidth) {
-      return;
-    }
-
-    const gap = 4;
-    let occupiedWidth = 0;
-    let nextVisibleCount = 0;
-
-    for (let index = 0; index < badges.length; index += 1) {
-      const badgeWidth = badgeMeasureRefs.current[index]?.offsetWidth ?? 0;
-
-      if (!badgeWidth) {
-        continue;
-      }
-
-      const requiredWidth = nextVisibleCount === 0 ? badgeWidth : occupiedWidth + gap + badgeWidth;
-
-      if (requiredWidth > containerWidth) {
-        break;
-      }
-
-      occupiedWidth = requiredWidth;
-      nextVisibleCount += 1;
-    }
-
-    setVisibleBadgeCount(badges.length > 0 ? Math.max(nextVisibleCount, 1) : 0);
-  }, [badges]);
-
-  useLayoutEffect(() => {
-    calculateVisibleBadgeCount();
-
-    const resizeObserver = new ResizeObserver(() => {
-      calculateVisibleBadgeCount();
-    });
-
-    if (badgeContainerRef.current) {
-      resizeObserver.observe(badgeContainerRef.current);
-    }
-
-    badgeMeasureRefs.current.forEach((badgeElement) => {
-      if (badgeElement) {
-        resizeObserver.observe(badgeElement);
-      }
-    });
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [calculateVisibleBadgeCount]);
+  const visibleBadges = badges.slice(0, MAX_VISIBLE_BADGES);
 
   return (
     <Link href={`/archiver/editor-profile/${editor.editorId}`} className="block shrink-0">
@@ -96,8 +41,8 @@ export const EditorRecommendCard = ({ editor }: IEditorRecommendCardProps) => {
             width={200}
             height={90}
             className="object-cover"
+            sizes="180px"
             priority={false}
-            unoptimized
           />
         </div>
         <div className="p-3">
@@ -105,40 +50,20 @@ export const EditorRecommendCard = ({ editor }: IEditorRecommendCardProps) => {
             <span className="body-14-semibold">{editor.nickname}</span>
           </div>
           <div className="caption-12-regular text-neutral-50 mb-3">{editor.introduction}</div>
-          <div className="relative">
-            <div
-              ref={badgeContainerRef}
-              className="flex flex-nowrap items-center gap-1 overflow-hidden"
-            >
-              {badges.slice(0, visibleBadgeCount).map((badge) => (
-                <Badge key={badge.key} variant="contained" className={badge.className}>
-                  <span className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
-                    {badge.label}
-                  </span>
-                </Badge>
-              ))}
-            </div>
-
-            <div className="absolute left-0 top-0 invisible pointer-events-none whitespace-nowrap">
-              <div className="flex items-center gap-1">
-                {badges.map((badge, index) => (
-                  <div
-                    key={`measure-${badge.key}`}
-                    ref={(element) => {
-                      badgeMeasureRefs.current[index] = element;
-                    }}
-                    className="inline-flex"
-                  >
-                    <Badge variant="contained" className={badge.className}>
-                      {badge.label}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </div>
+          <div className="flex flex-nowrap items-center gap-1 overflow-hidden">
+            {visibleBadges.map((badge) => (
+              <Badge key={badge.key} variant="contained" className={badge.className}>
+                <span className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                  {badge.label}
+                </span>
+              </Badge>
+            ))}
           </div>
         </div>
       </Kard>
     </Link>
   );
 };
+
+export const EditorRecommendCard = memo(EditorRecommendCardComponent);
+EditorRecommendCard.displayName = 'EditorRecommendCard';

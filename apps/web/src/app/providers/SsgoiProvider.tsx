@@ -14,7 +14,11 @@ const ssgoiConfig: SsgoiConfig = {
       from: '/archiver/home',
       to: '/archiver/search-result',
       transition: depth({ direction: 'enter' }),
-      symmetric: true, // 뒤로가기 시 자동으로 exit 방향 적용
+    },
+    {
+      from: '/archiver/search-result',
+      to: '/archiver/home',
+      transition: depth({ direction: 'exit' }),
     },
     // 아카이버 홈 <-> 장소 정보
     {
@@ -23,7 +27,7 @@ const ssgoiConfig: SsgoiConfig = {
       transition: drill({ direction: 'enter' }),
     },
     {
-      from: '/archiver/place-info/*',
+      from: '/archiver/place-info',
       to: '/archiver/home',
       transition: drill({ direction: 'exit' }),
     },
