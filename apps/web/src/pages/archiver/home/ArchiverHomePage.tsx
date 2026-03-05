@@ -10,10 +10,11 @@ import { useGetMyProfile } from '@/entities/archiver/profile/queries/useGetMyPro
 import { useGetHotPlace } from '@/entities/archiver/place/queries/useGetHotPlace';
 import { useGetEditorTrusted } from '@/entities/archiver/profile/queries/useGetEditorTrusted';
 import { useAuth } from '@/entities/auth/hooks/useAuth';
+import { consumeRoleSwitchLoadingFlag } from '@/shared/constants/roleSwitchLoading';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { SearchBar } from '@/shared/ui/SearchBar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
 
@@ -21,6 +22,7 @@ export const ArchiverHomePage = (): React.ReactElement => {
   useAuth();
   const router = useRouter();
   const [searchValue, setSearchValue] = useState('');
+  const [showRoleSwitchLoading, setShowRoleSwitchLoading] = useState(false);
 
   const {
     data: myData,
@@ -42,7 +44,13 @@ export const ArchiverHomePage = (): React.ReactElement => {
   const isError = isMyProfileError || isHotPlaceError || isEditorTrustedError;
   const showLoading = useMinLoading(isLoading);
 
-  if (showLoading) return <LoadingPage text="아카이버 홈 화면으로 이동중입니다." role="ARCHIVER" />;
+  useEffect(() => {
+    setShowRoleSwitchLoading(consumeRoleSwitchLoadingFlag());
+  }, []);
+
+  if (showRoleSwitchLoading && showLoading) {
+    return <LoadingPage text="아카이버 홈 화면으로 이동중입니다." role="ARCHIVER" />;
+  }
 
   if (isError) return <ErrorPage />;
 

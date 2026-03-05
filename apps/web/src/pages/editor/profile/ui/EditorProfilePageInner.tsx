@@ -8,7 +8,6 @@ import { KakaoMap } from '@/shared/ui/KakaoMap';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import { CATEGORIES } from '@/shared/constants/category';
 import { requestNativeCurrentLocation } from '@/shared/lib/native-actions';
-import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import type { IPin } from '@/entities/editor/place/model/editorPlace.type';
 import { useGetMyPlacePin } from '@/entities/editor/place/queries/useGetMyPlacePin';
 import { useGetMyPlaceList } from '@/entities/editor/place/queries/useGetMyPlaceList';
@@ -39,9 +38,9 @@ const toSelectedMarkerUrl = (url: string): string => {
 };
 
 const getMarkerScaleByLevel = (level: number): number => {
-  if (level >= 9) return 0.60;
-  if (level >= 7) return 0.60;
-  if (level >= 5) return 0.80;
+  if (level >= 9) return 0.6;
+  if (level >= 7) return 0.6;
+  if (level >= 5) return 0.8;
   return 1;
 };
 
@@ -246,7 +245,7 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
   };
 
   if (isPlaceListLoading && !placeListData) {
-    return <LoadingPage text="내 장소를 불러오는 중입니다." role="EDITOR" />;
+    return null;
   }
 
   if (isPlaceListError && !placeListData) {

@@ -14,7 +14,6 @@ import { Item } from '@/shared/ui/common/Item';
 import { EyeIcon, FolderOutlineIcon, RightArrowIcon } from '@/shared/ui/icon';
 import Image from 'next/image';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
-import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 
 const NEAR_CATEGORY_ID = 0;
 const DEFAULT_CATEGORY_ID = NEAR_CATEGORY_ID;
@@ -176,7 +175,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
           >
             {!coords ? <div className="px-5 pt-6">위치 불러오는 중입니다.</div> : null}
             {coords && isLoading ? (
-              <LoadingPage text="장소를 불러오는 중입니다." role="ARCHIVER" />
+              <div className="px-5 pt-6">장소를 불러오는 중입니다.</div>
             ) : null}
             {coords && isError ? <div className="px-5 pt-6">불러오기 실패</div> : null}
             {coords && apiErrorMessage ? <div className="px-5 pt-6">{apiErrorMessage}</div> : null}
@@ -240,7 +239,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
             </p>
           </div>
 
-          {isLoading ? <LoadingPage text="장소를 불러오는 중입니다." role="ARCHIVER" /> : null}
+          {isLoading ? <div className="px-5 pt-6">장소를 불러오는 중입니다.</div> : null}
           {isError ? <div className="px-5 pt-6">불러오기 실패</div> : null}
           {apiErrorMessage ? <div className="px-5 pt-6">{apiErrorMessage}</div> : null}
 

@@ -4,7 +4,6 @@ import { useGetMyFollows } from '@/entities/archiver/profile/queries/useGetMyFol
 import { EditorProfileItem } from '@/features/archiver/profile/ui/EditorProfileItem';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
-import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 
 export interface IEditor {
   editorId: string;
@@ -21,8 +20,7 @@ export const FollowListPage = () => {
   const showLoading = useMinLoading(isLoading);
   const followData = data?.data?.editors ?? [];
 
-  if (!data || showLoading)
-    return <LoadingPage text="팔로잉 목록을 불러오는 중입니다." role="ARCHIVER" />;
+  if (!data || showLoading) return null;
 
   if (isError) return <ErrorPage />;
 

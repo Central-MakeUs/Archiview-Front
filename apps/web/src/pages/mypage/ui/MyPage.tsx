@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { useAuth, SwitchRoleError } from '@/entities/auth/hooks/useAuth';
 import { LOCAL_STORAGE_KEYS, type StoredUserRole } from '@/shared/constants/localStorageKeys';
+import { setRoleSwitchLoadingFlag } from '@/shared/constants/roleSwitchLoading';
 import { ChangeRoleModal } from '@/entities/auth/ui/ChangeRoleModal';
 import { useLogout } from '@/entities/auth/hooks/useLogout';
 import { useWithdraw } from '@/entities/auth/hooks/useWithdraw';
@@ -12,8 +13,6 @@ import { openInAppBrowserOrBrowserNewTab } from '@/shared/lib/native-actions';
 import { EditorMyPage } from './editor/EditorMyPage';
 import { ArchiverMyPage } from './archiver/ArchiverMyPage';
 import { useGetMyProfile } from '@/entities/archiver/profile/queries/useGetMyProfile';
-import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
-import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { WithDrawModal } from './WithDrawModal';
 import { LogoutModal } from './LogoutModal';
 
@@ -34,7 +33,7 @@ export const MyPage = (): React.ReactElement => {
   const { switchRole } = useAuth();
   const { logout } = useLogout();
   const { withdraw } = useWithdraw();
-  const { data: myData, isLoading: isMyDataLoading } = useGetMyProfile({ useMock: false });
+  const { data: myData } = useGetMyProfile({ useMock: false });
 
   const [role, setRole] = useState<StoredUserRole | null>(null);
   const [openChangeRoleModal, setOpenChangeRoleModal] = useState(false);
@@ -54,6 +53,7 @@ export const MyPage = (): React.ReactElement => {
   const handleSwitchRole = useCallback(async () => {
     try {
       const nextRole = await switchRole();
+      setRoleSwitchLoadingFlag();
       // setRole 호출 시 리렌더로 새 역할의 MyPage가 잠깐 보였다가 리다이렉트되는 깜빡임 발생
       // 곧바로 홈으로 이동하므로 state 업데이트 생략
       router.replace(nextRole === 'ARCHIVER' ? '/archiver/home' : '/editor/home');
@@ -135,15 +135,6 @@ export const MyPage = (): React.ReactElement => {
       termsOfServiceUrl,
     ],
   );
-
-  const showLoading = useMinLoading(isMyDataLoading, 1500);
-  if (showLoading)
-    return (
-      <LoadingPage
-        text="내 정보를 불러오는 중입니다."
-        role={role === 'EDITOR' ? 'EDITOR' : 'ARCHIVER'}
-      />
-    );
 
   const commonHandlers = {
     onLogout: handleLogout,

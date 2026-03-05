@@ -1,12 +1,13 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { PopularPlaceSection } from '@/widgets/editor/PopularPlaceSection';
 import { EditorTopBanner } from '@/widgets/editor/EditorTopBanner';
 import { EditorInsight } from '@/features/editor/ui/EditorInsight';
 import { useAuth } from '@/entities/auth/hooks/useAuth';
+import { consumeRoleSwitchLoadingFlag } from '@/shared/constants/roleSwitchLoading';
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import { useEditorInsightSummaryQuery } from '@/entities/editor/place/queries/useGetInsightSummery';
 import { useGetMyPlaceList } from '@/entities/editor/place/queries/useGetMyPlaceList';
@@ -21,6 +22,7 @@ function parseInsightPeriod(value: string | undefined): InsightPeriod {
 
 export const EditorHomePage = () => {
   useAuth();
+  const [showRoleSwitchLoading, setShowRoleSwitchLoading] = useState(false);
 
   const sp = useSearchParams();
   const period = useMemo<InsightPeriod>(
@@ -44,7 +46,14 @@ export const EditorHomePage = () => {
   const isError = isInsightError || isPlaceError;
 
   const showLoading = useMinLoading(isLoading, 1500);
-  if (showLoading) return <LoadingPage text="에디터 홈페이지를 로딩 중입니다" role="EDITOR" />;
+
+  useEffect(() => {
+    setShowRoleSwitchLoading(consumeRoleSwitchLoadingFlag());
+  }, []);
+
+  if (showRoleSwitchLoading && showLoading) {
+    return <LoadingPage text="에디터 홈페이지를 로딩 중입니다" role="EDITOR" />;
+  }
 
   if (isError) return <ErrorPage />;
 

@@ -20,7 +20,6 @@ import { useGetArchivePins } from '@/entities/archiver/place/queries/useGetArchi
 import { useGetMyArchives } from '@/entities/archiver/place/queries/useGetMyArchives';
 
 import { ArchiverPlaceItem } from './ArchiverPlaceItem';
-import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import { LocationPermissionModal } from '../../../../shared/ui/common/Modal/LocationPermissionModal';
 
 const CATEGORY_ID_TO_MARKER_URL: Record<number, string> = {
@@ -43,9 +42,9 @@ const toSelectedMarkerUrl = (url: string): string => {
 };
 
 const getMarkerScaleByLevel = (level: number): number => {
-  if (level >= 9) return 0.60;
-  if (level >= 7) return 0.60;
-  if (level >= 5) return 0.80;
+  if (level >= 9) return 0.6;
+  if (level >= 7) return 0.6;
+  if (level >= 5) return 0.8;
   return 1;
 };
 
@@ -252,7 +251,7 @@ export const MyArchivePageInner = () => {
   }, [categoryFilteredPins, selectedMarkerPlaceId]);
 
   if (isLoading) {
-    return <LoadingPage text="내 아카이브를 불러오는 중입니다." role="ARCHIVER" />;
+    return null;
   }
 
   if (isError) {
