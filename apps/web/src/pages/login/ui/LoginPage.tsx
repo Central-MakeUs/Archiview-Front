@@ -54,8 +54,7 @@ export const LoginPage = () => {
 
   const isBridgeAvailable = typeof window !== 'undefined' && isWebViewBridgeAvailable();
 
-  // const canUseNativeKakaoLogin = isBridgeAvailable && isNativeMethodAvailable('signInWithKakao');
-  const canUseNativeKakaoLogin = false;
+  const canUseNativeKakaoLogin = isBridgeAvailable && isNativeMethodAvailable('signInWithKakao');
 
   const canUseNativeAppleLogin = isBridgeAvailable && isNativeMethodAvailable('signInWithApple');
 

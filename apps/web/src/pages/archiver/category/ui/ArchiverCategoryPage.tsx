@@ -98,18 +98,24 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
     let cancelled = false;
 
     const run = async () => {
-      const location = await getCurrentLocation();
-      const latitude = location?.coords?.latitude ?? FALLBACK_LATITUDE;
-      const longitude = location?.coords?.longitude ?? FALLBACK_LONGITUDE;
+      try {
+        const location = await getCurrentLocation();
+        console.log('[ArchiverCategoryPage] getCurrentLocation success:', location);
 
-      if (cancelled) return;
-      setCoords({ latitude, longitude });
+        const latitude = location?.coords?.latitude ?? FALLBACK_LATITUDE;
+        const longitude = location?.coords?.longitude ?? FALLBACK_LONGITUDE;
+
+        if (cancelled) return;
+        setCoords({ latitude, longitude });
+      } catch (error) {
+        console.error('[ArchiverCategoryPage] getCurrentLocation error:', error);
+
+        if (cancelled) return;
+        setCoords({ latitude: FALLBACK_LATITUDE, longitude: FALLBACK_LONGITUDE });
+      }
     };
 
-    run().catch(() => {
-      if (cancelled) return;
-      setCoords({ latitude: FALLBACK_LATITUDE, longitude: FALLBACK_LONGITUDE });
-    });
+    run();
 
     return () => {
       cancelled = true;
