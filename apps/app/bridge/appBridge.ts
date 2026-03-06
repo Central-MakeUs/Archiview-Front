@@ -3,7 +3,10 @@ import * as WebBrowser from 'expo-web-browser';
 import * as Location from 'expo-location';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { Linking, Platform } from 'react-native';
-import { login as kakaoLogin } from '@react-native-seoul/kakao-login';
+import {
+  getProfile as getKakaoProfile,
+  login as kakaoLogin,
+} from '@react-native-seoul/kakao-login';
 
 import { bridge } from '@webview-bridge/react-native';
 import type {
@@ -243,6 +246,7 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => ({
 
     try {
       const token = await kakaoLogin();
+      const profile = await getKakaoProfile();
 
       if (!token?.accessToken) {
         return {
@@ -252,10 +256,20 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => ({
         };
       }
 
+      const email = typeof profile?.email === 'string' ? profile.email : null;
+      if (!email) {
+        return {
+          status: 'error',
+          reason: 'missing-email',
+          message: 'Kakao login returned no email',
+        };
+      }
+      console.log(token.accessToken)
       return {
         status: 'success',
         credential: {
           accessToken: token.accessToken,
+          email,
           refreshToken: token.refreshToken ?? null,
           idToken: token.idToken ?? null,
         },

@@ -35,6 +35,7 @@ export type AppleSignInResult =
 
 export type KakaoNativeCredential = {
   accessToken: string;
+  email: string;
   refreshToken?: string | null;
   idToken?: string | null;
 };
