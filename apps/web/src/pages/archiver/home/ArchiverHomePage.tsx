@@ -14,7 +14,8 @@ import { consumeRoleSwitchLoadingFlag } from '@/shared/constants/roleSwitchLoadi
 import { LoadingPage } from '@/shared/ui/common/Loading/LoadingPage';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { SearchBar } from '@/shared/ui/SearchBar';
-import { useState } from 'react';
+import { consumeArchiverHomeScrollBottomFlag } from '@/shared/constants/archiverHomeScroll';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
 import type { IHotPlace } from '@/entities/archiver/place/model/archiverPlace.type';
@@ -26,8 +27,10 @@ const EMPTY_EDITORS: IEditor[] = [];
 export const ArchiverHomePage = (): React.ReactElement => {
   useAuth();
   const router = useRouter();
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const [searchValue, setSearchValue] = useState('');
   const [showRoleSwitchLoading] = useState(() => consumeRoleSwitchLoadingFlag());
+  const [shouldScrollToBottom] = useState(() => consumeArchiverHomeScrollBottomFlag());
 
   const {
     data: myData,
@@ -49,6 +52,21 @@ export const ArchiverHomePage = (): React.ReactElement => {
   const isError = isMyProfileError || isHotPlaceError || isEditorTrustedError;
   const showLoading = useMinLoading(isLoading);
 
+  useEffect(() => {
+    if (!shouldScrollToBottom || showLoading) return;
+
+    let rafId = 0;
+    rafId = window.requestAnimationFrame(() => {
+      const container = scrollContainerRef.current;
+      if (!container) return;
+      container.scrollTo({ top: container.scrollHeight, behavior: 'auto' });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+    };
+  }, [shouldScrollToBottom, showLoading]);
+
   if (showRoleSwitchLoading && showLoading) {
     return <LoadingPage text="아카이버 홈 화면으로 이동중입니다." role="ARCHIVER" />;
   }
@@ -60,7 +78,7 @@ export const ArchiverHomePage = (): React.ReactElement => {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <div className="flex-1 overflow-y-auto scroll-none">
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto scroll-none">
         <div className="relative">
           <div className="w-full bg-[#84C6FF] h-45 rounded-b-4xl px-5 pt-8 pb-16">
             <div className="mb-3">

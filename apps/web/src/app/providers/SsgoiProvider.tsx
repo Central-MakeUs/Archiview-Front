@@ -27,7 +27,7 @@ const ssgoiConfig: SsgoiConfig = {
       transition: drill({ direction: 'enter' }),
     },
     {
-      from: '/archiver/place-info',
+      from: '/archiver/place-info/*',
       to: '/archiver/home',
       transition: drill({ direction: 'exit' }),
     },
@@ -53,31 +53,31 @@ const ssgoiConfig: SsgoiConfig = {
     {
       from: '/archiver/home',
       to: '/archiver/follow-list',
-      transition: snap(),
+      transition: swap(),
       symmetric: true,
     },
     {
       from: '/archiver/home',
       to: '/archiver/my-archive',
-      transition: snap(),
+      transition: swap(),
       symmetric: true,
     },
     {
       from: '/archiver/home',
       to: '/mypage',
-      transition: snap(),
+      transition: swap(),
       symmetric: true,
     },
     {
       from: '/archiver/editor-profile/*',
       to: '/archiver/my-archive',
-      transition: snap(),
+      transition: swap(),
       symmetric: true,
     },
     {
       from: '/archiver/editor-profile/*',
       to: '/mypage',
-      transition: snap(),
+      transition: swap(),
       symmetric: true,
     },
     // 팔로우 -> 아카이버 프로필

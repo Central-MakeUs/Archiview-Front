@@ -41,9 +41,11 @@ export default async function Page(): Promise<React.ReactElement> {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={null}>
-        <ArchiverHomePage />
-      </Suspense>
+      <PageTransition id="/archiver/home">
+        <Suspense fallback={null}>
+          <ArchiverHomePage />
+        </Suspense>
+      </PageTransition>
     </HydrationBoundary>
   );
 }

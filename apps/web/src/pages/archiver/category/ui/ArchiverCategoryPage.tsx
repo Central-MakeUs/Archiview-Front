@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { CATEGORIES } from '@/shared/constants/category';
@@ -58,21 +58,6 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
 
   const isNear = categoryId === NEAR_CATEGORY_ID;
 
-  const setCategory = (nextId: number) => {
-    // TODO : 내주변 가드 치우기
-    // if (nextId === NEAR_CATEGORY_ID) {
-    //   alert('준비중이에요!');
-    //   return;
-    // }
-
-    const params = new URLSearchParams(sp?.toString() ?? '');
-    params.set('categoryId', String(nextId));
-
-    const qs = params.toString();
-    const path = pathname ?? '/archiver/category';
-    router.replace(qs ? `${path}?${qs}` : path);
-  };
-
   const categoryTabs = useMemo(
     () => [
       { label: '내주변', value: NEAR_CATEGORY_ID },
@@ -88,16 +73,22 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
 
   const [sheetOpen, setSheetOpen] = useState(true);
   const [coords, setCoords] = useState<{ latitude: number; longitude: number } | null>(null);
+  const mapContextRef = useRef<{ kakao: typeof window.kakao; map: kakao.maps.Map } | null>(null);
+  const isNearRef = useRef(isNear);
 
   useEffect(() => {
-    if (!isNear) {
-      setCoords(null);
-      return;
-    }
+    isNearRef.current = isNear;
+  }, [isNear]);
 
-    let cancelled = false;
+  const moveMapCenterToCoords = useCallback((latitude: number, longitude: number) => {
+    const mapContext = mapContextRef.current;
+    if (!mapContext) return;
 
-    const run = async () => {
+    mapContext.map.setCenter(new mapContext.kakao.maps.LatLng(latitude, longitude));
+  }, []);
+
+  const refreshCurrentLocation = useCallback(
+    async (isCancelled?: () => boolean) => {
       try {
         const location = await getCurrentLocation();
         console.log('[ArchiverCategoryPage] getCurrentLocation success:', location);
@@ -105,22 +96,60 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
         const latitude = location?.coords?.latitude ?? FALLBACK_LATITUDE;
         const longitude = location?.coords?.longitude ?? FALLBACK_LONGITUDE;
 
-        if (cancelled) return;
+        if (isCancelled?.() || !isNearRef.current) return;
         setCoords({ latitude, longitude });
+        moveMapCenterToCoords(latitude, longitude);
       } catch (error) {
         console.error('[ArchiverCategoryPage] getCurrentLocation error:', error);
 
-        if (cancelled) return;
+        if (isCancelled?.() || !isNearRef.current) return;
         setCoords({ latitude: FALLBACK_LATITUDE, longitude: FALLBACK_LONGITUDE });
+        moveMapCenterToCoords(FALLBACK_LATITUDE, FALLBACK_LONGITUDE);
       }
-    };
+    },
+    [moveMapCenterToCoords],
+  );
 
-    run();
+  const setCategory = (nextId: number) => {
+    if (nextId === categoryId) {
+      if (nextId === NEAR_CATEGORY_ID) {
+        if (coords) {
+          moveMapCenterToCoords(coords.latitude, coords.longitude);
+        }
+        refreshCurrentLocation().catch(() => undefined);
+      }
+      return;
+    }
+
+    // TODO : 내주변 가드 치우기
+    // if (nextId === NEAR_CATEGORY_ID) {
+    //   alert('준비중이에요!');
+    //   return;
+    // }
+
+    const params = new URLSearchParams(sp?.toString() ?? '');
+    params.set('categoryId', String(nextId));
+
+    const qs = params.toString();
+    const path = pathname ?? '/archiver/category';
+    router.replace(qs ? `${path}?${qs}` : path);
+  };
+
+  useEffect(() => {
+    if (!isNear) {
+      setCoords(null);
+      mapContextRef.current = null;
+      return;
+    }
+
+    let cancelled = false;
+
+    refreshCurrentLocation(() => cancelled).catch(() => undefined);
 
     return () => {
       cancelled = true;
     };
-  }, [isNear]);
+  }, [isNear, refreshCurrentLocation]);
 
   const {
     data: categoryData,
@@ -165,13 +194,17 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
 
       {isNear ? (
         <div className="flex-1 min-h-0 pt-6">
-          {isNearMapLoading ? (
-            <MapSkeleton />
-          ) : (
+          <div className="relative h-full w-full">
             <KakaoMap
               lat={coords?.latitude ?? FALLBACK_LATITUDE}
               lng={coords?.longitude ?? FALLBACK_LONGITUDE}
               level={3}
+              onReady={({ kakao, map }) => {
+                mapContextRef.current = { kakao, map };
+                const latitude = coords?.latitude ?? FALLBACK_LATITUDE;
+                const longitude = coords?.longitude ?? FALLBACK_LONGITUDE;
+                map.setCenter(new kakao.maps.LatLng(latitude, longitude));
+              }}
               markers={
                 coords
                   ? [
@@ -187,7 +220,12 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
                   : []
               }
             />
-          )}
+            {isNearMapLoading ? (
+              <div className="pointer-events-none absolute inset-0">
+                <MapSkeleton />
+              </div>
+            ) : null}
+          </div>
 
           <BottomSheet
             isOpen={sheetOpen}

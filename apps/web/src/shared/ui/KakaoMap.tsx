@@ -61,6 +61,7 @@ export const KakaoMap = ({
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const kakaoRef = useRef<typeof window.kakao | null>(null);
   const markersRef = useRef<kakao.maps.Marker[]>([]);
+  const relayoutRafRef = useRef<number | null>(null);
 
   const onReadyRef = useRef<IKakaoMapProps['onReady']>(onReady);
   const onMarkerClickRef = useRef<IKakaoMapProps['onMarkerClick']>(onMarkerClick);
@@ -90,6 +91,7 @@ export const KakaoMap = ({
   // 초기화
   useEffect(() => {
     let cancelled = false;
+    const relayoutTimeoutIds: Array<ReturnType<typeof setTimeout>> = [];
 
     const initMap = async () => {
       const kakao = await waitForKakao();
@@ -106,6 +108,25 @@ export const KakaoMap = ({
         const map = new kakao.maps.Map(elRef.current, { center, level });
         mapRef.current = map;
         setIsMapReady(true);
+
+        const relayoutAndCenter = () => {
+          const currentMap = mapRef.current;
+          const currentKakao = kakaoRef.current;
+          if (!currentMap || !currentKakao) return;
+
+          const { lat, lng } = latestRef.current;
+          currentMap.relayout();
+          currentMap.setCenter(new currentKakao.maps.LatLng(lat, lng));
+        };
+
+        [0, 180, 420].forEach((delayMs) => {
+          const timeoutId = setTimeout(() => {
+            if (cancelled) return;
+            relayoutAndCenter();
+          }, delayMs);
+
+          relayoutTimeoutIds.push(timeoutId);
+        });
 
         kakao.maps.event.addListener(map, 'click', () => {
           if (markerClickingRef.current) {
@@ -125,12 +146,56 @@ export const KakaoMap = ({
 
     return () => {
       cancelled = true;
+      relayoutTimeoutIds.forEach((timeoutId) => clearTimeout(timeoutId));
+      if (relayoutRafRef.current !== null) {
+        window.cancelAnimationFrame(relayoutRafRef.current);
+        relayoutRafRef.current = null;
+      }
       markersRef.current.forEach((item) => item.setMap(null));
       markersRef.current = [];
       mapRef.current = null;
       kakaoRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    const kakao = kakaoRef.current;
+    const element = elRef.current;
+    if (!isMapReady || !map || !kakao || !element) return;
+    if (typeof ResizeObserver === 'undefined') return;
+
+    const relayoutAndCenter = () => {
+      const currentMap = mapRef.current;
+      const currentKakao = kakaoRef.current;
+      if (!currentMap || !currentKakao) return;
+
+      const { lat, lng } = latestRef.current;
+      currentMap.relayout();
+      currentMap.setCenter(new currentKakao.maps.LatLng(lat, lng));
+    };
+
+    const observer = new ResizeObserver(() => {
+      if (relayoutRafRef.current !== null) {
+        window.cancelAnimationFrame(relayoutRafRef.current);
+      }
+
+      relayoutRafRef.current = window.requestAnimationFrame(() => {
+        relayoutAndCenter();
+        relayoutRafRef.current = null;
+      });
+    });
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+      if (relayoutRafRef.current !== null) {
+        window.cancelAnimationFrame(relayoutRafRef.current);
+        relayoutRafRef.current = null;
+      }
+    };
+  }, [isMapReady]);
 
   // 업데이트
   useEffect(() => {

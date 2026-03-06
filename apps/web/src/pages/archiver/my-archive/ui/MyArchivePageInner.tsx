@@ -9,7 +9,9 @@ import {
 } from '@/shared/lib/native-actions';
 import type { GeoLocation } from '@archiview/webview-bridge-contract';
 import { CATEGORIES } from '@/shared/constants/category';
+import { setArchiverHomeScrollBottomFlag } from '@/shared/constants/archiverHomeScroll';
 import { KakaoMap } from '@/shared/ui/KakaoMap';
+import { Button } from '@/shared/ui/button';
 import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import {
   CategoryOptionTabs,
@@ -314,17 +316,34 @@ export const MyArchivePageInner = () => {
           }
           contentClassName="overflow-y-auto px-0 pb-6"
         >
-          {markerFilteredPlaces.map((p) => (
-            <ArchiverPlaceItem
-              key={p.postPlaceId}
-              name={p.placeName}
-              thumbnail={p.imageUrl}
-              description={p.description}
-              savedCount={p.saveCount}
-              viewCount={p.viewCount}
-              onClick={() => router.push(`/archiver/place-info/${p.postPlaceId}`)}
-            />
-          ))}
+          {markerFilteredPlaces.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-6 py-14 px-5">
+              <p className="body-16-semibold text-neutral-40 text-center whitespace-pre-wrap">
+                {'아카이브한 장소가 없어요.\n홈에서 마음에 드는 장소를 저장해 보세요.'}
+              </p>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setArchiverHomeScrollBottomFlag();
+                  router.push('/archiver/home');
+                }}
+              >
+                아카이브하러가기
+              </Button>
+            </div>
+          ) : (
+            markerFilteredPlaces.map((p) => (
+              <ArchiverPlaceItem
+                key={p.postPlaceId}
+                name={p.placeName}
+                thumbnail={p.imageUrl}
+                description={p.description}
+                savedCount={p.saveCount}
+                viewCount={p.viewCount}
+                onClick={() => router.push(`/archiver/place-info/${p.postPlaceId}`)}
+              />
+            ))
+          )}
         </BottomSheet>
       </div>
     </div>

@@ -42,7 +42,7 @@ export const PlaceInfoPage = ({ placeId }: { placeId: number }) => {
       <div className="flex-1 overflow-auto scroll-none">
         <RoundedHeaderSection
           place={placeData?.data?.place}
-          thumbnail={placeData?.data?.postPlaces?.[0]?.imageUrl || ''}
+          thumbnail={placeData?.data?.postPlaces?.[0]?.imageUrl || '/images/TestImage.png'}
         />
         <InfoSection
           place={placeData?.data?.place}

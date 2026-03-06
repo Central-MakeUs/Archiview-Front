@@ -274,7 +274,7 @@ export const LoginPage = () => {
                 onClick={handleNativeKakaoLogin}
                 disabled={isNativeKakaoLoginPending}
               >
-                <span className="text-neutral-70">카카오톡으로 로그인</span>
+                <span className="text-neutral-70">카카오톡으로 로그인카카오톡</span>
               </Button>
             ) : (
               <KakaoButton />
