@@ -1,12 +1,29 @@
 {
   "expo": {
+    "scheme": "kakaoda1d6064b32ed92f55aa747f2898a4b6",
     "extra": {
       "eas": {
-        "projectId": "559ed858-ed88-4f6f-b919-7f6f3df8709a"
+        "projectId": "4a84022f-d710-4e0a-9806-519545bf523f"
       }
     },
     "android": {
-      "package": "com.minjoonpark.archiviewfront"
-    }
+      "package": "com.archiview.app"
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "extraMavenRepos": ["https://devrepo.kakao.com/nexus/content/groups/public/"]
+          }
+        }
+      ],
+      [
+        "@react-native-seoul/kakao-login",
+        {
+          "nativeAppKey": "da1d6064b32ed92f55aa747f2898a4b6"
+        }
+      ]
+    ]
   }
 }
