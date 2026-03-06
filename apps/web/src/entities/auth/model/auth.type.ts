@@ -12,7 +12,7 @@ export interface IAppleMobileLoginRequestDTO {
 
 export interface IKakaoMobileLoginRequestDTO {
   accessToken: string;
-  // account_email: string;
+  // account_email: string; 
 }
 
 export interface IUserType {

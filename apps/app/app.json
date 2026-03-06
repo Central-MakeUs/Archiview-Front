@@ -2,7 +2,7 @@
   "expo": {
     "name": "아카이뷰",
     "slug": "archiview",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/archiviewLogo.png",
     "scheme": "app",

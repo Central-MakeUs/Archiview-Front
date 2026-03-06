@@ -128,11 +128,24 @@ export const LoginPage = () => {
       }
 
       persistAccessToken(accessToken);
-    } catch (error) {
-      console.error('Failed to login with native Kakao login', error);
-    } finally {
-      setIsNativeKakaoSigningIn(false);
-    }
+   } catch (error) {
+  const e = error as {
+    name?: string;
+    message?: string;
+    response?: Response;
+    errorData?: unknown;
+  };
+
+  const bodyText = e.response ? await e.response.clone().text() : null;
+
+  console.error('[mobileKakaoLogin]', {
+    name: e.name,
+    message: e.message,
+    status: e.response?.status,
+    bodyText,
+    errorData: e.errorData,
+  });
+}
   };
 
   const handleNativeAppleLogin = async () => {

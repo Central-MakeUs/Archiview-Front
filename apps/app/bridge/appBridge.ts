@@ -264,7 +264,7 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => ({
           message: 'Kakao login returned no email',
         };
       }
-
+      console.log(token.accessToken)
       return {
         status: 'success',
         credential: {
