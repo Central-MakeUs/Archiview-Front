@@ -8,7 +8,6 @@ export default function Index() {
       <WebView
         style={{ flex: 1 }}
         source={{ uri: 'https://archiview.space/' }}
-        // source={{ uri: 'http://172.20.10.11:3000' }}
         javaScriptEnabled
         domStorageEnabled
         mixedContentMode="always"

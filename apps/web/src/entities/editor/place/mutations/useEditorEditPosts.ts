@@ -4,10 +4,8 @@ import { editorPlacePost } from '../api/editorPlace-post';
 import { ExtendedKyHttpError } from '@/shared/lib/api/common';
 import { IEditEditorPostRequest } from '../model/editorPlace.type';
 import { editorKeys } from '@/shared/lib/query-keys';
-import { useRouter } from 'next/navigation';
 
 export const useEditorEditPosts = () => {
-  const router = useRouter();
   const queryClient = useQueryClient();
   const { mutate: editEditorPost } = useMutation({
     mutationFn: ({ postId, body }: { postId: number; body: IEditEditorPostRequest }) =>
@@ -17,7 +15,6 @@ export const useEditorEditPosts = () => {
       await queryClient.invalidateQueries({ queryKey: editorKeys.getMyPlaceDetail._def });
       await queryClient.invalidateQueries({ queryKey: editorKeys.getInsightSummery._def });
       toast.success('게시물을 성공적으로 수정 하였습니다');
-      router.push('/editor/home');
     },
     onError: (error: ExtendedKyHttpError) => {
       const message = error.errorData?.message ?? error.message ?? '알 수 없는 오류';
