@@ -38,7 +38,7 @@ export const authPost = {
     return response;
   },
 
-  // 모바일 애플 로그인
+  // 모바일 애플 로그인  
   mobileAppleLogin: async (
     payload: IAppleMobileLoginRequestDTO,
   ): Promise<IAppleMobileLoginResponseDTO> => {

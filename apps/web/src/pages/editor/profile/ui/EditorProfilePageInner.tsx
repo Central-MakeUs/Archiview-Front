@@ -15,7 +15,6 @@ import { useGetMyPlaceList } from '@/entities/editor/place/queries/useGetMyPlace
 import { EditorPlaceItem } from '../../../../entities/editor/place/ui/EditorPlaceItem';
 
 import { CategoryOptionTabs, type ICategoryOptionValue } from '../CategoryOptionTabs';
-import { HamburgerIcon } from '@/shared/ui/icon/HamburgerIcon';
 import { EditorProfileCard } from './EditorProfileCard';
 
 const CATEGORY_ID_TO_MARKER_URL: Record<number, string> = {
@@ -344,7 +343,6 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
                 업로드한 장소{' '}
                 <span className="text-primary-40 pl-1">{markerFilteredPlaces.length}</span>
               </p>
-              <HamburgerIcon />
             </div>
           }
           contentClassName="overflow-y-auto px-5 pb-6"

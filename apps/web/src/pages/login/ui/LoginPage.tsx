@@ -104,22 +104,13 @@ export const LoginPage = () => {
       }
 
       const kakaoAccessToken = nativeResult.credential.accessToken;
-      const accountEmail = nativeResult.credential.email;
 
       if (!kakaoAccessToken) {
         console.error('Native Kakao login credential is missing accessToken');
         return;
       }
 
-      if (!accountEmail) {
-        console.error('Native Kakao login credential is missing email');
-        return;
-      }
-
-      const response = await mobileKakaoLogin({
-        accessToken: kakaoAccessToken,
-        // account_email: accountEmail,
-      });
+      const response = await mobileKakaoLogin({ accessToken: kakaoAccessToken });
       const accessToken = extractAccessToken(response);
 
       if (!accessToken) {
@@ -128,24 +119,26 @@ export const LoginPage = () => {
       }
 
       persistAccessToken(accessToken);
-   } catch (error) {
-  const e = error as {
-    name?: string;
-    message?: string;
-    response?: Response;
-    errorData?: unknown;
-  };
+    } catch (error) {
+      const e = error as {
+        name?: string;
+        message?: string;
+        response?: Response;
+        errorData?: unknown;
+      };
 
-  const bodyText = e.response ? await e.response.clone().text() : null;
+      const bodyText = e.response ? await e.response.clone().text() : null;
 
-  console.error('[mobileKakaoLogin]', {
-    name: e.name,
-    message: e.message,
-    status: e.response?.status,
-    bodyText,
-    errorData: e.errorData,
-  });
-}
+      console.error('[mobileKakaoLogin]', {
+        name: e.name,
+        message: e.message,
+        status: e.response?.status,
+        bodyText,
+        errorData: e.errorData,
+      });
+    } finally {
+      setIsNativeKakaoSigningIn(false);
+    }
   };
 
   const handleNativeAppleLogin = async () => {
@@ -184,7 +177,22 @@ export const LoginPage = () => {
 
       persistAccessToken(accessToken);
     } catch (error) {
-      console.error('Failed to login with native Apple login', error);
+      const e = error as {
+        name?: string;
+        message?: string;
+        response?: Response;
+        errorData?: unknown;
+      };
+
+      const bodyText = e.response ? await e.response.clone().text() : null;
+
+      console.error('[mobileKakaoLogin]', {
+        name: e.name,
+        message: e.message,
+        status: e.response?.status,
+        bodyText,
+        errorData: e.errorData,
+      });
     } finally {
       setIsNativeAppleSigningIn(false);
     }
