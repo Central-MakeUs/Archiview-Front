@@ -25,9 +25,11 @@ export default async function MyPageRoute(): Promise<React.ReactNode> {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={null}>
-        <MyPage />
-      </Suspense>
+      <PageTransition id="/mypage">
+        <Suspense fallback={null}>
+          <MyPage />
+        </Suspense>
+      </PageTransition>
     </HydrationBoundary>
   );
 }
