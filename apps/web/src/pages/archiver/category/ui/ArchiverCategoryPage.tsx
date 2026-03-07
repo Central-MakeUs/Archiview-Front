@@ -22,9 +22,39 @@ const FALLBACK_LATITUDE = 37.5665;
 const FALLBACK_LONGITUDE = 126.978;
 // TODO : 폴백 이미지 제거..
 const FALLBACK_PLACE_IMAGE = '/images/TestImage.png';
+const CATEGORY_ID_TO_MARKER_URL: Record<number, string> = {
+  [CATEGORIES[0].id]: '/marker/koreanMarker.png',
+  [CATEGORIES[1].id]: '/marker/westernMarker.png',
+  [CATEGORIES[2].id]: '/marker/japaneseMarker.png',
+  [CATEGORIES[3].id]: '/marker/cafeMarker.png',
+  [CATEGORIES[4].id]: '/marker/dateMarker.png',
+  [CATEGORIES[5].id]: '/marker/izakayaMarker.png',
+  [CATEGORIES[6].id]: '/marker/etcMarker.png',
+};
+const DEFAULT_MARKER_URL = '/marker/defaultMarker.png';
+const DEFAULT_SELECTED_MARKER_URL = '/marker/defaultMarkerSelected.png';
 const MY_LOCATION_MARKER_URL = '/marker/myMarker.png';
-const NEAR_PLACE_MARKER_URL = '/marker/defaultMarker.png';
 const SKELETON_ITEM_COUNT = 5;
+
+const toSelectedMarkerUrl = (url: string): string => {
+  if (!url.endsWith('.png')) return url;
+  return `${url.slice(0, -4)}Selected.png`;
+};
+
+const getNearPlaceCategoryId = (place: {
+  categoryIds?: number[];
+  categories?: number[];
+}): number | undefined => {
+  if (Array.isArray(place.categoryIds) && place.categoryIds.length > 0) {
+    return place.categoryIds[0];
+  }
+
+  if (Array.isArray(place.categories) && place.categories.length > 0) {
+    return place.categories[0];
+  }
+
+  return undefined;
+};
 
 const MapSkeleton = () => <div className="h-full w-full animate-pulse bg-neutral-20" />;
 
@@ -196,17 +226,31 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
       isNear
         ? (nearData?.data?.places ?? [])
             .filter((place) => Number.isFinite(place.latitude) && Number.isFinite(place.longitude))
-            .map((place) => ({
-              id: place.placeId,
-              lat: place.latitude,
-              lng: place.longitude,
-              zIndex: 100,
-              imageSrc: NEAR_PLACE_MARKER_URL,
-              imageSize: { width: 45, height: 63.9 },
-              imageOffset: { x: 22.5, y: 63.9 },
-            }))
+            .map((place) => {
+              const isSelected =
+                selectedMarkerPlaceId !== null && place.placeId === selectedMarkerPlaceId;
+              const categoryId = getNearPlaceCategoryId(place);
+              const defaultImageSrc =
+                (categoryId !== undefined ? CATEGORY_ID_TO_MARKER_URL[categoryId] : undefined) ??
+                DEFAULT_MARKER_URL;
+              const selectedImageSrc =
+                defaultImageSrc === DEFAULT_MARKER_URL
+                  ? DEFAULT_SELECTED_MARKER_URL
+                  : toSelectedMarkerUrl(defaultImageSrc);
+              const imageSrc = isSelected ? selectedImageSrc : defaultImageSrc;
+
+              return {
+                id: place.placeId,
+                lat: place.latitude,
+                lng: place.longitude,
+                zIndex: isSelected ? 100 : 1,
+                imageSrc,
+                imageSize: isSelected ? { width: 60, height: 85.2 } : { width: 45, height: 63.9 },
+                imageOffset: isSelected ? { x: 30, y: 85.2 } : { x: 22.5, y: 63.9 },
+              };
+            })
         : [],
-    [isNear, nearData],
+    [isNear, nearData, selectedMarkerPlaceId],
   );
 
   useEffect(() => {
@@ -243,6 +287,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
               }}
               onMapClick={() => {
                 setSelectedMarkerPlaceId(null);
+                setSheetOpen(false);
               }}
               onReady={({ kakao, map }) => {
                 mapContextRef.current = { kakao, map };
