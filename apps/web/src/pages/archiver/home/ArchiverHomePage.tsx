@@ -20,6 +20,7 @@ import { useRouter } from 'next/navigation';
 import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
 import type { IHotPlace } from '@/entities/archiver/place/model/archiverPlace.type';
 import type { IEditor } from '@/entities/archiver/profile/model/archiverProfile.type';
+import { useHomeInitialSwapIntro } from '@/shared/hooks/useHomeInitialSwapIntro';
 
 const EMPTY_HOT_PLACES: IHotPlace[] = [];
 const EMPTY_EDITORS: IEditor[] = [];
@@ -31,6 +32,7 @@ export const ArchiverHomePage = (): React.ReactElement => {
   const [searchValue, setSearchValue] = useState('');
   const [showRoleSwitchLoading] = useState(() => consumeRoleSwitchLoadingFlag());
   const [shouldScrollToBottom] = useState(() => consumeArchiverHomeScrollBottomFlag());
+  const isIntroEntered = useHomeInitialSwapIntro();
 
   const {
     data: myData,
@@ -75,9 +77,12 @@ export const ArchiverHomePage = (): React.ReactElement => {
 
   const hotPlaces = hotPlaceData?.data?.places ?? EMPTY_HOT_PLACES;
   const editorTrusted = editorTrustedData?.data?.editors ?? EMPTY_EDITORS;
+  const introClassName = isIntroEntered ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0';
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div
+      className={`flex min-h-screen flex-col transition-[transform,opacity] duration-300 ease-out motion-reduce:transform-none motion-reduce:opacity-100 motion-reduce:transition-none ${introClassName}`}
+    >
       <div ref={scrollContainerRef} className="flex-1 overflow-y-auto scroll-none">
         <div className="relative">
           <div className="w-full bg-[#84C6FF] h-45 rounded-b-4xl px-5 pt-8 pb-16">
@@ -113,8 +118,8 @@ export const ArchiverHomePage = (): React.ReactElement => {
         </div>
         <div className="p-5 pt-12">
           <CategorySection />
-          <HotPlaceSection hotPlaces={hotPlaces} isLoading={isHotPlaceLoading} />
-          <EditorTrustedSection editors={editorTrusted} isLoading={isEditorTrustedLoading} />
+          <HotPlaceSection hotPlaces={hotPlaces} isLoading={showLoading} />
+          <EditorTrustedSection editors={editorTrusted} isLoading={showLoading} />
         </div>
       </div>
     </div>

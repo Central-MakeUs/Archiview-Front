@@ -14,6 +14,7 @@ import { useGetMyPlaceList } from '@/entities/editor/place/queries/useGetMyPlace
 import type { InsightPeriod } from '@/entities/editor/place/model/editorPlace.type';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
+import { useHomeInitialSwapIntro } from '@/shared/hooks/useHomeInitialSwapIntro';
 
 function parseInsightPeriod(value: string | undefined): InsightPeriod {
   if (value === 'WEEK' || value === 'MONTH' || value === 'ALL') return value;
@@ -90,6 +91,7 @@ const EditorHomeSkeleton = () => (
 export const EditorHomePage = () => {
   useAuth();
   const [showRoleSwitchLoading, setShowRoleSwitchLoading] = useState(false);
+  const isIntroEntered = useHomeInitialSwapIntro();
 
   const sp = useSearchParams();
   const period = useMemo<InsightPeriod>(
@@ -118,25 +120,41 @@ export const EditorHomePage = () => {
     setShowRoleSwitchLoading(consumeRoleSwitchLoadingFlag());
   }, []);
 
+  const introClassName = isIntroEntered ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0';
+
   // if (showRoleSwitchLoading && showLoading) {
   //   return <LoadingPage text="에디터 홈페이지를 로딩 중입니다" role="EDITOR" />;
   // }
 
-  if (isError) return <ErrorPage />;
+  const content = (() => {
+    if (isError) {
+      return <ErrorPage />;
+    }
 
-  if (isLoading) return <EditorHomeSkeleton />;
+    if (isLoading) {
+      return <EditorHomeSkeleton />;
+    }
 
-  const places = placeData?.data?.places ?? [];
+    const places = placeData?.data?.places ?? [];
+
+    return (
+      <>
+        <EditorTopBanner
+          editorNickname={insightData?.data?.editorNickname ?? ''}
+          placeCount={places.length}
+        />
+        <EditorInsight insightData={insightData?.data ?? undefined} />
+        <p className="heading-20-bold pb-4 pl-5">반응이 좋은 장소</p>
+        <PopularPlaceSection places={places} />
+      </>
+    );
+  })();
 
   return (
-    <div className="w-full">
-      <EditorTopBanner
-        editorNickname={insightData?.data?.editorNickname ?? ''}
-        placeCount={places.length}
-      />
-      <EditorInsight insightData={insightData?.data ?? undefined} />
-      <p className="heading-20-bold pb-4 pl-5">반응이 좋은 장소</p>
-      <PopularPlaceSection places={places} />
+    <div
+      className={`w-full transition-[transform,opacity] duration-300 ease-out motion-reduce:transform-none motion-reduce:opacity-100 motion-reduce:transition-none ${introClassName}`}
+    >
+      {content}
     </div>
   );
 };
