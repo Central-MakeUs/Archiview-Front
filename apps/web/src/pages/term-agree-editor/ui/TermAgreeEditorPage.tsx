@@ -40,18 +40,22 @@ export const TermAgreeEditorPage = () => {
         <CheckItem
           checked={copyWrite}
           onCheckedChange={setCopyWrite}
+          className="px-2"
           endArrowIcon={true}
           redirectUrl={process.env.NEXT_PUBLIC_EDITOR_POLICY_URL ?? ''}
         >
-          <span className="text-neutral-40 mr-1">(필수)</span> 에디터 운영정책 및 저작권 안내
+          <span className="text-neutral-40 mr-1 shrink-0 text-sm">(필수)</span>
+          <span className="break-keep text-sm">에디터 운영정책 및 저작권 안내</span>
         </CheckItem>
         <CheckItem
           checked={guideLine}
           onCheckedChange={setGuideLine}
+          className="px-2"
           endArrowIcon={true}
           redirectUrl={process.env.NEXT_PUBLIC_EDITOR_AGREEMENT_URL ?? ''}
         >
-          <span className="text-neutral-40 mr-1">(필수)</span> 커뮤니티 가이드라인 준수 서약
+          <span className="text-neutral-40 mr-1 shrink-0 text-sm">(필수)</span>
+          <span className="break-keep text-sm">커뮤니티 가이드라인 준수 서약</span>
         </CheckItem>
       </div>
       <Button
