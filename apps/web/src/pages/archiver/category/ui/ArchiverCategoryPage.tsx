@@ -22,8 +22,39 @@ const FALLBACK_LATITUDE = 37.5665;
 const FALLBACK_LONGITUDE = 126.978;
 // TODO : 폴백 이미지 제거..
 const FALLBACK_PLACE_IMAGE = '/images/TestImage.png';
+const CATEGORY_ID_TO_MARKER_URL: Record<number, string> = {
+  [CATEGORIES[0].id]: '/marker/koreanMarker.png',
+  [CATEGORIES[1].id]: '/marker/westernMarker.png',
+  [CATEGORIES[2].id]: '/marker/japaneseMarker.png',
+  [CATEGORIES[3].id]: '/marker/cafeMarker.png',
+  [CATEGORIES[4].id]: '/marker/dateMarker.png',
+  [CATEGORIES[5].id]: '/marker/izakayaMarker.png',
+  [CATEGORIES[6].id]: '/marker/etcMarker.png',
+};
+const DEFAULT_MARKER_URL = '/marker/defaultMarker.png';
+const DEFAULT_SELECTED_MARKER_URL = '/marker/defaultMarkerSelected.png';
 const MY_LOCATION_MARKER_URL = '/marker/myMarker.png';
 const SKELETON_ITEM_COUNT = 5;
+
+const toSelectedMarkerUrl = (url: string): string => {
+  if (!url.endsWith('.png')) return url;
+  return `${url.slice(0, -4)}Selected.png`;
+};
+
+const getNearPlaceCategoryId = (place: {
+  categoryIds?: number[];
+  categories?: number[];
+}): number | undefined => {
+  if (Array.isArray(place.categoryIds) && place.categoryIds.length > 0) {
+    return place.categoryIds[0];
+  }
+
+  if (Array.isArray(place.categories) && place.categories.length > 0) {
+    return place.categories[0];
+  }
+
+  return undefined;
+};
 
 const MapSkeleton = () => <div className="h-full w-full animate-pulse bg-neutral-20" />;
 
@@ -73,6 +104,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
 
   const [sheetOpen, setSheetOpen] = useState(true);
   const [coords, setCoords] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [selectedMarkerPlaceId, setSelectedMarkerPlaceId] = useState<number | null>(null);
   const mapContextRef = useRef<{ kakao: typeof window.kakao; map: kakao.maps.Map } | null>(null);
   const isNearRef = useRef(isNear);
 
@@ -138,6 +170,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
   useEffect(() => {
     if (!isNear) {
       setCoords(null);
+      setSelectedMarkerPlaceId(null);
       mapContextRef.current = null;
       return;
     }
@@ -182,6 +215,54 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
   const places = data?.data?.places ?? [];
   const totalCount = data?.data?.totalCount ?? 0;
   const canShowCategoryList = !isNear && !isLoading && !isError && !apiErrorMessage;
+  const nearDisplayedPlaces = useMemo(() => {
+    if (!isNear) return [];
+    if (selectedMarkerPlaceId === null) return places;
+
+    return places.filter((place) => place.placeId === selectedMarkerPlaceId);
+  }, [isNear, places, selectedMarkerPlaceId]);
+  const nearPlaceMarkers = useMemo(
+    () =>
+      isNear
+        ? (nearData?.data?.places ?? [])
+            .filter((place) => Number.isFinite(place.latitude) && Number.isFinite(place.longitude))
+            .map((place) => {
+              const isSelected =
+                selectedMarkerPlaceId !== null && place.placeId === selectedMarkerPlaceId;
+              const categoryId = getNearPlaceCategoryId(place);
+              const defaultImageSrc =
+                (categoryId !== undefined ? CATEGORY_ID_TO_MARKER_URL[categoryId] : undefined) ??
+                DEFAULT_MARKER_URL;
+              const selectedImageSrc =
+                defaultImageSrc === DEFAULT_MARKER_URL
+                  ? DEFAULT_SELECTED_MARKER_URL
+                  : toSelectedMarkerUrl(defaultImageSrc);
+              const imageSrc = isSelected ? selectedImageSrc : defaultImageSrc;
+
+              return {
+                id: place.placeId,
+                lat: place.latitude,
+                lng: place.longitude,
+                zIndex: isSelected ? 100 : 1,
+                imageSrc,
+                imageSize: isSelected ? { width: 60, height: 85.2 } : { width: 45, height: 63.9 },
+                imageOffset: isSelected ? { x: 30, y: 85.2 } : { x: 22.5, y: 63.9 },
+              };
+            })
+        : [],
+    [isNear, nearData, selectedMarkerPlaceId],
+  );
+
+  useEffect(() => {
+    if (!isNear || selectedMarkerPlaceId === null) return;
+
+    const exists = (nearData?.data?.places ?? []).some(
+      (place) => place.placeId === selectedMarkerPlaceId,
+    );
+    if (!exists) {
+      setSelectedMarkerPlaceId(null);
+    }
+  }, [isNear, nearData, selectedMarkerPlaceId]);
 
   return (
     <div className="flex h-full flex-col min-h-0">
@@ -199,6 +280,15 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
               lat={coords?.latitude ?? FALLBACK_LATITUDE}
               lng={coords?.longitude ?? FALLBACK_LONGITUDE}
               level={3}
+              onMarkerClick={({ id }) => {
+                if (typeof id !== 'number') return;
+                setSelectedMarkerPlaceId(id);
+                setSheetOpen(true);
+              }}
+              onMapClick={() => {
+                setSelectedMarkerPlaceId(null);
+                setSheetOpen(false);
+              }}
               onReady={({ kakao, map }) => {
                 mapContextRef.current = { kakao, map };
                 const latitude = coords?.latitude ?? FALLBACK_LATITUDE;
@@ -206,16 +296,21 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
                 map.setCenter(new kakao.maps.LatLng(latitude, longitude));
               }}
               markers={
-                coords
+                isNear
                   ? [
-                      {
-                        lat: coords.latitude,
-                        lng: coords.longitude,
-                        zIndex: 200,
-                        imageSrc: MY_LOCATION_MARKER_URL,
-                        imageSize: { width: 48, height: 68 },
-                        imageOffset: { x: 24, y: 68 },
-                      },
+                      ...nearPlaceMarkers,
+                      ...(coords
+                        ? [
+                            {
+                              lat: coords.latitude,
+                              lng: coords.longitude,
+                              zIndex: 200,
+                              imageSrc: MY_LOCATION_MARKER_URL,
+                              imageSize: { width: 48, height: 68 },
+                              imageOffset: { x: 24, y: 68 },
+                            },
+                          ]
+                        : []),
                     ]
                   : []
               }
@@ -235,7 +330,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
             header={
               <div className="px-5 pb-4 pt-2.5">
                 <p className="heading-20-bold">
-                  내주변 <span className="text-primary-40 pl-1">{totalCount}</span>
+                  내주변 <span className="text-primary-40 pl-1">{nearDisplayedPlaces.length}</span>
                 </p>
               </div>
             }
@@ -248,14 +343,14 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
             ) : null}
 
             {!isNearListLoading && !isError && !apiErrorMessage ? (
-              places.length === 0 ? (
+              nearDisplayedPlaces.length === 0 ? (
                 <div className="flex flex-1 items-center justify-center py-30">
                   <p className="body-16-semibold text-neutral-40 text-center whitespace-pre-wrap">
                     {'이 카테고리에 저장된 장소가 없어요.\n다른 카테고리를 선택해 보세요.'}
                   </p>
                 </div>
               ) : (
-                places.map((p) => (
+                nearDisplayedPlaces.map((p) => (
                   <Item
                     key={p.placeId}
                     thumbnail={

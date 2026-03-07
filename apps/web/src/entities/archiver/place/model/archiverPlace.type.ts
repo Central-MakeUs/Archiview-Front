@@ -74,6 +74,9 @@ export interface INearPlace {
   latestDescription: string;
   viewCount: number;
   saveCount: number;
+  latitude: number;
+  longitude: number;
+  categoryIds: number[];
 }
 
 export interface IPostPlaceRequest {
