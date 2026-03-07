@@ -37,7 +37,7 @@ export const PlaceInfoPage = ({ placeId }: { placeId: number }) => {
   return (
     <div className="h-full flex flex-col">
       <div className="shrink-0">
-        <BackButtonHeader title="" />
+        <BackButtonHeader title="" replaceTo="/archiver/home" />
       </div>
       <div className="flex-1 overflow-auto scroll-none">
         <RoundedHeaderSection
