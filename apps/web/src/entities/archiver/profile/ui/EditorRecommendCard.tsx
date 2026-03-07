@@ -36,13 +36,12 @@ const EditorRecommendCardComponent = ({ editor }: IEditorRecommendCardProps) => 
   return (
     <Link href={`/archiver/editor-profile/${editor.editorId}`} className="block shrink-0">
       <Kard className="shrink-0 w-45 shadow-default overflow-hidden border-none">
-        <div className="relative w-full shrink-0 overflow-hidden" style={{ height: '99px' }}>
+        <div className="relative w-full shrink-0 overflow-hidden" style={{ height: '120px' }}>
           <Image
             src={editor.profileImageUrl || '/images/ExampleImage.png'}
             alt=""
-            width={200}
-            height={90}
-            className="object-cover"
+            fill
+            className="object-cover object-center"
             sizes="180px"
             priority={false}
           />

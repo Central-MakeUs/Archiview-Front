@@ -25,7 +25,7 @@ const EditorTrustedSectionComponent = ({
                 key={`editor-trusted-skeleton-${index}`}
                 className="w-45 shrink-0 overflow-hidden rounded-default bg-white shadow-default"
               >
-                <div className="h-[99px] animate-pulse bg-neutral-20" />
+                <div className="h-[120px] animate-pulse bg-neutral-20" />
                 <div className="p-3">
                   <div className="mb-2 h-5 w-1/2 animate-pulse rounded bg-neutral-20" />
                   <div className="mb-3 h-4 w-full animate-pulse rounded bg-neutral-20" />
