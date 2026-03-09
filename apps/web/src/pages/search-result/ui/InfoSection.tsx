@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { CaretRightIcon, FolderOutlineIcon, RightArrowIcon, EyeIcon } from '@/shared/ui/icon';
 import type { IPlace } from '@/entities/archiver/search/model/archiverSearch.type';
 
@@ -20,7 +20,6 @@ export const InfoSection = ({
   onMoreClick,
   showPreview = false,
 }: IInfoSectionProps) => {
-  const router = useRouter();
   const displayPlaces = showPreview ? places.slice(0, MAX_PREVIEW_ITEMS) : places;
 
   return (
@@ -29,17 +28,9 @@ export const InfoSection = ({
       <div className="flex flex-col gap-[6px] w-full">
         <div className="flex flex-col w-full bg-transparent">
           {displayPlaces.map((place) => (
-            <div
+            <Link
               key={place.placeId}
-              role="button"
-              tabIndex={0}
-              onClick={() => router.push(`/archiver/place-info/${place.placeId}`)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  router.push(`/archiver/place-info/${place.placeId}`);
-                }
-              }}
+              href={`/archiver/place-info/${place.placeId}`}
               className="flex w-full items-center p-5 cursor-pointer bg-transparent border-b border-primary-10"
             >
               <div className="shrink-0">
@@ -64,7 +55,7 @@ export const InfoSection = ({
                   </p>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         {showPreview && onMoreClick && places.length > 3 && (

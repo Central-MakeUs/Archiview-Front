@@ -13,6 +13,7 @@ import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import { Item } from '@/shared/ui/common/Item';
 import { EyeIcon, FolderOutlineIcon, RightArrowIcon } from '@/shared/ui/icon';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
 
 const NEAR_CATEGORY_ID = 0;
@@ -351,42 +352,46 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
                 </div>
               ) : (
                 nearDisplayedPlaces.map((p) => (
-                  <Item
+                  <Link
                     key={p.placeId}
-                    thumbnail={
-                      <div className="relative h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30">
-                        <Image
-                          src={p.imageUrl || FALLBACK_PLACE_IMAGE}
-                          alt={p.placeName}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    }
-                    onClick={() => router.push(`/archiver/place-info/${p.placeId}`)}
+                    href={`/archiver/place-info/${p.placeId}`}
+                    className="block"
                   >
-                    <div className="flex flex-col pl-2 min-w-0">
-                      <p className="body-16-semibold flex flex-row items-center justify-between">
-                        <span className="truncate">{p.placeName}</span>
-                        <RightArrowIcon />
-                      </p>
-
-                      <p className="body-14-semibold text-neutral-50 w-53 truncate pt-0.75">
-                        {p.latestDescription}
-                      </p>
-
-                      <div className="flex flex-row gap-2 caption-12-regular text-primary-50 pt-1">
-                        <p className="flex flex-row items-center gap-1">
-                          <FolderOutlineIcon className="w-4 text-primary-30" />
-                          {p.saveCount}
+                    <Item
+                      thumbnail={
+                        <div className="relative h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30">
+                          <Image
+                            src={p.imageUrl || FALLBACK_PLACE_IMAGE}
+                            alt={p.placeName}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      }
+                    >
+                      <div className="flex flex-col pl-2 min-w-0">
+                        <p className="body-16-semibold flex flex-row items-center justify-between">
+                          <span className="truncate">{p.placeName}</span>
+                          <RightArrowIcon />
                         </p>
-                        <p className="flex flex-row items-center gap-1">
-                          <EyeIcon className="w-4 text-primary-30" />
-                          {p.viewCount}
+
+                        <p className="body-14-semibold text-neutral-50 w-53 truncate pt-0.75">
+                          {p.latestDescription}
                         </p>
+
+                        <div className="flex flex-row gap-2 caption-12-regular text-primary-50 pt-1">
+                          <p className="flex flex-row items-center gap-1">
+                            <FolderOutlineIcon className="w-4 text-primary-30" />
+                            {p.saveCount}
+                          </p>
+                          <p className="flex flex-row items-center gap-1">
+                            <EyeIcon className="w-4 text-primary-30" />
+                            {p.viewCount}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </Item>
+                    </Item>
+                  </Link>
                 ))
               )
             ) : null}
@@ -414,43 +419,47 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
                 </div>
               ) : (
                 places.map((p) => (
-                  <Item
-                    disableActive
+                  <Link
                     key={p.placeId}
-                    thumbnail={
-                      <div className="relative h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30">
-                        <Image
-                          src={p.imageUrl || FALLBACK_PLACE_IMAGE}
-                          alt={p.placeName}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    }
-                    onClick={() => router.push(`/archiver/place-info/${p.placeId}`)}
+                    href={`/archiver/place-info/${p.placeId}`}
+                    className="block"
                   >
-                    <div className="flex flex-col pl-2 min-w-0">
-                      <p className="body-16-semibold flex flex-row items-center justify-between">
-                        <span className="truncate text-primary-40">{p.placeName}</span>
-                        <RightArrowIcon />
-                      </p>
-
-                      <p className="body-14-semibold text-neutral-50 w-53 truncate pt-0.75">
-                        {p.latestDescription}
-                      </p>
-
-                      <div className="flex flex-row gap-2 caption-12-regular text-primary-50 pt-1">
-                        <p className="flex flex-row items-center gap-1">
-                          <FolderOutlineIcon className="w-4 text-primary-30" />
-                          {p.saveCount}
+                    <Item
+                      disableActive
+                      thumbnail={
+                        <div className="relative h-18 w-18 overflow-hidden rounded-2xl bg-neutral-30">
+                          <Image
+                            src={p.imageUrl || FALLBACK_PLACE_IMAGE}
+                            alt={p.placeName}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      }
+                    >
+                      <div className="flex flex-col pl-2 min-w-0">
+                        <p className="body-16-semibold flex flex-row items-center justify-between">
+                          <span className="truncate text-primary-40">{p.placeName}</span>
+                          <RightArrowIcon />
                         </p>
-                        <p className="flex flex-row items-center gap-1">
-                          <EyeIcon className="w-4 text-primary-30" />
-                          {p.viewCount}
+
+                        <p className="body-14-semibold text-neutral-50 w-53 truncate pt-0.75">
+                          {p.latestDescription}
                         </p>
+
+                        <div className="flex flex-row gap-2 caption-12-regular text-primary-50 pt-1">
+                          <p className="flex flex-row items-center gap-1">
+                            <FolderOutlineIcon className="w-4 text-primary-30" />
+                            {p.saveCount}
+                          </p>
+                          <p className="flex flex-row items-center gap-1">
+                            <EyeIcon className="w-4 text-primary-30" />
+                            {p.viewCount}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </Item>
+                    </Item>
+                  </Link>
                 ))
               )}
             </div>

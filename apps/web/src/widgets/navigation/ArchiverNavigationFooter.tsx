@@ -1,6 +1,7 @@
 'use client';
 
-import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import { LocationPinIcon, UserCircleIcon, HomeIcon, ProfileAddIcon } from '../../shared/ui/icon';
 
@@ -38,18 +39,18 @@ const ArchiverNavigationFooterItem = ({
   icon,
   label,
   isActive,
-  onClick,
+  href,
 }: {
   icon: React.FC<React.SVGProps<SVGSVGElement>>;
   label: string;
   isActive: boolean;
-  onClick: () => void;
+  href: string;
 }): React.ReactElement => {
   const Icon = icon;
 
   return (
-    <button
-      onClick={onClick}
+    <Link
+      href={href}
       className={`
         w-20 h-14
         flex flex-col items-center justify-center gap-1
@@ -58,7 +59,7 @@ const ArchiverNavigationFooterItem = ({
     >
       <Icon />
       <div className="caption-12-semibold">{label}</div>
-    </button>
+    </Link>
   );
 };
 
@@ -67,7 +68,6 @@ export const ArchiverNavigationFooter = ({
 }: {
   activeKey?: ArchiverNavigationFooterKey;
 }): React.ReactElement => {
-  const router = useRouter();
   const pathname = usePathname() ?? '';
 
   return (
@@ -85,7 +85,7 @@ export const ArchiverNavigationFooter = ({
               icon={item.icon}
               label={item.label}
               isActive={isActive}
-              onClick={() => router.push(item.href)}
+              href={item.href}
             />
           );
         })}

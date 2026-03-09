@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import type { GeoLocation } from '@archiview/webview-bridge-contract';
 
 import { CATEGORIES } from '@/shared/constants/category';
@@ -110,8 +110,6 @@ const PlaceListSkeleton = () => (
 );
 
 export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
-  const router = useRouter();
-
   const [open, setOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<ICategoryOptionValue>({
     scope: '전체',
@@ -419,15 +417,19 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
             <PlaceListSkeleton />
           ) : (
             markerFilteredPlaces.map((p) => (
-              <ArchiverPlaceItem
+              <Link
                 key={p.postPlaceId}
-                name={p.placeName}
-                thumbnail={p.imageUrl}
-                description={p.description}
-                savedCount={p.saveCount}
-                viewCount={p.viewCount}
-                onClick={() => router.push(`/archiver/place-info/${p.placeId}?editor=${editorId}`)}
-              />
+                href={`/archiver/place-info/${p.placeId}?editor=${editorId}`}
+                className="block"
+              >
+                <ArchiverPlaceItem
+                  name={p.placeName}
+                  thumbnail={p.imageUrl}
+                  description={p.description}
+                  savedCount={p.saveCount}
+                  viewCount={p.viewCount}
+                />
+              </Link>
             ))
           )}
         </BottomSheet>
