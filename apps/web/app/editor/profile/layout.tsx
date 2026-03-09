@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { BackButtonHeader, Header, LogoHeader } from '@/widgets/header';
-import { ArchiviewLogoIcon } from '@/shared/ui/icon';
+import { LogoHeader } from '@/widgets/header';
 import { EditorNavigationFooter } from '@/widgets/navigation/EditorNavigationFooter';
 
 export default function HomeLayout({

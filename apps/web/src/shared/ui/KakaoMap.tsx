@@ -2,6 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+const KAKAO_SDK_SCRIPT_ID = 'kakao-map-sdk';
+const KAKAO_SDK_BASE_URL = 'https://dapi.kakao.com/v2/maps/sdk.js';
+const KAKAO_SDK_TIMEOUT_MS = 10000;
+
+let kakaoSdkPromise: Promise<typeof window.kakao> | undefined;
+
 interface IKakaoMapProps {
   lat: number;
   lng: number;
@@ -31,18 +37,114 @@ interface IKakaoMapProps {
   className?: string;
 }
 
-function waitForKakao(maxWaitMs: number = 5000): Promise<typeof window.kakao> {
-  return new Promise((resolve, reject) => {
-    const start = Date.now();
+function createKakaoSdkUrl(): string {
+  const appKey = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY;
 
-    const tick = (): void => {
-      if (typeof window !== 'undefined' && window.kakao?.maps) return resolve(window.kakao);
-      if (Date.now() - start > maxWaitMs) return reject(new Error('Kakao Maps SDK not loaded'));
-      setTimeout(tick, 50);
+  if (!appKey) {
+    throw new Error('NEXT_PUBLIC_KAKAO_MAP_KEY is missing');
+  }
+
+  const searchParams = new URLSearchParams({
+    appkey: appKey,
+    libraries: 'services',
+    autoload: 'false',
+  });
+
+  return `${KAKAO_SDK_BASE_URL}?${searchParams.toString()}`;
+}
+
+function loadKakaoSdk(): Promise<typeof window.kakao> {
+  if (typeof window === 'undefined') {
+    return Promise.reject(new Error('Kakao Maps SDK can only be loaded in browser'));
+  }
+
+  if (window.kakao?.maps) {
+    return Promise.resolve(window.kakao);
+  }
+
+  if (kakaoSdkPromise) {
+    return kakaoSdkPromise;
+  }
+
+  kakaoSdkPromise = new Promise((resolve, reject) => {
+    let settled = false;
+    let timeoutId = 0;
+
+    const complete = (callback: () => void): void => {
+      if (settled) {
+        return;
+      }
+
+      settled = true;
+      window.clearTimeout(timeoutId);
+      callback();
     };
 
-    tick();
+    const fail = (error: Error): void => {
+      complete(() => {
+        kakaoSdkPromise = undefined;
+        reject(error);
+      });
+    };
+
+    timeoutId = window.setTimeout(() => {
+      fail(new Error('Timed out while loading Kakao Maps SDK'));
+    }, KAKAO_SDK_TIMEOUT_MS);
+
+    const resolveWithKakao = (): void => {
+      if (!window.kakao?.maps) {
+        fail(new Error('Kakao Maps SDK is not available after loading script'));
+        return;
+      }
+
+      window.kakao.maps.load(() => {
+        if (!window.kakao?.maps) {
+          fail(new Error('Kakao Maps SDK failed to initialize'));
+          return;
+        }
+
+        complete(() => {
+          resolve(window.kakao);
+        });
+      });
+    };
+
+    const existingScript = document.getElementById(KAKAO_SDK_SCRIPT_ID) as HTMLScriptElement | null;
+
+    if (existingScript) {
+      if (window.kakao?.maps) {
+        resolveWithKakao();
+        return;
+      }
+
+      existingScript.addEventListener('load', resolveWithKakao, { once: true });
+      existingScript.addEventListener(
+        'error',
+        () => fail(new Error('Failed to load Kakao Maps SDK script')),
+        { once: true },
+      );
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.id = KAKAO_SDK_SCRIPT_ID;
+    script.src = createKakaoSdkUrl();
+    script.async = true;
+    script.defer = true;
+
+    script.addEventListener('load', resolveWithKakao, { once: true });
+    script.addEventListener(
+      'error',
+      () => fail(new Error('Failed to load Kakao Maps SDK script')),
+      {
+        once: true,
+      },
+    );
+
+    document.head.appendChild(script);
   });
+
+  return kakaoSdkPromise;
 }
 
 export const KakaoMap = ({
@@ -94,50 +196,46 @@ export const KakaoMap = ({
     const relayoutTimeoutIds: Array<ReturnType<typeof setTimeout>> = [];
 
     const initMap = async () => {
-      const kakao = await waitForKakao();
-      if (cancelled) return;
+      const kakao = await loadKakaoSdk();
+      if (cancelled || !elRef.current) return;
 
-      kakao.maps.load(() => {
-        if (cancelled || !elRef.current) return;
+      kakaoRef.current = kakao;
 
-        kakaoRef.current = kakao;
+      const { lat, lng, level } = latestRef.current;
+      const center = new kakao.maps.LatLng(lat, lng);
 
-        const { lat, lng, level } = latestRef.current;
-        const center = new kakao.maps.LatLng(lat, lng);
+      const map = new kakao.maps.Map(elRef.current, { center, level });
+      mapRef.current = map;
+      setIsMapReady(true);
 
-        const map = new kakao.maps.Map(elRef.current, { center, level });
-        mapRef.current = map;
-        setIsMapReady(true);
+      const relayoutAndCenter = () => {
+        const currentMap = mapRef.current;
+        const currentKakao = kakaoRef.current;
+        if (!currentMap || !currentKakao) return;
 
-        const relayoutAndCenter = () => {
-          const currentMap = mapRef.current;
-          const currentKakao = kakaoRef.current;
-          if (!currentMap || !currentKakao) return;
+        const { lat, lng } = latestRef.current;
+        currentMap.relayout();
+        currentMap.setCenter(new currentKakao.maps.LatLng(lat, lng));
+      };
 
-          const { lat, lng } = latestRef.current;
-          currentMap.relayout();
-          currentMap.setCenter(new currentKakao.maps.LatLng(lat, lng));
-        };
+      [0, 180, 420].forEach((delayMs) => {
+        const timeoutId = setTimeout(() => {
+          if (cancelled) return;
+          relayoutAndCenter();
+        }, delayMs);
 
-        [0, 180, 420].forEach((delayMs) => {
-          const timeoutId = setTimeout(() => {
-            if (cancelled) return;
-            relayoutAndCenter();
-          }, delayMs);
-
-          relayoutTimeoutIds.push(timeoutId);
-        });
-
-        kakao.maps.event.addListener(map, 'click', () => {
-          if (markerClickingRef.current) {
-            markerClickingRef.current = false;
-            return;
-          }
-          onMapClickRef.current?.();
-        });
-
-        onReadyRef.current?.({ kakao, map });
+        relayoutTimeoutIds.push(timeoutId);
       });
+
+      kakao.maps.event.addListener(map, 'click', () => {
+        if (markerClickingRef.current) {
+          markerClickingRef.current = false;
+          return;
+        }
+        onMapClickRef.current?.();
+      });
+
+      onReadyRef.current?.({ kakao, map });
     };
 
     initMap().catch((e) => {

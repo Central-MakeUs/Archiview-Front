@@ -100,7 +100,7 @@ export const ArchiverHomePage = (): React.ReactElement => {
             height={124}
             className="absolute top-8 right-9.75"
           />
-          <div className="absolute left-5 right-5 bottom-0 translate-y-1/2 relative">
+          <div className="absolute left-5 right-5 bottom-0 translate-y-1/2">
             <Link
               href="/archiver/search-result"
               aria-label="검색 결과 페이지로 이동"
