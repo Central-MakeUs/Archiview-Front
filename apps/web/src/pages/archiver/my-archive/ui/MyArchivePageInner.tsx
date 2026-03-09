@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   isAppWebView,
@@ -333,15 +334,19 @@ export const MyArchivePageInner = () => {
             </div>
           ) : (
             markerFilteredPlaces.map((p) => (
-              <ArchiverPlaceItem
+              <Link
                 key={p.postPlaceId}
-                name={p.placeName}
-                thumbnail={p.imageUrl}
-                description={p.description}
-                savedCount={p.saveCount}
-                viewCount={p.viewCount}
-                onClick={() => router.push(`/archiver/place-info/${p.postPlaceId}`)}
-              />
+                href={`/archiver/place-info/${p.postPlaceId}`}
+                className="block"
+              >
+                <ArchiverPlaceItem
+                  name={p.placeName}
+                  thumbnail={p.imageUrl}
+                  description={p.description}
+                  savedCount={p.saveCount}
+                  viewCount={p.viewCount}
+                />
+              </Link>
             ))
           )}
         </BottomSheet>

@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { Badge } from '@/shared/ui/Badge';
 import { CategorySection } from '@/entities/common/ui/CategorySection';
@@ -16,7 +17,6 @@ import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { SearchBar } from '@/shared/ui/SearchBar';
 import { consumeArchiverHomeScrollBottomFlag } from '@/shared/constants/archiverHomeScroll';
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
 import type { IHotPlace } from '@/entities/archiver/place/model/archiverPlace.type';
 import type { IEditor } from '@/entities/archiver/profile/model/archiverProfile.type';
@@ -27,9 +27,7 @@ const EMPTY_EDITORS: IEditor[] = [];
 
 export const ArchiverHomePage = (): React.ReactElement => {
   useAuth();
-  const router = useRouter();
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
-  const [searchValue, setSearchValue] = useState('');
   const [showRoleSwitchLoading] = useState(() => consumeRoleSwitchLoadingFlag());
   const [shouldScrollToBottom] = useState(() => consumeArchiverHomeScrollBottomFlag());
   const isIntroEntered = useHomeInitialSwapIntro();
@@ -102,16 +100,18 @@ export const ArchiverHomePage = (): React.ReactElement => {
             height={124}
             className="absolute top-8 right-9.75"
           />
-          <div
-            className="absolute left-5 right-5 bottom-0 translate-y-1/2"
-            onClick={() => router.push('/archiver/search-result')}
-          >
+          <div className="absolute left-5 right-5 bottom-0 translate-y-1/2 relative">
+            <Link
+              href="/archiver/search-result"
+              aria-label="검색 결과 페이지로 이동"
+              className="absolute inset-0 z-10 rounded-full"
+            />
             <SearchBar
               readOnly
               placeholder="게시물 URL 또는 키워드를 검색해보세요."
-              value={searchValue}
-              onChange={(value) => setSearchValue(value)}
-              onSubmit={() => router.push(`/archiver/search-result?search=${searchValue}`)}
+              value=""
+              onChange={() => undefined}
+              onSubmit={() => undefined}
               className="shadow-default"
             />
           </div>
