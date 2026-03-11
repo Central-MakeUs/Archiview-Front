@@ -2,13 +2,11 @@
 
 <div>
   <a href="">
-    <img align="left" width="146" height="146" alt="아카이뷰" src="https://github.com/user-attachments/assets/23b1f259-6bc4-4cfc-87b2-5e5cd24650f7" />
+    <img align="left" width="146" height="146" style="margin-right: 16px;" alt="아카이뷰" src="https://github.com/user-attachments/assets/23b1f259-6bc4-4cfc-87b2-5e5cd24650f7" />
   </a>
-  <p>
-    <b>아카이뷰</b>는 <i>'인스타그램 속 정보를 제대로 활용하고 있지 못하는 것 같다'</i> 라는 생각에서 시작된 서비스예요.<br><br>
-    관심 있는 정보가 있을 때마다 인스타그램 저장 기능을 활용하여 저장하거나, 친구에게 DM으로 보내두는데 항상 그 정보가 필요할 때면, 어디에 파묻혀 있는지 도저히 찾을 수 없더라고요.<br><br>
-    정보의 호수인 인스타그램을 잘 활용하지 못하고 있다는 점을 발견하고 아카이뷰를 기획하게 됐어요. 단순히 <i>'인스타그램 속 정보를 잘 활용하고 싶다'</i> 라는 생각 하나로요!
-  </p>
+  <b>아카이뷰</b>는 <i>'인스타그램 속 정보를 제대로 활용하고 있지 못하는 것 같다'</i> 라는 생각에서 시작된 서비스예요.<br><br>
+  관심 있는 정보가 있을 때마다 인스타그램 저장 기능을 활용하여 저장하거나, 친구에게 DM으로 보내두는데 항상 그 정보가 필요할 때면, 어디에 파묻혀 있는지 도저히 찾을 수 없더라고요.<br><br>
+  정보의 호수인 인스타그램을 잘 활용하지 못하고 있다는 점을 발견하고 아카이뷰를 기획하게 됐어요. 단순히 <i>'인스타그램 속 정보를 잘 활용하고 싶다'</i> 라는 생각 하나로요!
 </div>
 <br clear="left"/>
 
@@ -18,7 +16,7 @@
 | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
 | [![App Store](https://img.shields.io/badge/App%20Store-Download-black?style=flat&logo=apple&logoColor=white)](https://apps.apple.com/kr/app/%EC%95%84%EC%B9%B4%EC%9D%B4%EB%B7%B0/id6757837238) **앱스토어**                                 | 아이폰 유저라면 앱스토어에서 [아카이뷰](https://apps.apple.com/kr/app/%EC%95%84%EC%B9%B4%EC%9D%B4%EB%B7%B0/id6757837238)를 다운로드해 보세요!           |
 | [![Google Play](https://img.shields.io/badge/Google%20Play-Get%20it%20on%20Play-3DDC84?logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=com.archiview.app&pcampaignid=web_share) **플레이스토어** | 안드로이드 유저라면 플레이스토어에서 [아카이뷰](https://play.google.com/store/apps/details?id=com.archiview.app&pcampaignid=web_share)를 다운로드해 보세요! |
-| [![Web](https://img.shields.io/badge/Web-Open-000000?logo=globe&logoColor=white)](https://archiview.vercel.app) **웹**                                                                                                           | 앱 설치 없이 [웹](https://archiview.vercel.app)에서 바로 이용할 수도 있어요!                                                                           |
+| [![Web](https://img.shields.io/badge/Web-Open-000000?logo=globe&logoColor=white)](https://archiview.space/) **웹**                                                                                                           | 앱 설치 없이 [웹](https://archiview.space/)에서 바로 이용할 수도 있어요!                                                                           |
 
 ## 📌 목차
 
