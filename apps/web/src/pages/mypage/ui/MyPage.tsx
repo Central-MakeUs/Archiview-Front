@@ -13,7 +13,9 @@ import { useWithdraw } from '@/entities/auth/hooks/useWithdraw';
 import { openInAppBrowserOrBrowserNewTab } from '@/shared/lib/native-actions';
 import { EditorMyPage } from './editor/EditorMyPage';
 import { ArchiverMyPage } from './archiver/ArchiverMyPage';
+import { MyPageSkeleton } from './MyPageSkeleton';
 import { useGetMyProfile } from '@/entities/archiver/profile/queries/useGetMyProfile';
+import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { WithDrawModal } from './WithDrawModal';
 import { LogoutModal } from './LogoutModal';
 
@@ -34,7 +36,8 @@ export const MyPage = (): React.ReactElement => {
   const { switchRole } = useAuth();
   const { logout } = useLogout();
   const { withdraw } = useWithdraw();
-  const { data: myData } = useGetMyProfile({ useMock: false });
+  const { data: myData, isLoading: isMyProfileLoading } = useGetMyProfile({ useMock: false });
+  const showArchiverLoading = useMinLoading(isMyProfileLoading);
 
   const [role, setRole] = useState<StoredUserRole | null>(null);
   const [openChangeRoleModal, setOpenChangeRoleModal] = useState(false);
@@ -145,13 +148,38 @@ export const MyPage = (): React.ReactElement => {
     onSwitchRole: handleSwitchRole,
   };
 
+  if (role === null) return <MyPageSkeleton />;
+
+  if (role !== 'EDITOR') {
+    if (showArchiverLoading || !myData) return <MyPageSkeleton />;
+    return (
+      <>
+        <ArchiverMyPage myData={myData.data} {...commonHandlers} />
+        <ChangeRoleModal
+          isOpen={openChangeRoleModal}
+          onClose={() => setOpenChangeRoleModal(false)}
+          onConfirm={() => {
+            setOpenChangeRoleModal(false);
+            router.push('/term-agree-editor');
+          }}
+        />
+        <WithDrawModal
+          isOpen={openWithDrawModal}
+          onClose={() => setOpenWithDrawModal(false)}
+          onConfirm={handleWithdrawConfirm}
+        />
+        <LogoutModal
+          isOpen={openLogoutModal}
+          onClose={() => setOpenLogoutModal(false)}
+          onConfirm={handleLogoutConfirm}
+        />
+      </>
+    );
+  }
+
   return (
     <>
-      {role === 'EDITOR' ? (
-        <EditorMyPage {...commonHandlers} />
-      ) : (
-        <ArchiverMyPage myData={myData?.data ?? null} {...commonHandlers} />
-      )}
+      <EditorMyPage {...commonHandlers} />
 
       <ChangeRoleModal
         isOpen={openChangeRoleModal}

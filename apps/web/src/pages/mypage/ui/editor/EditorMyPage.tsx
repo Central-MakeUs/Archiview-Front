@@ -7,8 +7,10 @@ import { Button } from '@/shared/ui/button';
 
 import { EditorInfoCard } from './EditorInfoCard';
 import { AccountManagementSection, InfoSupportSection, TermsConditionsSection } from '../common';
+import { MyPageSkeleton } from '../MyPageSkeleton';
 import { EllipseArrowIcons } from '@/shared/ui/icon/EllipseArrowIcons';
 import { useEditorGetMyProfile } from '@/entities/editor/profile/queries/useEditorGetMyProfile';
+import { useMinLoading } from '@/shared/hooks/useMinLoading';
 
 const EDITOR_TERMS_ITEMS = [
   { label: '서비스 이용약관', key: 'service-terms' },
@@ -35,11 +37,14 @@ export const EditorMyPage = ({
   onSwitchRole,
 }: IEditorMyPageProps): React.ReactElement => {
   const router = useRouter();
-  const { data: editorUserData } = useEditorGetMyProfile();
+  const { data: editorUserData, isLoading: isEditorProfileLoading } = useEditorGetMyProfile();
+  const showLoading = useMinLoading(isEditorProfileLoading);
 
   const handleEditProfile = () => {
     router.push('/mypage/edit-profile');
   };
+
+  if (showLoading || !editorUserData) return <MyPageSkeleton />;
 
   return (
     <div className="flex flex-1 flex-col">

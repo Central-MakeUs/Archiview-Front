@@ -47,7 +47,10 @@ const ssgoiConfig: SsgoiConfig = {
     {
       from: '/archiver/category',
       to: '/archiver/home',
-      transition: drill({ direction: 'exit' }),
+      transition: drill({
+        direction: 'exit',
+        physics: { inertia: { acceleration: 45, resistance: 1.1 } },
+      }),
     },
     // 아카이버-바텀네비
     {
