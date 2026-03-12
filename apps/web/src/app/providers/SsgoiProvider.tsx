@@ -158,6 +158,13 @@ const ssgoiConfig: SsgoiConfig = {
       to: '/editor/profile',
       transition: drill({ direction: 'exit' }),
     },
+    // 에디터 마이페이지 <-> 프로필 수정 (다른 페이지와 동일하게 swap)
+    {
+      from: '/mypage',
+      to: '/mypage/edit-profile',
+      transition: swap(),
+      symmetric: true,
+    },
   ],
 };
 
