@@ -1,12 +1,17 @@
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 
 import { PageTransition } from '@/app/providers/PageTransition';
-import { ArchiverHomePage, metadata } from '@/pages/archiver/home';
+import { ArchiverHomePage } from '@/pages/archiver/home';
 import { archiverKeys } from '@/shared/lib/query-keys';
 import { archiverProfileServerGet } from '@/entities/archiver/profile/api/archiverProfile-server-get';
 
-export { metadata };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('archiverHome');
+  return { title: t('metadata.title') };
+}
 
 export default async function Page(): Promise<React.ReactElement> {
   const queryClient = new QueryClient();
