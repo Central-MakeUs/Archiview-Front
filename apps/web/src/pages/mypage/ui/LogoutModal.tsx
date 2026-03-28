@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { Modal } from '@/shared/ui/common/Modal/Modal';
 import { Button } from '@/shared/ui/button';
 import { XIcon } from '@/shared/ui/icon/XIcon';
@@ -12,6 +14,8 @@ interface ILogoutModalProps {
 }
 
 export const LogoutModal = ({ isOpen, onClose, onConfirm }: ILogoutModalProps) => {
+  const t = useTranslations('mypage.logoutModal');
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="w-70">
       <div className="relative rounded-default bg-white">
@@ -19,7 +23,7 @@ export const LogoutModal = ({ isOpen, onClose, onConfirm }: ILogoutModalProps) =
           <XIcon onClick={onClose} className="right-4 top-4 w-3" />
         </div>
 
-        <h2 className="body-16-bold text-neutral-90">로그아웃 하시겠어요?</h2>
+        <h2 className="body-16-bold text-neutral-90">{t('title')}</h2>
 
         <div className="mt-6 flex gap-2">
           <Button
@@ -28,11 +32,11 @@ export const LogoutModal = ({ isOpen, onClose, onConfirm }: ILogoutModalProps) =
               'flex-1 h-9 body-14-medium px-0 bg-white border border-neutral-30 text-neutral-30',
             )}
           >
-            취소
+            {t('cancel')}
           </Button>
 
           <Button onClick={onConfirm} className={cn('flex-1 h-9 body-14-medium px-0')}>
-            로그아웃
+            {t('confirm')}
           </Button>
         </div>
       </div>

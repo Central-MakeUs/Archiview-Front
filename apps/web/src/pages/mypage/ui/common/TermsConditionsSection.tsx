@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useTranslations } from 'next-intl';
 
 interface ITermsItem {
   label: string;
@@ -14,9 +17,11 @@ export const TermsConditionsSection = ({
   items,
   onItemClick,
 }: ITermsConditionsSectionProps): React.ReactElement => {
+  const t = useTranslations('mypage');
+
   return (
     <section>
-      <h2 className="heading-20-bold px-5 pb-2 pt-6 text-neutral-90">약관 및 정책</h2>
+      <h2 className="heading-20-bold px-5 pb-2 pt-6 text-neutral-90">{t('sectionTerms')}</h2>
 
       {items.map((item, index) => (
         <React.Fragment key={item.key}>

@@ -1,6 +1,6 @@
 import { IEditorHomeResponseDTO } from '@/entities/editor/home/model/editorHome.type';
 import { EditorPlaceItem } from '@/entities/editor/place/ui/EditorPlaceItem';
-import Link from 'next/link';
+import { Link } from '@/shared/lib/i18n/navigation';
 
 export const EditorPlaceItemList = ({
   editorInsightData,

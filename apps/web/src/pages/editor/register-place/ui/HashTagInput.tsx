@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import { useTranslations } from 'next-intl';
+
 import { BoxInput } from '@/shared/ui/common/Input/BoxInput';
 import { cn } from '@/shared/lib/cn';
 import { Chip } from '@/shared/ui/Chip';
@@ -11,6 +13,7 @@ const MAX_TAG_COUNT = 3;
 const MAX_TAG_LENGTH = 6;
 
 export const HashTagInput = ({ className }: { className?: string }) => {
+  const t = useTranslations('editorRegisterPlace.hashTag');
   const { control, setValue } = useFormContext();
   const [inputValue, setInputValue] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -26,17 +29,17 @@ export const HashTagInput = ({ className }: { className?: string }) => {
     if (!trimmed) return;
 
     if (trimmed.length > MAX_TAG_LENGTH) {
-      setErrorMessage('해시태그는 최대 6글자까지 입력할 수 있어요');
+      setErrorMessage(t('errorMaxLength'));
       return;
     }
 
     if (tags.length >= MAX_TAG_COUNT) {
-      setErrorMessage('해시태그는 최대 3개까지 추가할 수 있어요');
+      setErrorMessage(t('errorMaxCount'));
       return;
     }
 
     if (tags.includes(trimmed)) {
-      setErrorMessage('이미 추가된 해시태그예요');
+      setErrorMessage(t('errorDuplicate'));
       return;
     }
 
@@ -57,8 +60,8 @@ export const HashTagInput = ({ className }: { className?: string }) => {
     <div className={cn(className)}>
       <div className="group flex flex-col gap-2.5">
         <div className="flex justify-between">
-          <p className="body-14-semibold mb-3">게시글의 해시태그를 자유롭게 설정해보세요</p>
-          <p className="caption-12-medium text-primary-40">*최대 3개</p>
+          <p className="body-14-semibold mb-3">{t('label')}</p>
+          <p className="caption-12-medium text-primary-40">{t('maxHint')}</p>
         </div>
 
         <div className="flex gap-3">
@@ -89,7 +92,7 @@ export const HashTagInput = ({ className }: { className?: string }) => {
             onClick={handleAddTag}
             className="w-16 h-12 body-14-semibold bg-primary-40 rounded-xl text-neutral-10"
           >
-            입력
+            {t('submit')}
           </button>
         </div>
 

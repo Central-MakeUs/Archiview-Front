@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/shared/lib/i18n/navigation';
 
 import { Badge } from '@/shared/ui/Badge';
 import { CategorySection } from '@/entities/common/ui/CategorySection';
@@ -75,11 +75,11 @@ export const ArchiverHomePage = (): React.ReactElement => {
 
   const hotPlaces = hotPlaceData?.data?.places ?? EMPTY_HOT_PLACES;
   const editorTrusted = editorTrustedData?.data?.editors ?? EMPTY_EDITORS;
-  const introClassName = isIntroEntered ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0';
+  const introClassName = isIntroEntered ? 'translate-x-0' : 'translate-x-4';
 
   return (
     <div
-      className={`flex min-h-screen flex-col transition-[transform,opacity] duration-300 ease-out motion-reduce:transform-none motion-reduce:opacity-100 motion-reduce:transition-none ${introClassName}`}
+      className={`flex min-h-screen flex-col transition-transform duration-300 ease-out motion-reduce:transform-none motion-reduce:transition-none ${introClassName}`}
     >
       <div ref={scrollContainerRef} className="flex-1 overflow-y-auto scroll-none">
         <div className="relative">

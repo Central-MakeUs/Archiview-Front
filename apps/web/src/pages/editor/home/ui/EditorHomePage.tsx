@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { PopularPlaceSection } from '@/widgets/editor/PopularPlaceSection';
 import { EditorTopBanner } from '@/widgets/editor/EditorTopBanner';
@@ -77,7 +78,7 @@ const PopularPlaceSectionSkeleton = () => (
   </>
 );
 
-const EditorHomeSkeleton = () => (
+export const EditorHomeSkeleton = () => (
   <div className="w-full">
     <EditorTopBannerSkeleton />
     <EditorInsightSkeleton />
@@ -90,6 +91,7 @@ const EditorHomeSkeleton = () => (
 
 export const EditorHomePage = () => {
   useAuth();
+  const t = useTranslations('editorHome');
   const [showRoleSwitchLoading, setShowRoleSwitchLoading] = useState(false);
   const isIntroEntered = useHomeInitialSwapIntro();
 
@@ -120,7 +122,7 @@ export const EditorHomePage = () => {
     setShowRoleSwitchLoading(consumeRoleSwitchLoadingFlag());
   }, []);
 
-  const introClassName = isIntroEntered ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0';
+  const introClassName = isIntroEntered ? 'translate-x-0' : 'translate-x-4';
 
   // if (showRoleSwitchLoading && showLoading) {
   //   return <LoadingPage text="에디터 홈페이지를 로딩 중입니다" role="EDITOR" />;
@@ -143,8 +145,8 @@ export const EditorHomePage = () => {
           editorNickname={insightData?.data?.editorNickname ?? ''}
           placeCount={places.length}
         />
-        <EditorInsight insightData={insightData?.data ?? undefined} />
-        <p className="heading-20-bold pb-4 pl-5">반응이 좋은 장소</p>
+        <EditorInsight insightData={insightData?.data ?? undefined} period={period} />
+        <p className="heading-20-bold pb-4 pl-5">{t('popularPlaces')}</p>
         <PopularPlaceSection places={places} />
       </>
     );
@@ -152,7 +154,7 @@ export const EditorHomePage = () => {
 
   return (
     <div
-      className={`w-full transition-[transform,opacity] duration-300 ease-out motion-reduce:transform-none motion-reduce:opacity-100 motion-reduce:transition-none ${introClassName}`}
+      className={`w-full transition-transform duration-300 ease-out motion-reduce:transform-none motion-reduce:transition-none ${introClassName}`}
     >
       {content}
     </div>

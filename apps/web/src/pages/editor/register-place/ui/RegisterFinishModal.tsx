@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { Modal } from '@/shared/ui/common/Modal/Modal';
 import { Button } from '@/shared/ui/button';
 import { XIcon } from '@/shared/ui/icon/XIcon';
@@ -12,6 +14,8 @@ interface IRegisterFinishModalProps {
 }
 
 export const RegisterFinishModal = ({ isOpen, onClose, onConfirm }: IRegisterFinishModalProps) => {
+  const t = useTranslations('editorRegisterPlace.finishModal');
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="w-70">
       <div className="relative rounded-default bg-white">
@@ -19,12 +23,9 @@ export const RegisterFinishModal = ({ isOpen, onClose, onConfirm }: IRegisterFin
           <XIcon onClick={onClose} className="right-4 top-4 w-3" />
         </div>
 
-         <h2 className="body-16-bold text-neutral-90">장소 등록이 완료되었어요!</h2>
+        <h2 className="body-16-bold text-neutral-90">{t('title')}</h2>
 
-        <p className="mt-3 body-14-medium text-neutral-40">
-          돌아가서 내 장소를 확인해볼까요?
-        </p>
-
+        <p className="mt-3 body-14-medium text-neutral-40">{t('description')}</p>
 
         <div className="mt-6 flex gap-2">
           <Button
@@ -33,11 +34,11 @@ export const RegisterFinishModal = ({ isOpen, onClose, onConfirm }: IRegisterFin
               'flex-1 h-9 body-14-medium px-0 bg-white border border-neutral-30 text-neutral-30',
             )}
           >
-            수정하기
+            {t('continueEdit')}
           </Button>
 
           <Button onClick={onConfirm} className={cn('flex-1 h-9 body-14-medium px-0')}>
-            이동하기
+            {t('goToProfile')}
           </Button>
         </div>
       </div>

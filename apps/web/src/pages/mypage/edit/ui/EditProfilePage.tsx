@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { useRef, useState, useMemo, useEffect } from 'react';
 
 import { useEditorGetPresignedUrl } from '@/entities/editor/place/mutations/useEditorGetPresignedUrl';
@@ -26,9 +27,10 @@ import {
   openNativeAppSettings,
   requestNativeImage,
 } from '@/shared/lib/native-actions';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 
 export const EditProfilePage = () => {
+  const t = useTranslations('mypage.edit');
   const queryClient = useQueryClient();
   const fileRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
@@ -190,7 +192,7 @@ export const EditProfilePage = () => {
 
     editProfile(payload, {
       onSuccess: async () => {
-        toast.success('프로필 수정 완료');
+        toast.success(t('toastSuccess'));
         await queryClient.invalidateQueries({
           queryKey: editorKeys.getEditorMeProfile.all.queryKey,
         });
@@ -198,7 +200,7 @@ export const EditProfilePage = () => {
       },
       onError: (error) => {
         const kyError = error as ExtendedKyHttpError;
-        toast.error(kyError.errorData?.message ?? error.message ?? '알 수 없는 오류');
+        toast.error(kyError.errorData?.message ?? error.message ?? t('toastUnknownError'));
       },
     });
   };
@@ -238,19 +240,19 @@ export const EditProfilePage = () => {
             type="button"
             onClick={openFilePicker}
             className="relative h-22.5 w-22.5 rounded-full bg-neutral-20 overflow-hidden"
-            aria-label="프로필 이미지 업로드"
+            aria-label={t('profileUploadAria')}
           >
             {/* 미리보기 */}
             {profileImagePreViewUrl ? (
               <Image
                 src={profileImagePreViewUrl}
-                alt="프로필 미리보기"
+                alt={t('profilePreviewAlt')}
                 fill
                 className="object-cover"
               />
             ) : (
               <div className="h-full w-full flex items-center justify-center text-neutral-40 text-sm">
-                프로필 사진 업로드
+                {t('profileUpload')}
               </div>
             )}
           </button>
@@ -266,8 +268,8 @@ export const EditProfilePage = () => {
 
         <div>
           <div className="flex flex-row justify-between mb-3">
-            <p className="body-14-semibold">닉네임</p>
-            <p className="caption-12-medium text-primary-40">*필수</p>
+            <p className="body-14-semibold">{t('nickname')}</p>
+            <p className="caption-12-medium text-primary-40">{t('required')}</p>
           </div>
           <NickNameInput
             value={nickname}
@@ -280,16 +282,16 @@ export const EditProfilePage = () => {
 
         <div>
           <div className="flex flex-row justify-between mb-3">
-            <p className="body-14-semibold">한줄소개</p>
-            <p className="caption-12-medium text-primary-40">*필수</p>
+            <p className="body-14-semibold">{t('introduction')}</p>
+            <p className="caption-12-medium text-primary-40">{t('required')}</p>
           </div>
           <IntroductionInput value={introduction} onChange={setIntroduction} />
         </div>
 
         <div>
           <div className="flex flex-row justify-between mb-3">
-            <p className="body-14-semibold">인스타그램 아이디</p>
-            <p className="caption-12-medium text-primary-40">*필수</p>
+            <p className="body-14-semibold">{t('instagramId')}</p>
+            <p className="caption-12-medium text-primary-40">{t('required')}</p>
           </div>
           <InstagramIdInput
             value={instagramId}
@@ -301,8 +303,8 @@ export const EditProfilePage = () => {
 
         <div>
           <div className="flex flex-row justify-between mb-3">
-            <p className="body-14-semibold">인스타그램 URL</p>
-            <p className="caption-12-medium text-primary-40">*필수</p>
+            <p className="body-14-semibold">{t('instagramUrl')}</p>
+            <p className="caption-12-medium text-primary-40">{t('required')}</p>
           </div>
           <InstagramUrlInput
             value={instagramUrl}
@@ -314,8 +316,8 @@ export const EditProfilePage = () => {
 
         <div>
           <div className="flex flex-row justify-between mb-3">
-            <p className="body-14-semibold">나를 표현하는 해시태그를 자유롭게 설정해보세요!</p>
-            <p className="caption-12-medium text-primary-40">*2개 필수</p>
+            <p className="body-14-semibold">{t('hashtagPrompt')}</p>
+            <p className="caption-12-medium text-primary-40">{t('requiredTwo')}</p>
           </div>
           <HashTagInput value={hashtags} onChange={setHashtags} max={2} />
         </div>
@@ -329,14 +331,14 @@ export const EditProfilePage = () => {
             )}
           />
           <span className={cn('caption-12-regular')}>
-            일부 정보는 다른 사용자에게 공개될 수 있어요.
+            {t('privacyNote')}
           </span>
         </div>
       </div>
 
       <div className="pb-5 pt-3">
         <Button disabled={!isSubmitEnabled} onClick={handleSubmit} className="w-full">
-          수정완료
+          {t('submit')}
         </Button>
       </div>
     </div>

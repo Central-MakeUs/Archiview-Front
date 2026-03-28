@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/shared/lib/i18n/navigation';
 import { CaretRightIcon, FolderOutlineIcon, RightArrowIcon, EyeIcon } from '@/shared/ui/icon';
 import type { IPlace } from '@/entities/archiver/search/model/archiverSearch.type';
 

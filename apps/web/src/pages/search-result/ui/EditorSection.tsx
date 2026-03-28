@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 import { CaretRightIcon, RightArrowIcon } from '@/shared/ui/icon';
 import type { IEditor } from '@/entities/archiver/search/model/archiverSearch.type';
 import { UserPlusIcon } from '@/shared/ui/icon/UserPlusIcon';

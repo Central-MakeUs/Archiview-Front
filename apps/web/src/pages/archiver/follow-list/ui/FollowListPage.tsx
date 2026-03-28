@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 
 import { useGetMyFollows } from '@/entities/archiver/profile/queries/useGetMyFollows';
 import { EditorProfileItem } from '@/features/archiver/profile/ui/EditorProfileItem';

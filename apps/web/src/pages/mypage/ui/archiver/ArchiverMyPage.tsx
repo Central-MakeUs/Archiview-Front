@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 
 import { Button } from '@/shared/ui/button';
 
@@ -9,12 +10,6 @@ import { ArchiverInfoCard } from './ArchiverInfoCard';
 import { AccountManagementSection, InfoSupportSection, TermsConditionsSection } from '../common';
 import { EllipseArrowIcons } from '@/shared/ui/icon/EllipseArrowIcons';
 import { IArchiverMyProfileResponseDTO } from '@/entities/archiver/profile/model/archiverProfile.type';
-
-const ARCHIVER_TERMS_ITEMS = [
-  { label: '서비스 이용약관', key: 'service-terms' },
-  { label: '위치 기반 서비스 이용약관', key: 'location-terms' },
-  { label: '개인정보 처리 방침', key: 'privacy-policy' },
-] as const;
 
 interface IArchiverMyPageProps {
   myData: IArchiverMyProfileResponseDTO['data'];
@@ -36,9 +31,17 @@ export const ArchiverMyPage = ({
   onSwitchRole,
 }: IArchiverMyPageProps): React.ReactElement => {
   const router = useRouter();
+  const t = useTranslations('mypage');
+  const tArchiverTerms = useTranslations('mypage.archiverTerms');
+
+  const archiverTermsItems = [
+    { label: tArchiverTerms('service'), key: 'service-terms' },
+    { label: tArchiverTerms('location'), key: 'location-terms' },
+    { label: tArchiverTerms('privacy'), key: 'privacy-policy' },
+  ] as const;
 
   const handleManageBlockedEditors = () => {
-    router.push('blocked-editor');
+    router.push('/blocked-editor');
   };
 
   return (
@@ -55,18 +58,18 @@ export const ArchiverMyPage = ({
       <AccountManagementSection
         onLogout={onLogout}
         onWithdraw={onWithdraw}
-        extraItems={[{ label: '차단한 에디터 관리', onClick: handleManageBlockedEditors }]}
+        extraItems={[{ label: t('manageBlockedEditors'), onClick: handleManageBlockedEditors }]}
       />
 
       {/* 정보 및 지원 */}
       <InfoSupportSection onContact={onContact} onReportBug={onReportBug} />
 
       {/* 약관 및 정책 */}
-      <TermsConditionsSection items={ARCHIVER_TERMS_ITEMS} onItemClick={onTermsClick} />
+      <TermsConditionsSection items={archiverTermsItems} onItemClick={onTermsClick} />
 
       {/* 하단 버전 + 역할 전환 */}
       <div className="mt-auto flex flex-col items-center gap-4 px-5 pb-8 pt-10">
-        <span className="caption-12-regular text-neutral-40">버전 v.1.0</span>
+        <span className="caption-12-regular text-neutral-40">{t('version')}</span>
 
         <Button
           variant="contained"
@@ -75,7 +78,7 @@ export const ArchiverMyPage = ({
           className="h-[67px] w-[228px] rounded-[999px]"
         >
           <EllipseArrowIcons className="mr-1" />
-          에디터 모드로 전환
+          {t('switchToEditor')}
         </Button>
       </div>
     </div>

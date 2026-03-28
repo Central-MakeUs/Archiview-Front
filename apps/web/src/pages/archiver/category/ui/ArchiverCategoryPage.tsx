@@ -1,7 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+
+import { Link, usePathname, useRouter } from '@/shared/lib/i18n/navigation';
 
 import { CATEGORIES } from '@/shared/constants/category';
 import { OptionTabs } from '@/shared/ui/common/Tabs/OptionTabs';
@@ -13,7 +15,6 @@ import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import { Item } from '@/shared/ui/common/Item';
 import { EyeIcon, FolderOutlineIcon, RightArrowIcon } from '@/shared/ui/icon';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
 
 const NEAR_CATEGORY_ID = 0;

@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { Link, useRouter } from '@/shared/lib/i18n/navigation';
 import {
   isAppWebView,
   openNativeAppSettings,
@@ -66,10 +66,11 @@ const getMarkerCategoryId = (pin: IPin): number | undefined => {
 
 export const MyArchivePageInner = () => {
   const router = useRouter();
+  const tCategory = useTranslations('categoryPicker');
 
   const [open, setOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<ICategoryOptionValue>({
-    scope: '전체',
+    scope: 'ALL',
     categoryIds: [],
   });
   const [location, setLocation] = useState<GeoLocation | null>(null);
@@ -80,10 +81,10 @@ export const MyArchivePageInner = () => {
   const [isLocationPermissionModalOpen, setIsLocationPermissionModalOpen] = useState(false);
   const shouldMoveToNearbyRef = useRef(false);
 
-  const mapFilter = categoryFilter.scope === '내주변' ? 'NEARBY' : 'ALL';
-  const nearbyLatitude = categoryFilter.scope === '내주변' ? location?.coords.latitude : undefined;
+  const mapFilter = categoryFilter.scope === 'NEARBY' ? 'NEARBY' : 'ALL';
+  const nearbyLatitude = categoryFilter.scope === 'NEARBY' ? location?.coords.latitude : undefined;
   const nearbyLongitude =
-    categoryFilter.scope === '내주변' ? location?.coords.longitude : undefined;
+    categoryFilter.scope === 'NEARBY' ? location?.coords.longitude : undefined;
 
   const { data, isLoading, isError } = useGetMyArchives({ useMock: false });
   const { data: archivePinsData } = useGetArchivePins({
@@ -94,7 +95,7 @@ export const MyArchivePageInner = () => {
   });
 
   useEffect(() => {
-    if (categoryFilter.scope !== '내주변') {
+    if (categoryFilter.scope !== 'NEARBY') {
       shouldMoveToNearbyRef.current = false;
       setLocation(null);
       setIsLocationPermissionModalOpen(false);
@@ -144,7 +145,7 @@ export const MyArchivePageInner = () => {
   }, []);
 
   useEffect(() => {
-    if (categoryFilter.scope !== '내주변') return;
+    if (categoryFilter.scope !== 'NEARBY') return;
     if (!location) return;
     if (!shouldMoveToNearbyRef.current) return;
 
@@ -169,7 +170,7 @@ export const MyArchivePageInner = () => {
     const markerScale = getMarkerScaleByLevel(mapLevel);
 
     return [
-      ...(categoryFilter.scope === '내주변' && location
+      ...(categoryFilter.scope === 'NEARBY' && location
         ? [
             {
               lat: location.coords.latitude,
@@ -310,7 +311,7 @@ export const MyArchivePageInner = () => {
           header={
             <div className="px-5 pb-4 pt-2.5">
               <p className="heading-20-bold">
-                {categoryFilter.scope}{' '}
+                {categoryFilter.scope === 'NEARBY' ? tCategory('scopeNearby') : tCategory('scopeAll')}{' '}
                 <span className="text-primary-40 pl-1">{markerFilteredPlaces.length}</span>
               </p>
             </div>

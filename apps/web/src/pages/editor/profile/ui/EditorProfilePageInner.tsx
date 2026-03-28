@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 import type { GeoLocation } from '@archiview/webview-bridge-contract';
 
 import { KakaoMap } from '@/shared/ui/KakaoMap';
@@ -77,10 +78,11 @@ interface IEditorProfile {
 }
 
 export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile }) => {
+  const t = useTranslations('editorProfile');
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<ICategoryOptionValue>({
-    scope: '전체',
+    scope: 'ALL',
     categoryIds: [],
   });
   const [location, setLocation] = useState<GeoLocation | null>(null);
@@ -90,10 +92,10 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
   const [selectedMarkerPlaceId, setSelectedMarkerPlaceId] = useState<number | null>(null);
   const shouldMoveToNearbyRef = useRef(false);
 
-  const mapFilter = categoryFilter.scope === '내주변' ? 'NEARBY' : 'ALL';
-  const nearbyLatitude = categoryFilter.scope === '내주변' ? location?.coords.latitude : undefined;
+  const mapFilter = categoryFilter.scope === 'NEARBY' ? 'NEARBY' : 'ALL';
+  const nearbyLatitude = categoryFilter.scope === 'NEARBY' ? location?.coords.latitude : undefined;
   const nearbyLongitude =
-    categoryFilter.scope === '내주변' ? location?.coords.longitude : undefined;
+    categoryFilter.scope === 'NEARBY' ? location?.coords.longitude : undefined;
 
   const {
     data: placeListData,
@@ -118,7 +120,7 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
   const places = placeListData?.data?.places ?? [];
 
   useEffect(() => {
-    if (categoryFilter.scope !== '내주변') {
+    if (categoryFilter.scope !== 'NEARBY') {
       shouldMoveToNearbyRef.current = false;
       setLocation(null);
       return;
@@ -158,7 +160,7 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
   }, []);
 
   useEffect(() => {
-    if (categoryFilter.scope !== '내주변') return;
+    if (categoryFilter.scope !== 'NEARBY') return;
     if (!location) return;
     if (!shouldMoveToNearbyRef.current) return;
 
@@ -176,7 +178,7 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
     const markerScale = getMarkerScaleByLevel(mapLevel);
 
     return [
-      ...(categoryFilter.scope === '내주변' && location
+      ...(categoryFilter.scope === 'NEARBY' && location
         ? [
             {
               lat: location.coords.latitude,
@@ -289,7 +291,7 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
   }
 
   if (isPlaceListError && !placeListData) {
-    return <div className="px-5 pt-6">불러오기 실패</div>;
+    return <div className="px-5 pt-6">{t('loadError')}</div>;
   }
 
   return (
@@ -340,7 +342,7 @@ export const EditorProfilePageInner = ({ profile }: { profile: IEditorProfile })
           header={
             <div className="flex flex-row justify-between pb-4 pt-2.5 px-5">
               <p className="heading-20-bold">
-                업로드한 장소{' '}
+                {t('bottomSheet.placesUploaded')}{' '}
                 <span className="text-primary-40 pl-1">{markerFilteredPlaces.length}</span>
               </p>
             </div>
