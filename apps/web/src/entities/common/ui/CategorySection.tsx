@@ -1,7 +1,7 @@
 'use client';
 
 import { memo, useEffect, useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@/shared/lib/i18n/navigation';
 
 interface ICategoryItem {
   label: string;

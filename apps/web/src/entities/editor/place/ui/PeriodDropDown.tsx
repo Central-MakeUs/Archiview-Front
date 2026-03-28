@@ -1,25 +1,34 @@
+'use client';
+
 import { useMemo, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+
+import { usePathname, useRouter } from '@/shared/lib/i18n/navigation';
 
 import { Button } from '@/shared/ui/button';
 import { UpArrowIcon } from '@/shared/ui/icon';
 
 import type { InsightPeriod } from '@/entities/editor/place/model/editorPlace.type';
 
-const PERIOD_LABEL: Record<InsightPeriod, string> = {
-  ALL: '전체 기간',
-  WEEK: '7일',
-  MONTH: '30일',
-};
-
 export const PeriodDropdown = ({ value }: { value: InsightPeriod }) => {
+  const t = useTranslations('editorHome');
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();
 
-  const currentLabel = useMemo(() => PERIOD_LABEL[value], [value]);
+  const periodLabel = useMemo(
+    (): Record<InsightPeriod, string> => ({
+      ALL: t('period.all'),
+      WEEK: t('period.week'),
+      MONTH: t('period.month'),
+    }),
+    [t],
+  );
+
+  const currentLabel = useMemo(() => periodLabel[value], [periodLabel, value]);
 
   const setPeriod = (next: InsightPeriod) => {
     const params = new URLSearchParams(sp?.toString() ?? '');
@@ -58,23 +67,23 @@ export const PeriodDropdown = ({ value }: { value: InsightPeriod }) => {
         <Button
           type="button"
           onClick={() => setPeriod('ALL')}
-          className="w-full justify-start px-4 py-2 rounded-none active:bg-primary-10 bg-white hover:bg-white caption-12-medium text-neutral-50"
+          className="w-full justify-start rounded-none bg-white px-4 py-2 caption-12-medium text-neutral-50 hover:bg-white active:bg-primary-10"
         >
-          전체 기간
+          {t('period.all')}
         </Button>
         <Button
           type="button"
           onClick={() => setPeriod('WEEK')}
-          className="w-full justify-start px-4 py-2 rounded-none active:bg-primary-10 bg-white hover:bg-white caption-12-medium text-neutral-50"
+          className="w-full justify-start rounded-none bg-white px-4 py-2 caption-12-medium text-neutral-50 hover:bg-white active:bg-primary-10"
         >
-          7일
+          {t('period.week')}
         </Button>
         <Button
           type="button"
           onClick={() => setPeriod('MONTH')}
-          className="w-full justify-start px-4 py-2 rounded-none active:bg-primary-10 bg-white hover:bg-white caption-12-medium text-neutral-50"
+          className="w-full justify-start rounded-none bg-white px-4 py-2 caption-12-medium text-neutral-50 hover:bg-white active:bg-primary-10"
         >
-          30일
+          {t('period.month')}
         </Button>
       </div>
     </div>

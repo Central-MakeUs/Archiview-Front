@@ -8,7 +8,7 @@ import {
   PlaneArrowOutlineIcon,
   InstagramOutlineIcon,
 } from '@/shared/ui/icon';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 
 interface IEditorPlaceItemProps {
   placeId: number;

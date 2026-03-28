@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 
 import { invalidateAllArchiverQueries } from '@/shared/lib/query-keys';
 import type { ExtendedKyHttpError } from '@/shared/lib/api/common';

@@ -4,7 +4,7 @@ import { editorPlacePost } from '../api/editorPlace-post';
 import { ExtendedKyHttpError } from '@/shared/lib/api/common';
 import { IEditEditorPostRequest } from '../model/editorPlace.type';
 import { editorKeys } from '@/shared/lib/query-keys';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 
 export const useEditorEditPosts = () => {
   const router = useRouter();

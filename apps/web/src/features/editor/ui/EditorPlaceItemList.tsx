@@ -1,6 +1,10 @@
+'use client';
+
 import { useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+
+import { Link } from '@/shared/lib/i18n/navigation';
 
 import type { IEditorInsightPlace } from '@/entities/editor/place/model/editorPlace.type';
 import { parseMetric } from '@/features/editor/utils/parseMetric';
@@ -9,6 +13,8 @@ import type { PlaceOption } from './PlaceOptionTabs';
 import { EditorPlaceItem } from '../../../entities/editor/place/ui/EditorPlaceItem';
 
 const EmptyPlaceState = () => {
+  const t = useTranslations('editorHome');
+
   return (
     <div className="flex flex-col items-center gap-6 py-24">
       <Link
@@ -37,9 +43,9 @@ const EmptyPlaceState = () => {
         </svg>
       </Link>
       <p className="body-16-semibold text-center text-neutral-40">
-        아직 공유한 장소가 없어요.
+        {t('emptyPlaces.line1')}
         <br />
-        소중한 정보를 등록해주세요!
+        {t('emptyPlaces.line2')}
       </p>
     </div>
   );

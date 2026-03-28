@@ -2,7 +2,7 @@
 
 import { memo, useMemo } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/shared/lib/i18n/navigation';
 
 import { Badge } from '@/shared/ui/Badge';
 import { Kard } from '@/shared/ui/common/Kard';
