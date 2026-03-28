@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/shared/lib/i18n/navigation';
 import type { GeoLocation } from '@archiview/webview-bridge-contract';
 
@@ -110,6 +111,7 @@ const PlaceListSkeleton = () => (
 );
 
 export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
+  const t = useTranslations('archiverEditorProfile.sheet');
   const [open, setOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<ICategoryOptionValue>({
     scope: 'ALL',
@@ -405,7 +407,7 @@ export const EditorProfilePage = ({ editorId }: { editorId: string }) => {
           header={
             <div className="flex flex-row justify-between pb-4 pt-2.5 px-5">
               <p className="heading-20-bold">
-                업로드한 장소{' '}
+                {t('uploadedPlaces')}{' '}
                 <span className="text-primary-40 pl-1">{markerFilteredPlaces.length}</span>
               </p>
               <SortDropdown value={sort} onChange={setSort} />

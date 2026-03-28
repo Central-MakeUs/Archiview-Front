@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useRouter } from '@/shared/lib/i18n/navigation';
 
 import { useGetMyFollows } from '@/entities/archiver/profile/queries/useGetMyFollows';
@@ -44,6 +45,7 @@ const FollowListSkeleton = () => {
 };
 
 export const FollowListPage = () => {
+  const t = useTranslations('archiverFollowList');
   const router = useRouter();
   const { data, isLoading, isError } = useGetMyFollows({ useMock: false });
   const showLoading = useMinLoading(isLoading);
@@ -57,13 +59,14 @@ export const FollowListPage = () => {
     <div>
       <div className="flex flex-row justify-between p-5">
         <span className="heading-20-bold">
-          에디터 <span className="text-primary-40">{data.data?.editors.length}</span>
+          {t('headingEditors')}{' '}
+          <span className="text-primary-40">{data.data?.editors.length}</span>
         </span>
       </div>
       {followData.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-6 py-30 px-5">
           <p className="body-16-semibold text-neutral-40 text-center whitespace-pre-wrap">
-            {'팔로우한 에디터가 없어요.\n마음에 드는 에디터를 팔로우해 보세요.'}
+            {t('emptyState')}
           </p>
           <Button
             variant="outlined"
@@ -72,7 +75,7 @@ export const FollowListPage = () => {
               router.push('/archiver/home');
             }}
           >
-            팔로우하러가기
+            {t('goFollow')}
           </Button>
         </div>
       ) : (

@@ -17,6 +17,7 @@ import { useMinLoading } from '@/shared/hooks/useMinLoading';
 import { SearchBar } from '@/shared/ui/SearchBar';
 import { consumeArchiverHomeScrollBottomFlag } from '@/shared/constants/archiverHomeScroll';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { ErrorPage } from '@/shared/ui/common/Error/ErrorPage';
 import type { IHotPlace } from '@/entities/archiver/place/model/archiverPlace.type';
 import type { IEditor } from '@/entities/archiver/profile/model/archiverProfile.type';
@@ -26,6 +27,7 @@ const EMPTY_HOT_PLACES: IHotPlace[] = [];
 const EMPTY_EDITORS: IEditor[] = [];
 
 export const ArchiverHomePage = (): React.ReactElement => {
+  const t = useTranslations('archiverHome');
   useAuth();
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const [showRoleSwitchLoading] = useState(() => consumeRoleSwitchLoadingFlag());
@@ -68,7 +70,7 @@ export const ArchiverHomePage = (): React.ReactElement => {
   }, [shouldScrollToBottom, showLoading]);
 
   if (showRoleSwitchLoading && showLoading) {
-    return <LoadingPage text="아카이버 홈 화면으로 이동중입니다." role="ARCHIVER" />;
+    return <LoadingPage text={t('roleSwitchLoading')} role="ARCHIVER" />;
   }
 
   if (isError) return <ErrorPage />;
@@ -86,16 +88,16 @@ export const ArchiverHomePage = (): React.ReactElement => {
           <div className="w-full bg-[#84C6FF] h-45 rounded-b-4xl px-5 pt-8 pb-16">
             <div className="mb-3">
               <Badge variant="contained" className="rounded-xl bg-primary-60">
-                아카이버
+                {t('badge')}
               </Badge>
             </div>
             <div className="heading-24-bold">{myData?.data?.nickname}</div>
-            <div className="body-14-regular text-primary-50">소중한 정보를 검색해보세요!</div>
+            <div className="body-14-regular text-primary-50">{t('tagline')}</div>
           </div>
           <Image
             preload={true}
             src="/images/MainFolderIcon.svg"
-            alt="MainFolderImage"
+            alt={t('folderImageAlt')}
             width={124}
             height={124}
             className="absolute top-8 right-9.75"
@@ -103,12 +105,12 @@ export const ArchiverHomePage = (): React.ReactElement => {
           <div className="absolute left-5 right-5 bottom-0 translate-y-1/2">
             <Link
               href="/archiver/search-result"
-              aria-label="검색 결과 페이지로 이동"
+              aria-label={t('searchAriaLabel')}
               className="absolute inset-0 z-10 rounded-full"
             />
             <SearchBar
               readOnly
-              placeholder="게시물 URL 또는 키워드를 검색해보세요."
+              placeholder={t('searchPlaceholder')}
               value=""
               onChange={() => undefined}
               onSubmit={() => undefined}

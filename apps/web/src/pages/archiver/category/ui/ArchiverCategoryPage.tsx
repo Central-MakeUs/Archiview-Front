@@ -15,6 +15,7 @@ import { BottomSheet } from '@/shared/ui/common/BottomSheet/BottomSheet';
 import { Item } from '@/shared/ui/common/Item';
 import { EyeIcon, FolderOutlineIcon, RightArrowIcon } from '@/shared/ui/icon';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
 
 const NEAR_CATEGORY_ID = 0;
@@ -76,6 +77,8 @@ const PlaceListSkeleton = () => (
 );
 
 export const ArchiverCategoryPage = (): React.ReactElement => {
+  const t = useTranslations('archiverCategoryPage');
+  const tCategory = useTranslations('categoryPicker');
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();
@@ -93,16 +96,17 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
 
   const categoryTabs = useMemo(
     () => [
-      { label: '내주변', value: NEAR_CATEGORY_ID },
-      ...CATEGORIES.map((c) => ({ label: c.name, value: c.id })),
+      { label: tCategory('scopeNearby'), value: NEAR_CATEGORY_ID },
+      ...CATEGORIES.map((c) => ({ label: tCategory(`types.${c.id}`), value: c.id })),
     ],
-    [],
+    [tCategory],
   );
 
-  const categoryName = useMemo(
-    () => CATEGORIES.find((c) => c.id === categoryId)?.name ?? '',
-    [categoryId],
-  );
+  const categoryName = useMemo(() => {
+    if (categoryId === NEAR_CATEGORY_ID) return '';
+    const hit = CATEGORIES.find((c) => c.id === categoryId);
+    return hit ? tCategory(`types.${hit.id}`) : '';
+  }, [categoryId, tCategory]);
 
   const [sheetOpen, setSheetOpen] = useState(true);
   const [coords, setCoords] = useState<{ latitude: number; longitude: number } | null>(null);
@@ -332,14 +336,17 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
             header={
               <div className="px-5 pb-4 pt-2.5">
                 <p className="heading-20-bold">
-                  내주변 <span className="text-primary-40 pl-1">{nearDisplayedPlaces.length}</span>
+                  {t('nearbySheetTitle')}{' '}
+                  <span className="text-primary-40 pl-1">{nearDisplayedPlaces.length}</span>
                 </p>
               </div>
             }
             contentClassName="overflow-y-auto px-0 pb-6"
           >
             {isNearListLoading ? <PlaceListSkeleton /> : null}
-            {!isNearListLoading && isError ? <div className="px-5 pt-6">불러오기 실패</div> : null}
+            {!isNearListLoading && isError ? (
+              <div className="px-5 pt-6">{t('loadFailed')}</div>
+            ) : null}
             {!isNearListLoading && apiErrorMessage ? (
               <div className="px-5 pt-6">{apiErrorMessage}</div>
             ) : null}
@@ -348,7 +355,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
               nearDisplayedPlaces.length === 0 ? (
                 <div className="flex flex-1 items-center justify-center py-30">
                   <p className="body-16-semibold text-neutral-40 text-center whitespace-pre-wrap">
-                    {'이 카테고리에 저장된 장소가 없어요.\n다른 카테고리를 선택해 보세요.'}
+                    {t('emptyCategory')}
                   </p>
                 </div>
               ) : (
@@ -407,7 +414,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
           </div>
 
           {isLoading ? <PlaceListSkeleton /> : null}
-          {isError ? <div className="px-5 pt-6">불러오기 실패</div> : null}
+          {isError ? <div className="px-5 pt-6">{t('loadFailed')}</div> : null}
           {apiErrorMessage ? <div className="px-5 pt-6">{apiErrorMessage}</div> : null}
 
           {canShowCategoryList ? (
@@ -415,7 +422,7 @@ export const ArchiverCategoryPage = (): React.ReactElement => {
               {places.length === 0 ? (
                 <div className="flex flex-1 items-center justify-center py-30">
                   <p className="body-16-semibold text-neutral-40 text-center whitespace-pre-wrap">
-                    {'이 카테고리에 저장된 장소가 없어요.\n다른 카테고리를 선택해 보세요.'}
+                    {t('emptyCategory')}
                   </p>
                 </div>
               ) : (

@@ -1,4 +1,7 @@
+'use client';
+
 import { memo } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { IEditor } from '@/entities/archiver/profile/model/archiverProfile.type';
 import { EditorRecommendCard } from '@/entities/archiver/profile/ui/EditorRecommendCard';
@@ -12,11 +15,13 @@ const EditorTrustedSectionComponent = ({
   editors,
   isLoading = false,
 }: IEditorTrustedSectionProps): React.ReactElement => {
+  const t = useTranslations('archiverHome.trustedEditors');
+
   if (isLoading) {
     return (
       <section className="mb-5">
         <div className="flex justify-between mb-4 pl-2">
-          <span className="heading-20-bold">믿고 먹는 에디터</span>
+          <span className="heading-20-bold">{t('title')}</span>
         </div>
         <div className="-mx-5 overflow-x-auto scroll-none momentum-scroll-x py-3 -my-3">
           <div className="flex gap-3 pl-5 pr-5">
@@ -43,13 +48,13 @@ const EditorTrustedSectionComponent = ({
   }
 
   if (editors.length === 0) {
-    return <div>표시할 에디터가 없습니다.</div>;
+    return <div>{t('empty')}</div>;
   }
 
   return (
     <section className="mb-5">
       <div className="flex justify-between mb-4 pl-2">
-        <span className="heading-20-bold">믿고 먹는 에디터</span>
+        <span className="heading-20-bold">{t('title')}</span>
       </div>
       <div className="-mx-5 overflow-x-auto scroll-none momentum-scroll-x py-3 -my-3">
         <div className="flex gap-3 pl-5 pr-5">

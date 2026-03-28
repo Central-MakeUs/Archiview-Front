@@ -10,7 +10,8 @@ import { BackButtonHeader } from '@/widgets/header/BackButtonHeader';
 import { archiverKeys } from '@/shared/lib/query-keys';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { RecentSearchSection } from './RecentSearchSection';
 import { RecommendationSection } from './RecommendationSection';
 import { InfoSection } from './InfoSection';
@@ -24,16 +25,20 @@ interface ITabItem {
   value: 'all' | 'info' | 'editor';
 }
 
-const tabItems: ITabItem[] = [
-  { label: '전체', value: 'all' },
-  { label: '정보', value: 'info' },
-  { label: '에디터', value: 'editor' },
-];
-
 export const SearchResultPage = () => {
+  const t = useTranslations('archiverSearchResult');
+  const tabItems = useMemo<ITabItem[]>(
+    () => [
+      { label: t('tabs.all'), value: 'all' },
+      { label: t('tabs.info'), value: 'info' },
+      { label: t('tabs.editor'), value: 'editor' },
+    ],
+    [t],
+  );
+
   const searchParams = useSearchParams();
   const search = searchParams?.get('search');
-  const [tab, setTab] = useState(tabItems[0].value);
+  const [tab, setTab] = useState<ITabItem['value']>('all');
   const [searchText, setSearchText] = useState(search ?? '');
   const [searchTerm, setSearchTerm] = useState(search ?? '');
 
@@ -72,6 +77,7 @@ export const SearchResultPage = () => {
       <div className="p-[20px]">
         <SearchBar
           value={searchText}
+          placeholder={t('searchPlaceholder')}
           onChange={(value) => setSearchText(value)}
           onSubmit={async () => {
             setSearchTerm(searchText);
@@ -83,7 +89,7 @@ export const SearchResultPage = () => {
         {isLoading ? (
           <div className="flex-1 flex w-full min-h-[200px]">
             <Loading
-              text="검색 결과를 불러오는 중입니다."
+              text={t('loading')}
               role="ARCHIVER"
               transparentBg
             />
@@ -104,7 +110,7 @@ export const SearchResultPage = () => {
           <>
             {searchData.data.places.length === 0 && searchData.data.editors.length === 0 ? (
               <div className="flex flex-1 items-center justify-center px-[20px]">
-                <p className="body-16-semibold text-neutral-40 text-center">검색 결과가 없습니다</p>
+                <p className="body-16-semibold text-neutral-40 text-center">{t('empty')}</p>
               </div>
             ) : (
               <>
