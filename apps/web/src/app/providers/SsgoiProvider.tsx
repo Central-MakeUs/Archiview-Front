@@ -3,7 +3,15 @@
 import type { ReactNode } from 'react';
 import { Ssgoi, type SsgoiConfig } from '@ssgoi/react';
 import { drill, depth, swap, snap } from '@ssgoi/react/view-transitions';
-import { usePathname } from 'next/navigation';
+import { usePathname as useNextPathname } from 'next/navigation';
+import { useMemo } from 'react';
+
+import { stripLocalePrefix } from '@/shared/lib/i18n/stripLocalePrefix';
+
+function usePathnameForTransitions() {
+  const pathname = useNextPathname();
+  return useMemo(() => stripLocalePrefix(pathname ?? '/'), [pathname]);
+}
 
 const ssgoiConfig: SsgoiConfig = {
   transitions: [
@@ -173,7 +181,7 @@ const ssgoiConfig: SsgoiConfig = {
 
 export function SsgoiProvider({ children }: { children: ReactNode }): ReactNode {
   return (
-    <Ssgoi config={ssgoiConfig} usePathname={usePathname}>
+    <Ssgoi config={ssgoiConfig} usePathname={usePathnameForTransitions}>
       <div style={{ position: 'relative', minHeight: '100vh', width: '100%' }}>{children}</div>
     </Ssgoi>
   );

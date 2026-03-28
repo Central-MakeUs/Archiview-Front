@@ -26,7 +26,7 @@ export const viewport: Viewport = {
 
 export function RootLayout({ children }: { children: React.ReactNode }): React.ReactNode {
   return (
-    <html lang="en">
+    <html lang="ko" suppressHydrationWarning>
       <body>
         <NativeBridgeProvider>
           <QueryProvider>
