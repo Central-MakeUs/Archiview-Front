@@ -4,6 +4,7 @@ import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query
 
 import { PageTransition } from '@/app/providers/PageTransition';
 import { MyPage, metadata } from '@/pages/mypage';
+import { MyPageSkeleton } from '@/pages/mypage/ui/MyPageSkeleton';
 import { archiverKeys, editorKeys } from '@/shared/lib/query-keys';
 import { COOKIE_KEYS, type StoredUserRole } from '@/shared/constants/cookies';
 import { archiverProfileServerGet } from '@/entities/archiver/profile/api/archiverProfile-server-get';
@@ -15,7 +16,12 @@ const isStoredUserRole = (value: string | undefined): value is StoredUserRole =>
   return value === 'GUEST' || value === 'ARCHIVER' || value === 'EDITOR';
 };
 
-export default async function MyPageRoute(): Promise<React.ReactNode> {
+export default async function MyPageRoute({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<React.ReactNode> {
+  const { locale } = await params;
   const queryClient = new QueryClient();
   const cookieStore = await cookies();
   const roleCookie = cookieStore.get(COOKIE_KEYS.role)?.value;
@@ -42,8 +48,8 @@ export default async function MyPageRoute(): Promise<React.ReactNode> {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <PageTransition id="/mypage">
-        <Suspense fallback={null}>
+      <PageTransition id="/mypage" key={locale}>
+        <Suspense fallback={<MyPageSkeleton />}>
           <MyPage />
         </Suspense>
       </PageTransition>
