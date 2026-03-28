@@ -1,33 +1,33 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+
+import { Link, usePathname } from '@/shared/lib/i18n/navigation';
 
 import { LocationPinIcon, UserCircleIcon, HomeIcon, ProfileAddIcon } from '../../shared/ui/icon';
 
-// TODO : 라우팅 수정
 export const ARCHIVER_NAVIGATION_FOOTER_ITEMS = [
   {
     key: 'home',
-    label: '홈',
+    labelKey: 'home',
     href: '/archiver/home',
     icon: HomeIcon,
   },
   {
     key: 'follow',
-    label: '팔로우',
+    labelKey: 'follow',
     href: '/archiver/follow-list',
     icon: ProfileAddIcon,
   },
   {
     key: 'archive',
-    label: '아카이브',
+    labelKey: 'archive',
     href: '/archiver/my-archive',
     icon: LocationPinIcon,
   },
   {
     key: 'mypage',
-    label: '마이페이지',
+    labelKey: 'mypage',
     href: '/mypage',
     icon: UserCircleIcon,
   },
@@ -69,6 +69,7 @@ export const ArchiverNavigationFooter = ({
   activeKey?: ArchiverNavigationFooterKey;
 }): React.ReactElement => {
   const pathname = usePathname() ?? '';
+  const t = useTranslations('archiverNav');
 
   return (
     <div className="h-18 bottom-0 px-4 border-t border-neutral-40 pt-2 pb-3 z-50 bg-white">
@@ -83,7 +84,7 @@ export const ArchiverNavigationFooter = ({
             <ArchiverNavigationFooterItem
               key={item.key}
               icon={item.icon}
-              label={item.label}
+              label={t(item.labelKey)}
               isActive={isActive}
               href={item.href}
             />

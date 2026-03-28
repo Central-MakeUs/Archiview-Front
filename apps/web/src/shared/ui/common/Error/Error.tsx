@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Button } from '../../button';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 import Cookies from 'js-cookie';
 
 import { COOKIE_KEYS } from '@/shared/constants/cookies';

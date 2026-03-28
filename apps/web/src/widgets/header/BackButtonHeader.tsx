@@ -1,7 +1,6 @@
 'use client';
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Link, useRouter } from '@/shared/lib/i18n/navigation';
 import { Header } from './Header';
 import { BackArrow } from '@/shared/ui/icon';
 
