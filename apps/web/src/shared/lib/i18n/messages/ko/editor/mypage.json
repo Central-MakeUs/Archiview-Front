@@ -1,0 +1,11 @@
+{
+  "mypage": {
+    "switchToArchiver": "아카이버 모드로 전환",
+    "editorTerms": {
+      "service": "서비스 이용약관",
+      "location": "위치 기반 서비스 이용약관",
+      "editorPolicy": "에디터 운영 정책",
+      "privacy": "개인정보 처리 방침"
+    }
+  }
+}

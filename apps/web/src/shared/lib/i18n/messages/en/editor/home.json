@@ -1,0 +1,35 @@
+{
+  "editorHome": {
+    "banner": {
+      "chipEditor": "Editor",
+      "placesShared": "You’ve shared <num>{count}</num> places<br></br>on Archiview",
+      "subtitle": "Thanks for sharing great spots with everyone.",
+      "ctaShare": "Share a place now",
+      "markerAlt": "Main marker"
+    },
+    "popularPlaces": "Places people love",
+    "insight": {
+      "title": "Insights",
+      "sharedPlaces": "Places shared",
+      "instagram": "Instagram visits",
+      "saves": "Saves",
+      "views": "Views"
+    },
+    "period": {
+      "all": "All time",
+      "week": "7 days",
+      "month": "30 days"
+    },
+    "tabs": {
+      "all": "All",
+      "mostViewed": "Most viewed",
+      "mostSaved": "Most saved",
+      "mostInstagram": "Most Instagram",
+      "mostDirections": "Most directions"
+    },
+    "emptyPlaces": {
+      "line1": "You haven’t shared any places yet.",
+      "line2": "Add your first one—we’d love to see it!"
+    }
+  }
+}

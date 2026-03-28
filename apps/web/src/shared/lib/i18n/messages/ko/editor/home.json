@@ -1,0 +1,35 @@
+{
+  "editorHome": {
+    "banner": {
+      "chipEditor": "에디터",
+      "placesShared": "총 <num>{count}</num>개의 장소를<br></br>아카이뷰에 공유했어요",
+      "subtitle": "소중한 정보를 공유해주세요",
+      "ctaShare": "지금 공유하러 가기",
+      "markerAlt": "메인 마커"
+    },
+    "popularPlaces": "반응이 좋은 장소",
+    "insight": {
+      "title": "인사이트",
+      "sharedPlaces": "공유한 장소",
+      "instagram": "인스타 유입",
+      "saves": "저장 수",
+      "views": "조회 수"
+    },
+    "period": {
+      "all": "전체 기간",
+      "week": "7일",
+      "month": "30일"
+    },
+    "tabs": {
+      "all": "전체",
+      "mostViewed": "많이 조회 된",
+      "mostSaved": "많이 저장한",
+      "mostInstagram": "인스타 유입 된",
+      "mostDirections": "길찾기 많은"
+    },
+    "emptyPlaces": {
+      "line1": "아직 공유한 장소가 없어요.",
+      "line2": "소중한 정보를 등록해주세요!"
+    }
+  }
+}

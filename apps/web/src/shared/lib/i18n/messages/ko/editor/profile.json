@@ -1,0 +1,13 @@
+{
+  "editorProfile": {
+    "loadError": "불러오기 실패",
+    "bottomSheet": {
+      "placesUploaded": "업로드한 장소"
+    },
+    "card": {
+      "shareInfo": "+ 정보 공유하기",
+      "editAria": "프로필 편집",
+      "profileImageAlt": "{nickname} 프로필"
+    }
+  }
+}

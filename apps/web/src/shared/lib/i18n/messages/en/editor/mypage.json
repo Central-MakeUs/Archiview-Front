@@ -1,0 +1,11 @@
+{
+  "mypage": {
+    "switchToArchiver": "Switch to archiver",
+    "editorTerms": {
+      "service": "Terms of service",
+      "location": "Location-based terms",
+      "editorPolicy": "Editor policy",
+      "privacy": "Privacy policy"
+    }
+  }
+}
