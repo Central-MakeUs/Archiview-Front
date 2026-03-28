@@ -5,6 +5,7 @@ import ky from 'ky';
 import Cookies from 'js-cookie';
 
 import { COOKIE_KEYS } from '@/shared/constants/cookies';
+import { getLocalePrefixFromPathname } from '@/shared/lib/i18n/stripLocalePrefix';
 
 import type { KyHttpError, ExtendedKyHttpError, ApiErrorResponse } from './common';
 
@@ -39,7 +40,7 @@ export const clientApi = ky.create({
       async (_, __, response) => {
         // JSON이 아닌데 status가 에러면: ky가 HTTPError 던질 거고 beforeError가 fallback로 처리
         if (response.status === 401) {
-          window.location.href = '/login';
+          window.location.href = `${getLocalePrefixFromPathname(window.location.pathname)}/login`;
           // JSON이 아니면 여기서 강제로 끊는 게 낫다 (선택)
           throw new Error('Unauthorized');
         }
