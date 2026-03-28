@@ -1,0 +1,11 @@
+{
+  "archiverFollowList": {
+    "metadata": {
+      "title": "팔로우"
+    },
+    "headerTitle": "팔로우한 에디터",
+    "headingEditors": "에디터",
+    "emptyState": "팔로우한 에디터가 없어요.\n마음에 드는 에디터를 팔로우해 보세요.",
+    "goFollow": "팔로우하러가기"
+  }
+}

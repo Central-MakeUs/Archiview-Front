@@ -1,0 +1,31 @@
+{
+  "archiverHome": {
+    "metadata": {
+      "title": "Home"
+    },
+    "roleSwitchLoading": "Taking you to the archiver home…",
+    "badge": "Archiver",
+    "tagline": "Search for the good stuff!",
+    "searchAriaLabel": "Go to search",
+    "searchPlaceholder": "Search by post URL or keyword.",
+    "folderImageAlt": "Folder illustration",
+    "hotPlaces": {
+      "title": "Hot spots right now",
+      "empty": "No places to show."
+    },
+    "trustedEditors": {
+      "title": "Editors worth trusting",
+      "empty": "No editors to show."
+    },
+    "categories": {
+      "nearby": "Near me",
+      "korean": "Korean",
+      "western": "Western",
+      "japanese": "Japanese",
+      "cafe": "Cafe",
+      "izakaya": "Izakaya",
+      "date": "Date ideas",
+      "other": "Other"
+    }
+  }
+}

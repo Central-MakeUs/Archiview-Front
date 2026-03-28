@@ -1,0 +1,22 @@
+{
+  "archiverSearchResult": {
+    "metadata": {
+      "title": "Search"
+    },
+    "tabs": {
+      "all": "All",
+      "info": "Places",
+      "editor": "Editors"
+    },
+    "loading": "Loading search results…",
+    "empty": "No results found",
+    "recentTitle": "Recent searches",
+    "recommendTitle": "Suggested keywords",
+    "infoSectionTitle": "Places",
+    "editorSectionTitle": "Editors",
+    "morePlaces": "More places",
+    "moreEditors": "More editors",
+    "profileImageAlt": "{nickname}'s profile",
+    "searchPlaceholder": "Search by post URL or keyword."
+  }
+}

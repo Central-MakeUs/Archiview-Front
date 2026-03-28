@@ -1,0 +1,35 @@
+{
+  "archiverPlaceInfo": {
+    "metadata": {
+      "title": "장소"
+    },
+    "placeInfoSectionTitle": "장소 정보",
+    "editorsRecorded": "<highlight>{count}명</highlight>의 에디터가 기록했어요",
+    "archiversSaved": "<highlight>{count}명</highlight>의 아카이버가 저장했어요",
+    "mapView": "지도보기",
+    "directionsButton": "지도에서 길 찾기",
+    "kakaoMapTabTitle": "KakaoMap",
+    "directionsLoadingTitle": "길찾기를 여는 중…",
+    "directionsLoadingBody1": "현재 위치 권한을 요청할 수 있어요. 잠시만 기다려 주세요.",
+    "directionsLoadingBody2": "권한 팝업이 보이지 않으면 주소 기반으로 열립니다.",
+    "currentLocationLabel": "현재위치",
+    "archiveModal": {
+      "titleArchive": "아카이브 완료!",
+      "titleUnarchive": "아카이브 취소",
+      "descriptionArchive": "<highlight>{editor} 에디터님의 글</highlight>을<br></br>아카이브 했어요",
+      "descriptionUnarchive": "<highlight>{editor} 에디터님의 글</highlight>을<br></br>아카이브를 취소했어요",
+      "confirm": "확인"
+    },
+    "reportModal": {
+      "title": "이 게시글 / 에디터를 신고할까요?",
+      "description": "신고하기를 클릭하여\n신고 사유를 작성해주세요.",
+      "cancel": "취소",
+      "confirm": "신고하기"
+    },
+    "card": {
+      "thumbnailAlt": "썸네일",
+      "instagramAlt": "인스타 아이콘",
+      "report": "신고하기"
+    }
+  }
+}
