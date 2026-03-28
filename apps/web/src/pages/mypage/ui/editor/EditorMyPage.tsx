@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 
 import { Button } from '@/shared/ui/button';
 
@@ -11,13 +12,6 @@ import { MyPageSkeleton } from '../MyPageSkeleton';
 import { EllipseArrowIcons } from '@/shared/ui/icon/EllipseArrowIcons';
 import { useEditorGetMyProfile } from '@/entities/editor/profile/queries/useEditorGetMyProfile';
 import { useMinLoading } from '@/shared/hooks/useMinLoading';
-
-const EDITOR_TERMS_ITEMS = [
-  { label: '서비스 이용약관', key: 'service-terms' },
-  { label: '위치 기반 서비스 이용약관', key: 'location-terms' },
-  { label: '에디터 운영 정책', key: 'editor-policy' },
-  { label: '개인정보 처리 방침', key: 'privacy-policy' },
-] as const;
 
 interface IEditorMyPageProps {
   onLogout: () => void;
@@ -37,6 +31,16 @@ export const EditorMyPage = ({
   onSwitchRole,
 }: IEditorMyPageProps): React.ReactElement => {
   const router = useRouter();
+  const t = useTranslations('mypage');
+  const tEditorTerms = useTranslations('mypage.editorTerms');
+
+  const editorTermsItems = [
+    { label: tEditorTerms('service'), key: 'service-terms' },
+    { label: tEditorTerms('location'), key: 'location-terms' },
+    { label: tEditorTerms('editorPolicy'), key: 'editor-policy' },
+    { label: tEditorTerms('privacy'), key: 'privacy-policy' },
+  ] as const;
+
   const { data: editorUserData, isLoading: isEditorProfileLoading } = useEditorGetMyProfile();
   const showLoading = useMinLoading(isEditorProfileLoading);
 
@@ -66,7 +70,7 @@ export const EditorMyPage = ({
       <InfoSupportSection onContact={onContact} onReportBug={onReportBug} />
 
       {/* 약관 및 정책 */}
-      <TermsConditionsSection items={EDITOR_TERMS_ITEMS} onItemClick={onTermsClick} />
+      <TermsConditionsSection items={editorTermsItems} onItemClick={onTermsClick} />
 
       {/* 하단 버전 + 역할 전환 */}
       <div className="mt-auto flex flex-col items-center gap-4 px-5 pb-8 pt-10">
@@ -79,7 +83,7 @@ export const EditorMyPage = ({
           className="rounded-[999px] w-[228px] h-[67px]"
         >
           <EllipseArrowIcons className="mr-1" />
-          아카이버 모드로 전환
+          {t('switchToArchiver')}
         </Button>
       </div>
     </div>

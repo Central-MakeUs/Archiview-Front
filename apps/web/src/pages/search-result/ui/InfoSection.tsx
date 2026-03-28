@@ -1,7 +1,8 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/shared/lib/i18n/navigation';
 import { CaretRightIcon, FolderOutlineIcon, RightArrowIcon, EyeIcon } from '@/shared/ui/icon';
 import type { IPlace } from '@/entities/archiver/search/model/archiverSearch.type';
 
@@ -20,11 +21,12 @@ export const InfoSection = ({
   onMoreClick,
   showPreview = false,
 }: IInfoSectionProps) => {
+  const t = useTranslations('archiverSearchResult');
   const displayPlaces = showPreview ? places.slice(0, MAX_PREVIEW_ITEMS) : places;
 
   return (
     <div className="flex flex-col gap-[20px] w-full">
-      <span className="body-18-bold px-[20px]">정보</span>
+      <span className="body-18-bold px-[20px]">{t('infoSectionTitle')}</span>
       <div className="flex flex-col gap-[6px] w-full">
         <div className="flex flex-col w-full bg-transparent">
           {displayPlaces.map((place) => (
@@ -65,7 +67,7 @@ export const InfoSection = ({
               onClick={onMoreClick}
               className="flex items-center gap-1 body-14-semibold text-primary-40 underline"
             >
-              장소 더 보기
+              {t('morePlaces')}
               <CaretRightIcon className="w-4 h-4 [&_path]:stroke-[var(--color-primary-40)]" />
             </button>
           </div>

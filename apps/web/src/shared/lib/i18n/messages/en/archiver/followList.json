@@ -1,0 +1,11 @@
+{
+  "archiverFollowList": {
+    "metadata": {
+      "title": "Following"
+    },
+    "headerTitle": "Editors you follow",
+    "headingEditors": "Editors",
+    "emptyState": "You're not following any editors yet.\nFollow ones you like for updates.",
+    "goFollow": "Discover editors"
+  }
+}

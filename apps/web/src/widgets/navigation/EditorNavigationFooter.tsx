@@ -1,33 +1,33 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+
+import { Link, usePathname } from '@/shared/lib/i18n/navigation';
 
 import { HomeIcon, UserCircleIcon, ShareInformationIcon, SettingIcon } from '@/shared/ui/icon';
 
-// TODO : 라우팅 수정
 export const EDITOR_NAVIGATION_FOOTER_ITEMS = [
   {
     key: 'home',
-    label: '홈',
+    labelKey: 'home',
     href: '/editor/home',
     icon: HomeIcon,
   },
   {
     key: 'profile',
-    label: '프로필',
+    labelKey: 'profile',
     href: '/editor/profile',
     icon: UserCircleIcon,
   },
   {
     key: 'share-information',
-    label: '정보공유',
+    labelKey: 'shareInformation',
     href: '/editor/register-place',
     icon: ShareInformationIcon,
   },
   {
     key: 'setting',
-    label: '설정',
+    labelKey: 'setting',
     href: '/mypage',
     icon: SettingIcon,
   },
@@ -63,6 +63,7 @@ const EditorNavigationFooterItem = ({
 
 export const EditorNavigationFooter = (): React.ReactElement => {
   const pathname = usePathname() ?? '';
+  const t = useTranslations('editorNav');
 
   return (
     <div className="h-18 bottom-0 px-4 border-t border-neutral-40 pt-2 pb-3 z-50 bg-white">
@@ -74,7 +75,7 @@ export const EditorNavigationFooter = (): React.ReactElement => {
             <EditorNavigationFooterItem
               key={item.key}
               icon={item.icon}
-              label={item.label}
+              label={t(item.labelKey)}
               isActive={isActive}
               href={item.href}
             />

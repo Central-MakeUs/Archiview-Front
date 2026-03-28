@@ -1,0 +1,22 @@
+{
+  "archiverSearchResult": {
+    "metadata": {
+      "title": "검색"
+    },
+    "tabs": {
+      "all": "전체",
+      "info": "정보",
+      "editor": "에디터"
+    },
+    "loading": "검색 결과를 불러오는 중입니다.",
+    "empty": "검색 결과가 없습니다",
+    "recentTitle": "최근 검색어",
+    "recommendTitle": "추천 키워드",
+    "infoSectionTitle": "정보",
+    "editorSectionTitle": "에디터",
+    "morePlaces": "장소 더 보기",
+    "moreEditors": "에디터 더 보기",
+    "profileImageAlt": "{nickname} 프로필",
+    "searchPlaceholder": "게시물 URL 또는 키워드를 검색해보세요."
+  }
+}

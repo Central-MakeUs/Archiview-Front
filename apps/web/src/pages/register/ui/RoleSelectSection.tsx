@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Link, useRouter } from '@/shared/lib/i18n/navigation';
 
 import { Kard } from '@/shared/ui/common/Kard';
 import { Button } from '@/shared/ui/button';

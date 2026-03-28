@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 
 import { Button } from '@/shared/ui/button';
 import { useAuth } from '@/entities/auth/hooks/useAuth';

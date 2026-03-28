@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { cn } from '@/shared/lib/cn';
 import { Modal } from '@/shared/ui/common/Modal/Modal';
 
@@ -15,6 +18,8 @@ export const ReportEditorCardModal = ({
   onConfirm,
   className,
 }: IReportEditorCardModalProps) => {
+  const t = useTranslations('archiverPlaceInfo.reportModal');
+
   return (
     <Modal
       isOpen={isOpen}
@@ -27,13 +32,10 @@ export const ReportEditorCardModal = ({
       )}
     >
       <div className="text-center">
-        <h2 className="text-[16px] font-semibold text-neutral-900">
-          이 게시글 / 에디터를 신고할까요?
-        </h2>
+        <h2 className="text-[16px] font-semibold text-neutral-900">{t('title')}</h2>
 
         <p className="mt-2 whitespace-pre-line text-[13px] leading-5 text-neutral-500">
-          신고하기를 클릭하여 <br />
-          신고 사유를 작성해주세요.
+          {t('description')}
         </p>
 
         <div className="mt-5 grid grid-cols-2 gap-3">
@@ -46,7 +48,7 @@ export const ReportEditorCardModal = ({
               'disabled:cursor-not-allowed disabled:opacity-60',
             )}
           >
-            취소
+            {t('cancel')}
           </button>
 
           <button
@@ -58,7 +60,7 @@ export const ReportEditorCardModal = ({
               'disabled:cursor-not-allowed disabled:opacity-60',
             )}
           >
-            신고하기
+            {t('confirm')}
           </button>
         </div>
       </div>

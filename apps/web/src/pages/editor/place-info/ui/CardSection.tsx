@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Chip } from '@/shared/ui/Chip';
 import { IEditorInsightPlaceDetail } from '@/entities/editor/place/model/editorPlace.type';
 import { PencilIcon } from '@/shared/ui/icon/place-info/PencilIcon';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 import { openInstagramUrlDeepLinkOrPopup } from '@/shared/lib/external/openInstagramUrl.client';
 import { usePostInstagramFlow } from '@/entities/archiver/place/mutation/usePostInstagramFlow';
 

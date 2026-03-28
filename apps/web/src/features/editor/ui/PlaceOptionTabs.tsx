@@ -1,5 +1,10 @@
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+'use client';
+
+import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
+import { useTranslations } from 'next-intl';
+
+import { usePathname, useRouter } from '@/shared/lib/i18n/navigation';
 
 import { OptionTabs } from '@/shared/ui/common/Tabs/OptionTabs';
 
@@ -10,18 +15,23 @@ export type PlaceOption =
   | 'MOST_INSTAGRAM'
   | 'MOST_DIRECTIONS';
 
-const TABS: { label: string; value: PlaceOption }[] = [
-  { label: '전체', value: 'ALL' },
-  { label: '많이 조회 된', value: 'MOST_VIEWED' },
-  { label: '많이 저장한', value: 'MOST_SAVED' },
-  { label: '인스타 유입 된', value: 'MOST_INSTAGRAM' },
-  { label: '길찾기 많은', value: 'MOST_DIRECTIONS' },
-];
-
 export const PlaceOptionTabs = ({ value }: { value: PlaceOption }) => {
+  const t = useTranslations('editorHome');
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();
+
+  const tabs = useMemo(
+    () =>
+      [
+        { label: t('tabs.all'), value: 'ALL' as const },
+        { label: t('tabs.mostViewed'), value: 'MOST_VIEWED' as const },
+        { label: t('tabs.mostSaved'), value: 'MOST_SAVED' as const },
+        { label: t('tabs.mostInstagram'), value: 'MOST_INSTAGRAM' as const },
+        { label: t('tabs.mostDirections'), value: 'MOST_DIRECTIONS' as const },
+      ] satisfies { label: string; value: PlaceOption }[],
+    [t],
+  );
 
   const current = useMemo(() => value ?? 'ALL', [value]);
 
@@ -41,7 +51,7 @@ export const PlaceOptionTabs = ({ value }: { value: PlaceOption }) => {
 
   return (
     <OptionTabs
-      items={TABS}
+      items={tabs}
       value={current}
       onChange={setMetric}
       containerClassName="flex gap-2 overflow-x-auto whitespace-nowrap scroll-none pl-5 pr-5"

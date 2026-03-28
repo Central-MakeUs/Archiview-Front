@@ -1,0 +1,15 @@
+{
+  "categoryPicker": {
+    "scopeAll": "All",
+    "scopeNearby": "Near me",
+    "types": {
+      "1": "Korean",
+      "2": "Western",
+      "3": "Japanese",
+      "4": "Cafe",
+      "5": "Date",
+      "6": "Izakaya",
+      "7": "Other"
+    }
+  }
+}

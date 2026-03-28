@@ -1,0 +1,47 @@
+{
+  "mypage": {
+    "headerTitle": "마이페이지",
+    "sectionAccount": "계정관리",
+    "sectionLanguage": "언어",
+    "languageKo": "한국어",
+    "languageEn": "English",
+    "sectionInfo": "정보 및 지원",
+    "sectionTerms": "약관 및 정책",
+    "logout": "로그아웃",
+    "withdraw": "회원탈퇴",
+    "contact": "문의하기",
+    "reportBug": "오류제보",
+    "version": "버전 v.1.0",
+    "languageModal": {
+      "title": "언어"
+    },
+    "logoutModal": {
+      "title": "로그아웃 하시겠어요?",
+      "cancel": "취소",
+      "confirm": "로그아웃"
+    },
+    "withdrawModal": {
+      "title": "정말 탈퇴하시겠어요?",
+      "descriptionLine1": "아카이뷰에서 저장한 모든 기록이",
+      "descriptionLine2": "사라지고 복구되지 않아요",
+      "cancel": "취소",
+      "confirm": "탈퇴하기"
+    },
+    "edit": {
+      "nickname": "닉네임",
+      "introduction": "한줄소개",
+      "instagramId": "인스타그램 아이디",
+      "instagramUrl": "인스타그램 URL",
+      "hashtagPrompt": "나를 표현하는 해시태그를 자유롭게 설정해보세요!",
+      "required": "*필수",
+      "requiredTwo": "*2개 필수",
+      "profileUpload": "프로필 사진 업로드",
+      "profilePreviewAlt": "프로필 미리보기",
+      "profileUploadAria": "프로필 이미지 업로드",
+      "privacyNote": "일부 정보는 다른 사용자에게 공개될 수 있어요.",
+      "submit": "수정완료",
+      "toastSuccess": "프로필 수정 완료",
+      "toastUnknownError": "알 수 없는 오류"
+    }
+  }
+}

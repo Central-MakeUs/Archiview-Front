@@ -5,7 +5,7 @@ import { authPost } from '../api/auth-post';
 import Cookies from 'js-cookie';
 
 import { COOKIE_KEYS } from '@/shared/constants/cookies';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 import { toast } from 'sonner';
 import { ExtendedKyHttpError } from '@/shared/lib/api/common';
 

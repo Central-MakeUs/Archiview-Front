@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { FolderIcon } from '@/shared/ui/icon/place-info/FolderIcon';
 import { MedalIcon } from '@/shared/ui/icon/place-info/MedalIcon';
 import PhoneIcon from '@/shared/ui/icon/place-info/PhoneIcon';
@@ -63,7 +66,7 @@ export const InfoSection = ({
   place?: IPlaceDetail;
   recordNumber?: number;
 }) => {
-  console.log(place);
+  const t = useTranslations('archiverPlaceInfo');
   const handleClickOpenKakaoMap = async () => {
     const address = (place?.roadAddressName || place?.addressName)?.trim();
     if (!address) return;
@@ -119,7 +122,7 @@ export const InfoSection = ({
 
       const webUrl = hasFromCoords
         ? createKakaoMapRouteFromToUrl({
-            fromName: '현재위치',
+            fromName: t('currentLocationLabel'),
             fromLatitude,
             fromLongitude,
             toName,
@@ -141,7 +144,7 @@ export const InfoSection = ({
     if (tab) {
       tab.opener = null;
 
-      tab.document.title = 'KakaoMap';
+      tab.document.title = t('kakaoMapTabTitle');
       tab.document.body.style.margin = '0';
       tab.document.body.style.fontFamily = 'system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
       tab.document.body.style.background = '#ffffff';
@@ -153,9 +156,9 @@ export const InfoSection = ({
                   <div style="width:18px;height:18px;border-radius:9999px;border:2px solid #d1d5db;border-top-color:#111827;animation:archiview-spin 0.9s linear infinite;"></div>
                 </div>
                 <div style="flex:1;min-width:0;">
-                  <div style="font-size:14px;font-weight:700;color:#111827;">길찾기를 여는 중<span class=\"archiview-dots\" aria-hidden=\"true\"><span>.</span><span>.</span><span>.</span></span></div>
-                  <div style="margin-top:6px;font-size:12px;color:#6b7280;line-height:1.5;">현재 위치 권한을 요청할 수 있어요. 잠시만 기다려 주세요.</div>
-                  <div style="margin-top:10px;font-size:12px;color:#9ca3af;line-height:1.5;">권한 팝업이 보이지 않으면 주소 기반으로 열립니다.</div>
+                  <div style="font-size:14px;font-weight:700;color:#111827;">${t('directionsLoadingTitle')}<span class=\"archiview-dots\" aria-hidden=\"true\"><span>.</span><span>.</span><span>.</span></span></div>
+                  <div style="margin-top:6px;font-size:12px;color:#6b7280;line-height:1.5;">${t('directionsLoadingBody1')}</div>
+                  <div style="margin-top:10px;font-size:12px;color:#9ca3af;line-height:1.5;">${t('directionsLoadingBody2')}</div>
                 </div>
               </div>
             </div>
@@ -188,7 +191,7 @@ export const InfoSection = ({
     geo.getCurrentPosition(
       ({ coords }) => {
         const routeUrl = createKakaoMapRouteFromToUrl({
-          fromName: '현재위치',
+          fromName: t('currentLocationLabel'),
           fromLatitude: coords.latitude,
           fromLongitude: coords.longitude,
           toName,
@@ -211,20 +214,24 @@ export const InfoSection = ({
   return (
     <div>
       <section className="p-5 gap-3 flex flex-col border-b-[#DBDCDF] border-b">
-        <div className="body-16-semibold text-neutral-50">장소 정보</div>
+        <div className="body-16-semibold text-neutral-50">{t('placeInfoSectionTitle')}</div>
         <div className="body-14-semibold text-neutral-50 flex flex-col gap-2">
           <div className="flex gap-2.5 items-center">
             <MedalIcon />
             <div>
-              <span className="text-primary-40 underline">{recordNumber}명</span>의 에디터가
-              기록했어요
+              {t.rich('editorsRecorded', {
+                count: recordNumber ?? 0,
+                highlight: (chunks) => <span className="text-primary-40 underline">{chunks}</span>,
+              })}
             </div>
           </div>
           <div className="flex gap-2.5 items-center">
             <FolderIcon className="text-primary-40 h-5.5 w-5.5" />
             <div>
-              <span className="text-primary-40 underline">{place?.saveCount}명</span>의 아카이버가
-              저장했어요
+              {t.rich('archiversSaved', {
+                count: place?.saveCount ?? 0,
+                highlight: (chunks) => <span className="text-primary-40 underline">{chunks}</span>,
+              })}
             </div>
           </div>
           <div className="flex justify-between">
@@ -240,7 +247,7 @@ export const InfoSection = ({
                 handleClickOpenKakaoMap().catch(() => undefined);
               }}
             >
-              지도보기
+              {t('mapView')}
             </button>
           </div>
           <div className="flex gap-2.5 items-center">
@@ -257,7 +264,7 @@ export const InfoSection = ({
             handleClickOpenKakaoMapDirections().catch(() => undefined);
           }}
         >
-          지도에서 길 찾기
+          {t('directionsButton')}
         </Button>
       </div>
     </div>

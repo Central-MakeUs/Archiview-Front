@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 import { CaretRightIcon, RightArrowIcon } from '@/shared/ui/icon';
 import type { IEditor } from '@/entities/archiver/search/model/archiverSearch.type';
 import { UserPlusIcon } from '@/shared/ui/icon/UserPlusIcon';
@@ -28,6 +29,7 @@ export const EditorSection = ({
   showPreview = false,
   searchTerm = '',
 }: IEditorSectionProps) => {
+  const t = useTranslations('archiverSearchResult');
   const router = useRouter();
   const queryClient = useQueryClient();
   const [followModalOpen, setFollowModalOpen] = useState(false);
@@ -47,7 +49,7 @@ export const EditorSection = ({
 
   return (
     <div className="flex flex-col gap-[20px] w-full">
-      <span className="body-18-bold px-[20px]">에디터</span>
+      <span className="body-18-bold px-[20px]">{t('editorSectionTitle')}</span>
       <div className="flex flex-col gap-[6px] w-full">
         <div className="flex flex-col w-full bg-transparent">
           {displayEditors.map((editor) => (
@@ -109,7 +111,7 @@ export const EditorSection = ({
               onClick={onMoreClick}
               className="flex items-center gap-1 body-14-semibold text-primary-40 underline"
             >
-              에디터 더 보기
+              {t('moreEditors')}
               <CaretRightIcon className="w-4 h-4 [&_path]:stroke-[var(--color-primary-40)]" />
             </button>
           </div>

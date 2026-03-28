@@ -1,0 +1,60 @@
+{
+  "editorRegisterPlace": {
+    "headerTitle": "장소등록",
+    "page": {
+      "addPlace": "장소 추가 +",
+      "submitEdit": "수정하기",
+      "submitRegister": "등록하기",
+      "deletePost": "게시글 전체 삭제"
+    },
+    "instagram": {
+      "label": "인스타그램 URL",
+      "required": "*필수",
+      "enterProfileLink": "인스타그램 프로필 링크를 입력해주세요.",
+      "invalidUrl": "올바른 인스타그램 URL을 입력해주세요.",
+      "validUrl": "올바른 URL입니다.",
+      "placeholder": "인스타그램 프로필 링크를 입력해주세요",
+      "hintDefault": "인스타그램 프로필 링크를 입력해주세요",
+      "submit": "입력",
+      "edit": "수정",
+      "clearAria": "지우기"
+    },
+    "hashTag": {
+      "label": "게시글의 해시태그를 자유롭게 설정해보세요",
+      "maxHint": "*최대 3개",
+      "placeholder": "해시태그를 입력해주세요",
+      "submit": "입력",
+      "errorMaxLength": "해시태그는 최대 6글자까지 입력할 수 있어요",
+      "errorMaxCount": "해시태그는 최대 3개까지 추가할 수 있어요",
+      "errorDuplicate": "이미 추가된 해시태그예요"
+    },
+    "placeCard": {
+      "titleFallback": "장소 {index}",
+      "thumbnailAlt": "썸네일",
+      "addressPlaceholder": "주소 검색",
+      "descriptionPlaceholder": "50자 이내로 장소를 소개해주세요",
+      "deletePlace": "이 장소 삭제",
+      "defaultWalkTime": "도보 10분"
+    },
+    "finishModal": {
+      "title": "장소 등록이 완료되었어요!",
+      "description": "돌아가서 내 장소를 확인해볼까요?",
+      "continueEdit": "수정하기",
+      "goToProfile": "이동하기"
+    },
+    "validation": {
+      "placeName": "장소 이름을 입력해주세요",
+      "description": "장소 설명을 입력해주세요",
+      "addressName": "주소를 입력해주세요",
+      "roadAddressName": "도로명 주소를 입력해주세요",
+      "categoryIds": "카테고리를 선택해주세요",
+      "nearestStationWalkTime": "최단 거리를 입력해주세요",
+      "placeUrl": "장소 URL을 입력해주세요",
+      "imageUrl": "이미지 URL을 입력해주세요",
+      "url": "URL을 입력해주세요",
+      "hashtagMaxLength": "해시태그는 최대 6글자까지 가능합니다",
+      "hashtagMaxCount": "해시태그는 최대 3개까지 추가할 수 있습니다",
+      "minOnePlace": "최소 1개의 장소가 필요합니다"
+    }
+  }
+}

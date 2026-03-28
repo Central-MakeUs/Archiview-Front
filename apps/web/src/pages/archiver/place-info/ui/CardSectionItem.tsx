@@ -1,5 +1,8 @@
+'use client';
+
 import Image from 'next/image';
 import { useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Chip } from '@/shared/ui/Chip';
 import { FolderIcon } from '@/shared/ui/icon';
@@ -37,6 +40,7 @@ export const CardSectionItem = ({
   onFolderClick: (postPlaceId: number, isArchived: boolean, editorName: string) => void;
   onClickReport: (postPlaceId: number) => void;
 }) => {
+  const t = useTranslations('archiverPlaceInfo.card');
   const { mutate: postInstagramFlow } = usePostInstagramFlow();
   const visibleHashTags = useMemo(() => getVisibleHashTags(post.hashTags), [post.hashTags]);
 
@@ -74,7 +78,7 @@ export const CardSectionItem = ({
             >
               <Image
                 src="/images/instagramColoredIcon.svg"
-                alt="인스타 아이콘"
+                alt={t('instagramAlt')}
                 width={24}
                 height={24}
                 className="w-6 h-6"
@@ -100,7 +104,7 @@ export const CardSectionItem = ({
             className="ml-auto caption-12-regular text-neutral-50"
             onClick={() => onClickReport(post.postPlaceId)}
           >
-            신고하기
+            {t('report')}
           </button>
         </div>
       </div>

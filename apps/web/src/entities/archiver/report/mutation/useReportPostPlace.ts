@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 
 import type { ExtendedKyHttpError } from '@/shared/lib/api/common';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

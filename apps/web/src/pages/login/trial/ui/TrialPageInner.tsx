@@ -30,7 +30,7 @@ interface IPlace {
 export const TrialPageInner = ({ initialPlaces }: { initialPlaces: IPlace[] }) => {
   const [open, setOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<ICategoryOptionValue>({
-    scope: '전체',
+    scope: 'ALL',
     categoryIds: [],
   });
 

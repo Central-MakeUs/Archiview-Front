@@ -1,7 +1,8 @@
 'use client';
 
-import { memo, useEffect, useState } from 'react';
-import Link from 'next/link';
+import { memo, useEffect, useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/shared/lib/i18n/navigation';
 
 interface ICategoryItem {
   label: string;
@@ -9,50 +10,48 @@ interface ICategoryItem {
   iconSrc: string;
 }
 
-const CATEGORY_ITEMS: ICategoryItem[] = [
+const CATEGORY_DEFS = [
   {
-    label: '내주변',
-    path: '/archiver/category?categoryId=0',
+    labelKey: 'nearby' as const,
+    categoryId: 0,
     iconSrc: '/images/archiverHome/NearMyPlaceImage.svg',
   },
   {
-    label: '한식',
-    path: '/archiver/category?categoryId=1',
+    labelKey: 'korean' as const,
+    categoryId: 1,
     iconSrc: '/images/archiverHome/KoreanImage.svg',
   },
   {
-    label: '양식',
-    path: '/archiver/category?categoryId=2',
+    labelKey: 'western' as const,
+    categoryId: 2,
     iconSrc: '/images/archiverHome/AmericanImage.svg',
   },
   {
-    label: '일식',
-    path: '/archiver/category?categoryId=3',
+    labelKey: 'japanese' as const,
+    categoryId: 3,
     iconSrc: '/images/archiverHome/JapaneseImage.svg',
   },
   {
-    label: '카페',
-    path: '/archiver/category?categoryId=4',
+    labelKey: 'cafe' as const,
+    categoryId: 4,
     iconSrc: '/images/archiverHome/CafeImage.svg',
   },
   {
-    label: '이자카야',
-    path: '/archiver/category?categoryId=6',
+    labelKey: 'izakaya' as const,
+    categoryId: 6,
     iconSrc: '/images/archiverHome/IzakayaImage.svg',
   },
   {
-    label: '데이트',
-    path: '/archiver/category?categoryId=5',
+    labelKey: 'date' as const,
+    categoryId: 5,
     iconSrc: '/images/archiverHome/DateImage.svg',
   },
   {
-    label: '기타',
-    path: '/archiver/category?categoryId=7',
+    labelKey: 'other' as const,
+    categoryId: 7,
     iconSrc: '/images/archiverHome/OthersImage.svg',
   },
-];
-
-const CATEGORY_ROWS = [CATEGORY_ITEMS.slice(0, 4), CATEGORY_ITEMS.slice(4, 8)];
+] as const;
 
 const CategoryItem = memo(({ iconSrc, label, path }: ICategoryItem): React.ReactElement => {
   return (
@@ -68,12 +67,27 @@ const CategoryItem = memo(({ iconSrc, label, path }: ICategoryItem): React.React
 CategoryItem.displayName = 'CategoryItem';
 
 const CategorySectionComponent = (): React.ReactElement => {
+  const t = useTranslations('archiverHome.categories');
+  const categoryItems = useMemo<ICategoryItem[]>(
+    () =>
+      CATEGORY_DEFS.map((def) => ({
+        label: t(def.labelKey),
+        path: `/archiver/category?categoryId=${def.categoryId}`,
+        iconSrc: def.iconSrc,
+      })),
+    [t],
+  );
+  const categoryRows = useMemo(
+    () => [categoryItems.slice(0, 4), categoryItems.slice(4, 8)],
+    [categoryItems],
+  );
+
   const [isIconsReady, setIsIconsReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
 
-    const preloadPromises = CATEGORY_ITEMS.map(
+    const preloadPromises = categoryItems.map(
       (category) =>
         new Promise<void>((resolve) => {
           const image = new window.Image();
@@ -88,38 +102,47 @@ const CategorySectionComponent = (): React.ReactElement => {
         }),
     );
 
-    void Promise.all(preloadPromises).then(() => {
-      if (!cancelled) {
-        setIsIconsReady(true);
-      }
-    });
+    Promise.all(preloadPromises)
+      .then(() => {
+        if (!cancelled) {
+          setIsIconsReady(true);
+        }
+      })
+      .catch(() => undefined);
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [categoryItems]);
 
   return (
     <section className="py-8 px-5">
       <div className="flex flex-col gap-3">
         {!isIconsReady
-          ? CATEGORY_ROWS.map((row, rowIndex) => (
+          ? categoryRows.map((row, rowIndex) => (
               <div key={`row-skeleton-${rowIndex}`} className="flex items-center justify-between">
                 {row.map((category) => (
                   <div
                     key={`${category.path}-skeleton`}
-                    className="flex flex-col gap-1.5 items-center"
+                    className="flex min-w-0 flex-1 basis-0 justify-center"
                   >
-                    <div className="h-13 w-13 rounded-xl bg-primary-20 animate-pulse" />
-                    <div className="h-3 w-8 rounded bg-neutral-20 animate-pulse" />
+                    <div className="flex flex-col gap-1.5 items-center">
+                      <div className="h-13 w-13 rounded-xl bg-primary-20 animate-pulse" />
+                      <div className="h-3 w-8 rounded bg-neutral-20 animate-pulse" />
+                    </div>
                   </div>
                 ))}
               </div>
             ))
-          : CATEGORY_ROWS.map((row, rowIndex) => (
+          : categoryRows.map((row, rowIndex) => (
               <div key={`row-${rowIndex}`} className="flex items-center justify-between">
                 {row.map((category) => (
-                  <CategoryItem key={category.path} {...category} />
+                  <div
+                    key={category.path}
+                    className="flex min-w-0 flex-1 basis-0 justify-center"
+                  >
+                    <CategoryItem {...category} />
+                  </div>
                 ))}
               </div>
             ))}

@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { Modal } from '@/shared/ui/common/Modal/Modal';
 import { Button } from '@/shared/ui/button';
 import { XIcon } from '@/shared/ui/icon/XIcon';
@@ -22,6 +23,7 @@ export const ArchivePlaceFinishModal = ({
   onConfirm,
   type = 'archive',
 }: IArchivePlaceFinishModalProps) => {
+  const t = useTranslations('archiverPlaceInfo.archiveModal');
   const isUnarchive = type === 'unarchive';
 
   return (
@@ -32,17 +34,20 @@ export const ArchivePlaceFinishModal = ({
         </div>
 
         <h2 className="body-16-bold text-neutral-90 pb-5">
-          {isUnarchive ? '아카이브 취소' : '아카이브 완료!'}
+          {isUnarchive ? t('titleUnarchive') : t('titleArchive')}
         </h2>
         <span className="body-14-bold text-primary-40">{place}</span>
         <p className="mt-3 body-14-bold text-neutral-40">
-          <span className="text-primary-40">{editor} 에디터님의 글</span>을
-          <br /> {isUnarchive ? '아카이브를 취소했어요' : '아카이브 했어요'}
+          {t.rich(isUnarchive ? 'descriptionUnarchive' : 'descriptionArchive', {
+            editor,
+            highlight: (chunks) => <span className="text-primary-40">{chunks}</span>,
+            br: () => <br />,
+          })}
         </p>
 
         <div className="mt-6 flex gap-2">
           <Button onClick={onConfirm} className={cn('flex-1 h-9 body-14-medium px-0')}>
-            확인
+            {t('confirm')}
           </Button>
         </div>
       </div>

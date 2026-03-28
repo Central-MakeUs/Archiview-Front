@@ -1,0 +1,10 @@
+{
+  "archiverCategoryPage": {
+    "metadata": {
+      "title": "Category"
+    },
+    "nearbySheetTitle": "Near me",
+    "loadFailed": "Couldn’t load",
+    "emptyCategory": "No saved places in this category yet.\nTry another one."
+  }
+}

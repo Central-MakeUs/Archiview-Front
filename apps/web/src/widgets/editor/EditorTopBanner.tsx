@@ -1,7 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+
+import { Link } from '@/shared/lib/i18n/navigation';
 
 import { Chip } from '@/shared/ui/Chip';
 import { RightArrowIcon } from '@/shared/ui/icon';
@@ -12,32 +14,36 @@ interface IEditorTopBannerProps {
 }
 
 export const EditorTopBanner = ({ editorNickname, placeCount }: IEditorTopBannerProps) => {
+  const t = useTranslations('editorHome');
+
   return (
-    <div className="relative w-full h-62.75 bg-primary-30 rounded-b-4xl px-5 pt-8 pb-6">
+    <div className="relative h-62.75 w-full rounded-b-4xl bg-primary-30 px-5 pb-6 pt-8">
       <Image
         preload={true}
         src="/images/MainMarkerIcon.svg"
-        alt="MainMarkerImage"
+        alt={t('banner.markerAlt')}
         width={190}
         height={190}
-        className="absolute top-12 right-1"
+        className="absolute right-1 top-12"
       />
-      <Chip label="에디터" className="rounded-xl border-none bg-primary-40 text-white" />
+      <Chip label={t('banner.chipEditor')} className="rounded-xl border-none bg-primary-40 text-white" />
       <div className="pt-3">
         <p className="heading-24-bold">{editorNickname}</p>
         <span className="heading-20-semibold">
-          총 <span className="text-primary-40 underline">{placeCount}</span>개의 장소를
-          <br />
-          아카이뷰에 공유했어요
+          {t.rich('banner.placesShared', {
+            count: placeCount,
+            num: (chunks) => <span className="text-primary-40 underline">{chunks}</span>,
+            br: () => <br />,
+          })}
         </span>
-        <p className="pt-3 body-14-regular text-primary-50">소중한 정보를 공유해주세요</p>
+        <p className="body-14-regular pt-3 text-primary-50">{t('banner.subtitle')}</p>
       </div>
 
       <Link
         href="/editor/register-place"
-        className="flex flex-row pt-4 justify-end items-center gap-1"
+        className="flex flex-row items-center justify-end gap-1 pt-4"
       >
-        <p className="underline caption-12-regular text-white">지금 공유하러 가기</p>
+        <p className="caption-12-regular text-white underline">{t('banner.ctaShare')}</p>
         <RightArrowIcon className="h-2.5 text-white" />
       </Link>
     </div>

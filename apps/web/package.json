@@ -23,6 +23,7 @@
     "js-cookie": "^3.0.5",
     "ky": "^1.14.2",
     "next": "16.1.1",
+    "next-intl": "^4.8.3",
     "react": "19.2.3",
     "react-daum-postcode": "^3.2.0",
     "react-dom": "19.2.3",
@@ -34,7 +35,6 @@
   },
   "devDependencies": {
     "@archiview/eslint": "workspace:*",
-    "@types/js-cookie": "^3.0.6",
     "@tailwindcss/postcss": "^4",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",

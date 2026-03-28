@@ -1,0 +1,35 @@
+{
+  "archiverPlaceInfo": {
+    "metadata": {
+      "title": "Place"
+    },
+    "placeInfoSectionTitle": "About this place",
+    "editorsRecorded": "<highlight>{count}</highlight> editors recorded this place",
+    "archiversSaved": "<highlight>{count}</highlight> archivers saved it",
+    "mapView": "Map",
+    "directionsButton": "Directions in map",
+    "kakaoMapTabTitle": "KakaoMap",
+    "directionsLoadingTitle": "Opening directions…",
+    "directionsLoadingBody1": "We may ask for your location. Please wait.",
+    "directionsLoadingBody2": "If no permission prompt appears, we’ll open using the address.",
+    "currentLocationLabel": "Current location",
+    "archiveModal": {
+      "titleArchive": "Saved to archive!",
+      "titleUnarchive": "Removed from archive",
+      "descriptionArchive": "<highlight>{editor}'s note</highlight> has been<br></br>archived.",
+      "descriptionUnarchive": "<highlight>{editor}'s note</highlight> has been<br></br>removed from your archive.",
+      "confirm": "OK"
+    },
+    "reportModal": {
+      "title": "Report this post or editor?",
+      "description": "Tap Report, then describe\nwhat happened.",
+      "cancel": "Cancel",
+      "confirm": "Report"
+    },
+    "card": {
+      "thumbnailAlt": "Thumbnail",
+      "instagramAlt": "Open Instagram",
+      "report": "Report"
+    }
+  }
+}

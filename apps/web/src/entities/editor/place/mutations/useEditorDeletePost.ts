@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { editorPlaceDelete } from '../api/editorPlace-delete';
 import { toast } from 'sonner';
 import { ExtendedKyHttpError } from '@/shared/lib/api/common';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 import { editorKeys } from '@/shared/lib/query-keys/keys/editor';
 
 export const useEditorDeletePost = () => {

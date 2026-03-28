@@ -1,0 +1,10 @@
+{
+  "archiverCategoryPage": {
+    "metadata": {
+      "title": "카테고리"
+    },
+    "nearbySheetTitle": "내주변",
+    "loadFailed": "불러오기 실패",
+    "emptyCategory": "이 카테고리에 저장된 장소가 없어요.\n다른 카테고리를 선택해 보세요."
+  }
+}

@@ -10,9 +10,9 @@ import { CaretUpCircleIcon, PictureIcon, XIcon } from '@/shared/ui/icon';
 import { useEditorGetPresignedUrl } from '@/entities/editor/place/mutations/useEditorGetPresignedUrl';
 import { usePutImage } from '@/entities/editor/place/mutations/usePutImage';
 import { CategoryChipGroup } from './CategoryChipGroup';
-import { registerPlaceSchema } from '../model/place.schema';
-import z from 'zod';
+import type { RegisterPlaceFormValues } from '../model/place.schema';
 import { IAddressValues } from '../model/place.types';
+import { useTranslations } from 'next-intl';
 
 const MAX_CATEGORIES = 2;
 
@@ -23,11 +23,11 @@ interface IRegisterPlaceCardProps {
 }
 
 export const RegisterPlaceCard = ({ placeIndex, canDelete, onRemove }: IRegisterPlaceCardProps) => {
+  const t = useTranslations('editorRegisterPlace');
   const index = placeIndex - 1;
   const base = `placeInfoRequestList.${index}` as const;
 
-  const { control, setValue, watch, formState } =
-    useFormContext<z.infer<typeof registerPlaceSchema>>();
+  const { control, setValue, watch, formState } = useFormContext<RegisterPlaceFormValues>();
   const value = watch(base);
   const error = formState.errors?.placeInfoRequestList?.[index];
 
@@ -40,9 +40,9 @@ export const RegisterPlaceCard = ({ placeIndex, canDelete, onRemove }: IRegister
   const { putImage } = usePutImage();
 
   const setFormValue = useCallback(
-    <TName extends FieldPath<z.infer<typeof registerPlaceSchema>>>(
+    <TName extends FieldPath<RegisterPlaceFormValues>>(
       name: TName,
-      value: FieldPathValue<z.infer<typeof registerPlaceSchema>, TName>,
+      value: FieldPathValue<RegisterPlaceFormValues, TName>,
     ) => {
       setValue(name, value, {
         shouldDirty: true,
@@ -62,9 +62,9 @@ export const RegisterPlaceCard = ({ placeIndex, canDelete, onRemove }: IRegister
       setFormValue(`${base}.longitude`, data.longitude);
       setFormValue(`${base}.placeUrl`, data.placeUrl);
       setFormValue(`${base}.phoneNumber`, data.phoneNumber);
-      setFormValue(`${base}.nearestStationWalkTime`, '도보 10분');
+      setFormValue(`${base}.nearestStationWalkTime`, t('placeCard.defaultWalkTime'));
     },
-    [base, setFormValue],
+    [base, setFormValue, t],
   );
 
   const handleThumbnailFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,7 +108,9 @@ export const RegisterPlaceCard = ({ placeIndex, canDelete, onRemove }: IRegister
         onClick={() => setIsExpanded((v) => !v)}
         className="flex justify-between items-center w-full text-left"
       >
-        <p className="body-14-semibold">{value?.placeName || `장소 ${placeIndex}`}</p>
+        <p className="body-14-semibold">
+          {value?.placeName || t('placeCard.titleFallback', { index: placeIndex })}
+        </p>
         <CaretUpCircleIcon
           className={`w-4 h-4 transition-transform ${isExpanded ? '' : 'rotate-180'} text-neutral-40`}
         />
@@ -132,7 +134,7 @@ export const RegisterPlaceCard = ({ placeIndex, canDelete, onRemove }: IRegister
             {thumbnailPreviewUrl || value?.imageUrl ? (
               <img
                 src={thumbnailPreviewUrl ?? value?.imageUrl}
-                alt="thumbnail"
+                alt={t('placeCard.thumbnailAlt')}
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -149,7 +151,7 @@ export const RegisterPlaceCard = ({ placeIndex, canDelete, onRemove }: IRegister
                 message={error?.roadAddressName?.message}
                 onClick={open}
               >
-                <input {...field} readOnly placeholder="주소 검색" />
+                <input {...field} readOnly placeholder={t('placeCard.addressPlaceholder')} />
               </BoxInput>
             )}
           />
@@ -159,7 +161,7 @@ export const RegisterPlaceCard = ({ placeIndex, canDelete, onRemove }: IRegister
             control={control}
             render={({ field }) => (
               <BoxInput>
-                <input {...field} maxLength={50} placeholder="50자 이내로 장소를 소개해주세요" />
+                <input {...field} maxLength={50} placeholder={t('placeCard.descriptionPlaceholder')} />
               </BoxInput>
             )}
           />
@@ -180,7 +182,7 @@ export const RegisterPlaceCard = ({ placeIndex, canDelete, onRemove }: IRegister
           {canDelete && (
             <div className="flex items-center justify-end w-full">
               <button type="button" onClick={onRemove} className="flex items-center gap-1">
-                <span className="body-14-semibold text-neutral-60">이 장소 삭제</span>
+                <span className="body-14-semibold text-neutral-60">{t('placeCard.deletePlace')}</span>
                 <XIcon className="w-3 h-3 text-neutral-60" />
               </button>
             </div>

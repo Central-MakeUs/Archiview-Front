@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 
 import { Item } from '@/shared/ui/common/Item';
 import { RightArrowIcon, ProfileDeleteIcon } from '@/shared/ui/icon';

@@ -1,0 +1,47 @@
+{
+  "mypage": {
+    "headerTitle": "My page",
+    "sectionAccount": "Account",
+    "sectionLanguage": "Language",
+    "languageKo": "Korean",
+    "languageEn": "English",
+    "sectionInfo": "Info & support",
+    "sectionTerms": "Terms & policies",
+    "logout": "Log out",
+    "withdraw": "Delete account",
+    "contact": "Contact us",
+    "reportBug": "Report a bug",
+    "version": "Version v.1.0",
+    "languageModal": {
+      "title": "Language"
+    },
+    "logoutModal": {
+      "title": "Log out?",
+      "cancel": "Cancel",
+      "confirm": "Log out"
+    },
+    "withdrawModal": {
+      "title": "Delete your account?",
+      "descriptionLine1": "All data saved in Archiview",
+      "descriptionLine2": "will be removed and cannot be restored.",
+      "cancel": "Cancel",
+      "confirm": "Delete account"
+    },
+    "edit": {
+      "nickname": "Nickname",
+      "introduction": "Bio",
+      "instagramId": "Instagram ID",
+      "instagramUrl": "Instagram URL",
+      "hashtagPrompt": "Add hashtags that describe you (2 required).",
+      "required": "*Required",
+      "requiredTwo": "*2 required",
+      "profileUpload": "Upload profile photo",
+      "profilePreviewAlt": "Profile preview",
+      "profileUploadAria": "Upload profile image",
+      "privacyNote": "Some information may be visible to other users.",
+      "submit": "Save changes",
+      "toastSuccess": "Profile updated",
+      "toastUnknownError": "Something went wrong"
+    }
+  }
+}

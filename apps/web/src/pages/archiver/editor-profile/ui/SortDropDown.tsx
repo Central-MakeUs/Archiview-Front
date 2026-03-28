@@ -1,13 +1,11 @@
+'use client';
+
 import { useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { UpArrowIcon } from '@/shared/ui/icon';
 
 type SortKey = 'LATEST' | 'OLDEST';
-
-const SORT_LABEL: Record<SortKey, string> = {
-  LATEST: '최신순',
-  OLDEST: '등록순',
-};
 
 export const SortDropdown = ({
   value,
@@ -16,9 +14,10 @@ export const SortDropdown = ({
   value: SortKey;
   onChange: (next: SortKey) => void;
 }) => {
+  const t = useTranslations('archiverEditorProfile.sort');
   const [open, setOpen] = useState(false);
 
-  const currentLabel = useMemo(() => SORT_LABEL[value], [value]);
+  const currentLabel = useMemo(() => (value === 'LATEST' ? t('latest') : t('oldest')), [t, value]);
 
   const select = (next: SortKey) => {
     onChange(next);
@@ -51,7 +50,7 @@ export const SortDropdown = ({
             : 'opacity-0 scale-95 -translate-y-1 pointer-events-none',
         ].join(' ')}
       >
-        <div className="px-4 pb-2 pt-4 text-neutral-80 caption-12-medium">정렬</div>
+        <div className="px-4 pb-2 pt-4 text-neutral-80 caption-12-medium">{t('menuTitle')}</div>
 
         <button
           type="button"
@@ -61,7 +60,7 @@ export const SortDropdown = ({
             value === 'LATEST' ? 'bg-primary-10 text-neutral-90' : 'bg-white text-neutral-60',
           ].join(' ')}
         >
-          최신순
+          {t('latest')}
         </button>
 
         <button
@@ -72,7 +71,7 @@ export const SortDropdown = ({
             value === 'OLDEST' ? 'bg-primary-10 text-neutral-90' : 'bg-white text-neutral-60',
           ].join(' ')}
         >
-          등록순
+          {t('oldest')}
         </button>
       </div>
     </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { Chip } from '@/shared/ui/Chip';
 import { XIcon } from '@/shared/ui/icon/XIcon';
 import type { IHistory } from '@/entities/archiver/search/model/archiverSearch.type';
@@ -10,11 +11,13 @@ interface IRecentSearchSectionProps {
 }
 
 export const RecentSearchSection = ({ histories, onDelete }: IRecentSearchSectionProps) => {
+  const t = useTranslations('archiverSearchResult');
+
   if (histories.length === 0) return null;
 
   return (
     <div className="flex flex-col gap-[20px] px-[20px]">
-      <div className="body-18-bold">최근 검색어</div>
+      <div className="body-18-bold">{t('recentTitle')}</div>
       <div className="flex flex-wrap gap-[4px]">
         {histories.map((item) => (
           <Chip

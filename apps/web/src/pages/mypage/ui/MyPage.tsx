@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 
 import { useAuth, SwitchRoleError } from '@/entities/auth/hooks/useAuth';
 import Cookies from 'js-cookie';
@@ -23,6 +23,17 @@ const isStoredUserRole = (value: string | null): value is StoredUserRole => {
   return value === 'GUEST' || value === 'ARCHIVER' || value === 'EDITOR';
 };
 
+/** Locale 전환 등으로 클라이언트에서 다시 마운트될 때 첫 페인트부터 역할을 알 수 있게 함 */
+const readRoleFromCookie = (): StoredUserRole | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const stored = Cookies.get(COOKIE_KEYS.role) ?? null;
+    return isStoredUserRole(stored) ? stored : null;
+  } catch {
+    return null;
+  }
+};
+
 export const MyPage = (): React.ReactElement => {
   const termsOfServiceUrl = process.env.NEXT_PUBLIC_TERMS_OF_SERVICE_URL;
   const geoLocationTermsOfServiceUrl = process.env.NEXT_PUBLIC_GEO_LOCATION_TERMS_OF_SERVICE_URL;
@@ -39,18 +50,13 @@ export const MyPage = (): React.ReactElement => {
   const { data: myData, isLoading: isMyProfileLoading } = useGetMyProfile({ useMock: false });
   const showArchiverLoading = useMinLoading(isMyProfileLoading);
 
-  const [role, setRole] = useState<StoredUserRole | null>(null);
+  const [role, setRole] = useState<StoredUserRole | null>(readRoleFromCookie);
   const [openChangeRoleModal, setOpenChangeRoleModal] = useState(false);
   const [openWithDrawModal, setOpenWithDrawModal] = useState(false);
   const [openLogoutModal, setOpenLogoutModal] = useState(false);
 
   useEffect(() => {
-    try {
-      const stored = Cookies.get(COOKIE_KEYS.role) ?? null;
-      setRole(isStoredUserRole(stored) ? stored : null);
-    } catch (e) {
-      console.error('Failed to read role from cookie', e);
-    }
+    setRole(readRoleFromCookie());
   }, []);
 
   // --- 공통 핸들러 ---

@@ -1,0 +1,60 @@
+{
+  "editorRegisterPlace": {
+    "headerTitle": "Add place",
+    "page": {
+      "addPlace": "Add place +",
+      "submitEdit": "Save changes",
+      "submitRegister": "Submit",
+      "deletePost": "Delete entire post"
+    },
+    "instagram": {
+      "label": "Instagram URL",
+      "required": "*Required",
+      "enterProfileLink": "Enter your Instagram profile link.",
+      "invalidUrl": "Enter a valid Instagram URL.",
+      "validUrl": "That URL looks good.",
+      "placeholder": "Paste your Instagram profile link",
+      "hintDefault": "Enter your Instagram profile link",
+      "submit": "Apply",
+      "edit": "Edit",
+      "clearAria": "Clear"
+    },
+    "hashTag": {
+      "label": "Add up to three hashtags for this post",
+      "maxHint": "*Up to 3",
+      "placeholder": "Enter a hashtag",
+      "submit": "Apply",
+      "errorMaxLength": "Hashtags can be up to 6 characters",
+      "errorMaxCount": "You can add up to 3 hashtags",
+      "errorDuplicate": "That hashtag is already added"
+    },
+    "placeCard": {
+      "titleFallback": "Place {index}",
+      "thumbnailAlt": "Thumbnail",
+      "addressPlaceholder": "Search address",
+      "descriptionPlaceholder": "Describe this place (max 50 characters)",
+      "deletePlace": "Remove this place",
+      "defaultWalkTime": "10 min walk"
+    },
+    "finishModal": {
+      "title": "Your place was added!",
+      "description": "View your places on your profile?",
+      "continueEdit": "Keep editing",
+      "goToProfile": "Go to profile"
+    },
+    "validation": {
+      "placeName": "Enter the place name",
+      "description": "Enter a short description",
+      "addressName": "Enter the address",
+      "roadAddressName": "Enter the street address",
+      "categoryIds": "Choose at least one category",
+      "nearestStationWalkTime": "Enter walking time from the station",
+      "placeUrl": "Enter the place URL",
+      "imageUrl": "Add an image",
+      "url": "Enter a URL",
+      "hashtagMaxLength": "Hashtags can be up to 6 characters",
+      "hashtagMaxCount": "You can add up to 3 hashtags",
+      "minOnePlace": "Add at least one place"
+    }
+  }
+}

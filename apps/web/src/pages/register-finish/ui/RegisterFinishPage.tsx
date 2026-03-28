@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/shared/lib/i18n/navigation';
 
 import { Button } from '@/shared/ui/button';
 import Image from 'next/image';

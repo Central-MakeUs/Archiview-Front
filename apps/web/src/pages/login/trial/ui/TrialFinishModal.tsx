@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 
 import { BottomSheetModal } from '@/shared/ui/common/BottomSheet';
 import { XIcon } from '@/shared/ui/icon';

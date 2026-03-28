@@ -44,7 +44,7 @@ export const EditorInfoCard = ({
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
         <div className="flex flex-col">
           <span className="heading-20-bold text-primary-50">{nickname}</span>
-          {instagramId && <span className="body-14-regular text-primary-10">@ {instagramId}</span>}
+          {instagramId && <span className="body-14-regular text-primary-10">{instagramId}</span>}
         </div>
 
         {tags.length > 0 && (

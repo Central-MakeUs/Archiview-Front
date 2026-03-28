@@ -1,26 +1,17 @@
 'use client';
 
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { CATEGORIES } from '@/shared/constants/category';
 
-export type CategoryScope = '전체' | '내주변';
+export type CategoryScope = 'ALL' | 'NEARBY';
 export type CategoryTab = (typeof CATEGORIES)[number]['name'];
 
 export interface ICategoryOptionValue {
   scope: CategoryScope;
   categoryIds: number[];
 }
-
-const SCOPE_TABS: { label: string; value: CategoryScope }[] = [
-  { label: '전체', value: '전체' },
-  { label: '내주변', value: '내주변' },
-];
-
-const CATEGORY_TABS = CATEGORIES.map((category) => ({
-  label: category.name,
-  value: category.id,
-}));
 
 const ACTIVE_BUTTON_CLASS = 'bg-primary-40 text-white shadow-sm';
 const INACTIVE_BUTTON_CLASS = 'bg-neutral-20 text-neutral-40';
@@ -35,7 +26,17 @@ interface IProps {
 // TODO : 엔티티 분리되면 엔티티로 빼기 (아카이버랑 공용으로 사용함)
 
 export const CategoryOptionTabs = ({ value, onChange }: IProps) => {
+  const t = useTranslations('categoryPicker');
   const categoryScrollRef = useRef<HTMLDivElement>(null);
+
+  const scopeTabs = useMemo(
+    () =>
+      [
+        { label: t('scopeAll'), value: 'ALL' as CategoryScope },
+        { label: t('scopeNearby'), value: 'NEARBY' as CategoryScope },
+      ] as const,
+    [t],
+  );
 
   const scrollCategoryButtonToCenter = (buttonElement: HTMLButtonElement) => {
     const container = categoryScrollRef.current;
@@ -76,7 +77,7 @@ export const CategoryOptionTabs = ({ value, onChange }: IProps) => {
   return (
     <div className="pl-5 pt-4 flex items-center gap-2">
       <div className="flex items-center gap-2 flex-none">
-        {SCOPE_TABS.map((tab) => {
+        {scopeTabs.map((tab) => {
           const active = value.scope === tab.value;
 
           return (
@@ -100,20 +101,20 @@ export const CategoryOptionTabs = ({ value, onChange }: IProps) => {
       <div className="min-w-0 flex-1 relative">
         <div ref={categoryScrollRef} className="min-w-0 flex-1 overflow-x-auto scroll-none">
           <div className="flex items-center gap-2 pr-5 whitespace-nowrap pl-1">
-            {CATEGORY_TABS.map((tab) => {
-              const active = value.categoryIds.includes(tab.value);
+            {CATEGORIES.map((category) => {
+              const active = value.categoryIds.includes(category.id);
 
               return (
                 <button
-                  key={tab.value}
+                  key={category.id}
                   type="button"
-                  onClick={(event) => handleCategoryToggle(tab.value, event.currentTarget)}
+                  onClick={(event) => handleCategoryToggle(category.id, event.currentTarget)}
                   className={[
                     BUTTON_BASE_CLASS,
                     active ? ACTIVE_BUTTON_CLASS : INACTIVE_BUTTON_CLASS,
                   ].join(' ')}
                 >
-                  {tab.label}
+                  {t(`types.${category.id}`)}
                 </button>
               );
             })}

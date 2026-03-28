@@ -1,4 +1,7 @@
+'use client';
+
 import { memo } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { HotPlaceCard } from '@/entities/archiver/place/ui/HotPlaceCard';
 import { IHotPlace } from '@/entities/archiver/place/model/archiverPlace.type';
@@ -12,11 +15,13 @@ const HotPlaceSectionComponent = ({
   hotPlaces,
   isLoading = false,
 }: IHotPlaceSectionProps): React.ReactElement => {
+  const t = useTranslations('archiverHome.hotPlaces');
+
   if (isLoading) {
     return (
       <section className="mb-5">
         <div className="flex justify-between mb-4 pl-2">
-          <span className="heading-20-bold">요즘 HOT한 장소</span>
+          <span className="heading-20-bold">{t('title')}</span>
         </div>
         <div className="-mx-5 overflow-x-auto scroll-none momentum-scroll-x py-2 -my-2">
           <div className="flex gap-3 pl-5 pr-5">
@@ -46,9 +51,9 @@ const HotPlaceSectionComponent = ({
     return (
       <section className="mb-5">
         <div className="flex justify-between mb-4 pl-2">
-          <span className="heading-20-bold">요즘 HOT한 장소</span>
+          <span className="heading-20-bold">{t('title')}</span>
         </div>
-        <div>표시할 장소가 없습니다.</div>
+        <div>{t('empty')}</div>
       </section>
     );
   }
@@ -56,7 +61,7 @@ const HotPlaceSectionComponent = ({
   return (
     <section className="mb-5">
       <div className="flex justify-between mb-4 pl-2">
-        <span className="heading-20-bold">요즘 HOT한 장소</span>
+        <span className="heading-20-bold">{t('title')}</span>
       </div>
       <div className="-mx-5 overflow-x-auto scroll-none momentum-scroll-x py-2 -my-2">
         <div className="flex gap-3 pl-5 pr-5">

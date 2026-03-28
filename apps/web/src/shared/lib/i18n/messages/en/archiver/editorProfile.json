@@ -1,0 +1,15 @@
+{
+  "archiverEditorProfile": {
+    "metadata": {
+      "title": "Editor profile"
+    },
+    "sheet": {
+      "uploadedPlaces": "Uploaded places"
+    },
+    "sort": {
+      "menuTitle": "Sort",
+      "latest": "Newest",
+      "oldest": "Oldest"
+    }
+  }
+}

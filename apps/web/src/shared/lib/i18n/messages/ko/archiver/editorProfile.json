@@ -1,0 +1,15 @@
+{
+  "archiverEditorProfile": {
+    "metadata": {
+      "title": "에디터 프로필"
+    },
+    "sheet": {
+      "uploadedPlaces": "업로드한 장소"
+    },
+    "sort": {
+      "menuTitle": "정렬",
+      "latest": "최신순",
+      "oldest": "등록순"
+    }
+  }
+}

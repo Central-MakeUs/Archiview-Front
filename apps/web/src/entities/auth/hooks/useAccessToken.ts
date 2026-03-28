@@ -2,7 +2,9 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+
+import { usePathname, useRouter } from '@/shared/lib/i18n/navigation';
 
 import Cookies from 'js-cookie';
 

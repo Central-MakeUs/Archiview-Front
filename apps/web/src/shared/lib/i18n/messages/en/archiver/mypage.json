@@ -1,0 +1,11 @@
+{
+  "mypage": {
+    "manageBlockedEditors": "Blocked editors",
+    "switchToEditor": "Switch to editor",
+    "archiverTerms": {
+      "service": "Terms of service",
+      "location": "Location-based terms",
+      "privacy": "Privacy policy"
+    }
+  }
+}

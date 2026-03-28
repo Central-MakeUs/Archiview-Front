@@ -1,0 +1,13 @@
+{
+  "editorProfile": {
+    "loadError": "Couldn't load. Try again.",
+    "bottomSheet": {
+      "placesUploaded": "Places you shared"
+    },
+    "card": {
+      "shareInfo": "+ Share a place",
+      "editAria": "Edit profile",
+      "profileImageAlt": "{nickname}'s profile"
+    }
+  }
+}

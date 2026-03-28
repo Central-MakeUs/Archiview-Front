@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslations } from 'next-intl';
 
 import { PencilIcon } from '@/shared/ui/icon/place-info/PencilIcon';
 import { Button } from '@/shared/ui/button';
@@ -22,6 +23,8 @@ export const EditorProfileCard = ({
   onEdit,
   onShareInfo,
 }: IEditorProfileCardProps): React.ReactElement => {
+  const t = useTranslations('editorProfile.card');
+
   return (
     <div className="mx-5 flex flex-col overflow-hidden rounded-default shadow-[0px_0px_11px_0px_rgba(144,144,144,0.4)]">
       {/* 상단 파란색 영역 */}
@@ -60,7 +63,7 @@ export const EditorProfileCard = ({
                     type="button"
                     onClick={onEdit}
                     className="shrink-0 p-0.5"
-                    aria-label="프로필 편집"
+                    aria-label={t('editAria')}
                   >
                     <PencilIcon width={24} height={24} stroke="currentColor" className="text-primary-50" />
                   </button>
@@ -93,7 +96,7 @@ export const EditorProfileCard = ({
       {/* 하단 흰색 영역 - 정보 공유하기 버튼 */}
       <div className="bg-neutral-10 px-5 pb-5 pt-4">
         <Button variant="contained" fullwidth onClick={onShareInfo} className="h-10 rounded-xl">
-          + 정보 공유하기
+          {t('shareInfo')}
         </Button>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useRef, useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/shared/lib/i18n/navigation';
 
 import { useEditorGetPresignedUrl } from '@/entities/editor/place/mutations/useEditorGetPresignedUrl';
 import { useRegisterEditorProfile } from '@/entities/auth/mutations/useRegisterEditorProfile';

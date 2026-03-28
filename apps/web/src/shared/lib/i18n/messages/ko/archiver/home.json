@@ -1,0 +1,31 @@
+{
+  "archiverHome": {
+    "metadata": {
+      "title": "홈"
+    },
+    "roleSwitchLoading": "아카이버 홈 화면으로 이동중입니다.",
+    "badge": "아카이버",
+    "tagline": "소중한 정보를 검색해보세요!",
+    "searchAriaLabel": "검색 결과 페이지로 이동",
+    "searchPlaceholder": "게시물 URL 또는 키워드를 검색해보세요.",
+    "folderImageAlt": "메인 폴더",
+    "hotPlaces": {
+      "title": "요즘 HOT한 장소",
+      "empty": "표시할 장소가 없습니다."
+    },
+    "trustedEditors": {
+      "title": "믿고 먹는 에디터",
+      "empty": "표시할 에디터가 없습니다."
+    },
+    "categories": {
+      "nearby": "내주변",
+      "korean": "한식",
+      "western": "양식",
+      "japanese": "일식",
+      "cafe": "카페",
+      "izakaya": "이자카야",
+      "date": "데이트",
+      "other": "기타"
+    }
+  }
+}
