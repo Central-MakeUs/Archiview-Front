@@ -30,3 +30,4 @@ export * from './RightArrowIcon';
 export * from './XIcon';
 export * from './CheckBoxIcon';
 export * from './UnBlockIcon';
+export * from './EarthIcon';
