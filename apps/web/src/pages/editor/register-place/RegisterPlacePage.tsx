@@ -139,72 +139,74 @@ export const RegisterPlacePage = () => {
 
   return (
     <FormProvider {...methods} key={locale}>
-      <form onSubmit={handleSubmit(onSubmit)} className="px-5">
-        <InstagramUrlInput className="pt-2.5 pb-8" />
-        <div className="-mx-5 border-b border-neutral-30" />
+      <>
+        <form onSubmit={handleSubmit(onSubmit)} className="px-5">
+          <InstagramUrlInput className="pt-2.5 pb-8" />
+          <div className="-mx-5 border-b border-neutral-30" />
 
-        <HashTagInput className="pt-4 pb-8" />
-        <div className="-mx-5 border-b border-neutral-30" />
+          <HashTagInput className="pt-4 pb-8" />
+          <div className="-mx-5 border-b border-neutral-30" />
 
-        <div className="-mx-5 py-8 bg-neutral-20">
-          <div className="px-5 flex flex-col gap-4">
-            {fields.map((field, index) => (
-              <RegisterPlaceCard
-                key={field.id}
-                placeIndex={index + 1}
-                canDelete={fields.length >= 2}
-                onRemove={() => remove(index)}
-              />
-            ))}
+          <div className="-mx-5 py-8 bg-neutral-20">
+            <div className="px-5 flex flex-col gap-4">
+              {fields.map((field, index) => (
+                <RegisterPlaceCard
+                  key={field.id}
+                  placeIndex={index + 1}
+                  canDelete={fields.length >= 2}
+                  onRemove={() => remove(index)}
+                />
+              ))}
 
-            <button
-              type="button"
-              onClick={() => append(createDefaultPlace())}
-              className="w-full h-12 rounded-xl border-2 border-dashed border-neutral-30 text-primary-40"
-            >
-              {t('page.addPlace')}
-            </button>
-
-            {isEdit ? (
-              <button
-                type="submit"
-                className="w-full h-12 rounded-xl border-neutral-30 bg-primary-50 text-neutral-10"
-              >
-                {t('page.submitEdit')}
-              </button>
-            ) : (
-              <button
-                type="submit"
-                className="w-full h-12 rounded-xl bg-primary-40 text-neutral-10"
-              >
-                {t('page.submitRegister')}
-              </button>
-            )}
-            {isEdit && (
               <button
                 type="button"
-                onClick={() => {
-                  const postId = placeData?.data?.postId ?? createdPostId;
-                  if (!postId) return;
-                  deleteEditorPost(postId);
-                }}
-                className="w-full h-12 rounded-xl border-neutral-30 bg-transparent body-16-semibold text-neutral-40"
+                onClick={() => append(createDefaultPlace())}
+                className="w-full h-12 rounded-xl border-2 border-dashed border-neutral-30 text-primary-40"
               >
-                {t('page.deletePost')}
+                {t('page.addPlace')}
               </button>
-            )}
-          </div>
-        </div>
-      </form>
 
-      <RegisterFinishModal
-        isOpen={isFinishModalOpen}
-        onClose={() => setIsFinishModalOpen(false)}
-        onConfirm={() => {
-          setIsFinishModalOpen(false);
-          router.replace('/editor/profile');
-        }}
-      />
+              {isEdit ? (
+                <button
+                  type="submit"
+                  className="w-full h-12 rounded-xl border-neutral-30 bg-primary-50 text-neutral-10"
+                >
+                  {t('page.submitEdit')}
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="w-full h-12 rounded-xl bg-primary-40 text-neutral-10"
+                >
+                  {t('page.submitRegister')}
+                </button>
+              )}
+              {isEdit && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const postId = placeData?.data?.postId ?? createdPostId;
+                    if (!postId) return;
+                    deleteEditorPost(postId);
+                  }}
+                  className="w-full h-12 rounded-xl border-neutral-30 bg-transparent body-16-semibold text-neutral-40"
+                >
+                  {t('page.deletePost')}
+                </button>
+              )}
+            </div>
+          </div>
+        </form>
+
+        <RegisterFinishModal
+          isOpen={isFinishModalOpen}
+          onClose={() => setIsFinishModalOpen(false)}
+          onConfirm={() => {
+            setIsFinishModalOpen(false);
+            router.replace('/editor/profile');
+          }}
+        />
+      </>
     </FormProvider>
   );
 };
