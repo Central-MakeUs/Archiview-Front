@@ -22,3 +22,7 @@ export type LoginEvent =
   | { type: 'SUCCESS'; accessToken: string }
   | { type: 'FAILURE'; reason: LoginFailureReason }
   | { type: 'RESET' };
+
+export type LoginCommand =
+  | { type: 'RUN_LOGIN_PIPELINE'; provider: LoginProvider; platform: LoginPlatform }
+  | { type: 'PERSIST_AND_REDIRECT'; accessToken: string };
