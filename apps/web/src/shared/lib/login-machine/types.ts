@@ -14,15 +14,30 @@ export type LoginFailureReason =
 
 export type LoginState =
   | { tag: 'idle' }
-  | { tag: 'authenticating'; provider: LoginProvider; platform: LoginPlatform }
+  | { tag: 'authenticating'; provider: LoginProvider; platform: LoginPlatform; attempt: number }
+  | {
+      tag: 'retrying';
+      provider: LoginProvider;
+      platform: LoginPlatform;
+      attempt: number;
+      reason: LoginFailureReason;
+    }
   | { tag: 'failed'; reason: LoginFailureReason };
 
 export type LoginEvent =
   | { type: 'START'; provider: LoginProvider; platform: LoginPlatform }
   | { type: 'SUCCESS'; accessToken: string }
   | { type: 'FAILURE'; reason: LoginFailureReason }
+  | { type: 'RETRY_TIMEOUT_FIRED' }
   | { type: 'RESET' };
 
 export type LoginCommand =
   | { type: 'RUN_LOGIN_PIPELINE'; provider: LoginProvider; platform: LoginPlatform }
+  | {
+      type: 'SCHEDULE_RETRY';
+      provider: LoginProvider;
+      platform: LoginPlatform;
+      attempt: number;
+      delayMs: number;
+    }
   | { type: 'PERSIST_AND_REDIRECT'; accessToken: string };

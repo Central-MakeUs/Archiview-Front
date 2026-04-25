@@ -2,7 +2,7 @@
 
 /* eslint-disable boundaries/element-types -- 러너는 shared 에 두되, entities 의 auth mutation 을 주입받아 쓰는 대신 직접 import. 원칙상 features 에 속하지만 머신과 묶어두기 위해 shared 에 둠. */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 
 import { COOKIE_KEYS, getDefaultCookieOptions } from '@/shared/constants/cookies';
@@ -90,6 +90,7 @@ const nativeMethodNameOf = (provider: LoginProvider): 'signInWithKakao' | 'signI
 export const useLoginRunner = (machine: LoginMachine) => {
   const { mutateAsync: kakaoExchange } = useKakaoMobileLogin();
   const { mutateAsync: appleExchange } = useAppleMobileLogin();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const runNativeKakao = async () => {
@@ -130,10 +131,20 @@ export const useLoginRunner = (machine: LoginMachine) => {
       machine.send({ type: 'SUCCESS', accessToken: appToken });
     };
 
+    /**
+     * 커맨드별로 수행할 로직 작성
+     */
     machine.onCommand(async (cmd) => {
       if (cmd.type === 'PERSIST_AND_REDIRECT') {
         Cookies.set(COOKIE_KEYS.accessToken, cmd.accessToken, getDefaultCookieOptions());
         window.location.href = '/';
+        return;
+      }
+
+      if (cmd.type === 'SCHEDULE_RETRY') {
+        timeoutRef.current = setTimeout(() => {
+          machine.send({ type: 'RETRY_TIMEOUT_FIRED' });
+        }, cmd.delayMs);
         return;
       }
 
@@ -160,5 +171,9 @@ export const useLoginRunner = (machine: LoginMachine) => {
         }
       }
     });
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, [machine, kakaoExchange, appleExchange]);
 };
