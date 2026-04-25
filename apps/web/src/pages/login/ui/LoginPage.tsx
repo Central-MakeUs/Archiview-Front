@@ -1,13 +1,18 @@
 'use client';
 
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 import {
   isNativeMethodAvailable,
   isWebViewBridgeAvailable,
 } from '@/shared/lib/native-bridge';
-import { useLoginMachine } from '@/shared/lib/login-machine';
+import {
+  LOGIN_FAILURE_MESSAGES,
+  useLoginMachine,
+  type LoginProvider,
+} from '@/shared/lib/login-machine';
 import { Button } from '@/shared/ui/button';
 import { AppleIcon } from '@/shared/ui/icon/AppleIcon';
 import { KakaoIcon } from '@/shared/ui/icon/KakaoIcon';
@@ -39,7 +44,23 @@ export const LoginPage = () => {
   const canUseNativeKakaoLogin = isBridgeAvailable && isNativeMethodAvailable('signInWithKakao');
   const canUseNativeAppleLogin = isBridgeAvailable && isNativeMethodAvailable('signInWithApple');
 
-  const isPending = state.tag === 'authenticating';
+  const isPending = state.tag === 'authenticating' || state.tag === 'retrying';
+
+  useEffect(() => {
+    if (state.tag === 'failed') {
+      toast.error(LOGIN_FAILURE_MESSAGES[state.reason]);
+    }
+  }, [state]);
+
+  const labelFor = (provider: LoginProvider, defaultLabel: string): string => {
+    if (state.tag === 'authenticating' && state.provider === provider) {
+      return state.attempt > 0 ? `재시도 중... (${state.attempt}/2)` : '로그인 중...';
+    }
+    if (state.tag === 'retrying' && state.provider === provider) {
+      return `재시도 대기 중... (${state.attempt}/2)`;
+    }
+    return defaultLabel;
+  };
 
   const handleNext = () => {
     if (carouselRef.current?.canScrollNext()) {
@@ -119,7 +140,7 @@ export const LoginPage = () => {
               }
               disabled={isPending}
             >
-              <span className="text-neutral-70">카카오톡으로 로그인</span>
+              <span className="text-neutral-70">{labelFor('KAKAO', '카카오톡으로 로그인')}</span>
             </Button>
             <Button
               variant="login"
@@ -135,7 +156,7 @@ export const LoginPage = () => {
               }
               disabled={isPending}
             >
-              <span className="text-neutral-10">Apple로 로그인</span>
+              <span className="text-neutral-10">{labelFor('APPLE', 'Apple로 로그인')}</span>
             </Button>
           </div>
         </div>
